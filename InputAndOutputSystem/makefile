@@ -6,4 +6,4 @@ OBJ = ${patsubst %.c, %.o, ${SRC}}
 HEADS = ${wildcard *.h}
 
 ${Target}: ${OBJ} ${HEADS}
-	ar rcs ${Target}.a ${OBJ}
+	ar rcs lib${Target}.a ${OBJ}
