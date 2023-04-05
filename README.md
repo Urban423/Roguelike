@@ -1,3 +1,4 @@
 # Roguelike
 MAI project semestr 2
-https://github.com/Urban423/Roguelike/issues/1#issue-1655428010
+
+![Roguelike drawio](https://user-images.githubusercontent.com/128281165/230065484-866a0c98-9dea-45d5-a204-eb57cfbac853.png)
