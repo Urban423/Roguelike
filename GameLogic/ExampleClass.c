@@ -31,8 +31,6 @@ void template(T, Update)(T *this)
 void lol(T* this, Object* second)
 {
 	T* res;
-	TEMPLATE(GetComponent, ExampleClass)(&second, &res);
-	res->ex=12;
 }
 
 #endif
