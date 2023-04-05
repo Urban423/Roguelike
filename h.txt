@@ -1,1 +1,0 @@
-gcc main.c Component.c Object.c ExampleClass.c Sys.c Vector2.c Scene.c GraphicsEngine.c ObjectHelper.c
