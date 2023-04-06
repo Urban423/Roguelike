@@ -3,6 +3,7 @@
 #include "Object.h"
 #include "templates.h"
 
+#undef T
 #define T ExampleClass
 
 struct T;
@@ -17,14 +18,7 @@ typedef struct
 typedef struct T
 {
     Component inherited_class;
-	float ex;
 }T;
-
-#ifdef T
-
-void lol(T* this, Object* second);
-
-#endif
 
 void template(T, constructor)(T* this);
 void template(T, Start)(T* this);

@@ -14,23 +14,12 @@ void template(T, constructor)(T *this)
 {
     Component_constructor((Component*)this);
     this->inherited_class.virtual_table = (component_functiontable*)&table;
-	this->ex = 0;
 }
 
 void template(T, Start)(T *this) {
-    printf("ExampleClass Started\n");
 }
 
 void template(T, Update)(T *this)
 {
-	printf("ExampleClass %f\n", this->ex);
-	this->ex++;
-}
-
-void lol(T* this, Object* second)
-{
-	printf("lol: ");
-	T* res;
-	TEMPLATE(GetComponent, ExampleClass)(second, &res);
-	printf("%f \n", res->ex);
+	
 }

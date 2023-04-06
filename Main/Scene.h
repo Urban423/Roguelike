@@ -1,8 +1,10 @@
 #include "GraphicsEngine.h"
-#include "Sys.h"
+#include "KeyBoardState.h"
+#include "ObjectHelper.h"
 
 typedef struct Scene
 {
+	Object obj;
 	KeyBoardState keyBoard;
 	Buffer renderer;
 	char is_running;

@@ -1,9 +1,9 @@
-#ifdef T 
-#include "Object.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "templates.h" 
 
+#ifndef OBJECT_H_
+#include "Object.h"
 void AddComponentToComponentManager(ComponentManager* this, Component* add)
 {
 	if(this->next != NULL)
@@ -25,7 +25,11 @@ void UpdateAll(Object* this)
 {
 	this->componentManager.component->virtual_table->Update(this->componentManager.component);
 }
+#endif
 
+
+
+#ifdef T 
 void TEMPLATE(AddComponent, T)(Object* this, T** result)
 {
 	(*result) = malloc(sizeof(T));
