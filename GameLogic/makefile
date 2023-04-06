@@ -1,9 +1,14 @@
 Target = GL
 CC = gcc
 
-SRC = ${wildcard *.c}
-OBJ = ${patsubst %.c, %.o, ${SRC}}
-HEADS = ${wildcard *.h}
+obj = bin
+PREF_OBJ = ./${obj}/
 
-${Target}: ${OBJ} ${HEADS}
-	ar rcs lib${Target}.a ${OBJ}
+SRC = ${wildcard *.c}
+OBJ = ${patsubst %.c, ${PREF_OBJ}%.o, ${SRC}}
+
+${Target}: ${OBJ}
+	${CC} -o lib${Target} $^
+	
+${PREF_OBJ}%.o: %.c
+	${CC} -c $< -o $@

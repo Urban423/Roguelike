@@ -1,4 +1,5 @@
 #include "ExampleClass.h"
+#include "ObjectHelper.h"
 #include <stdio.h>
 
 #define T ExampleClass
@@ -26,11 +27,10 @@ void template(T, Update)(T *this)
 	this->ex++;
 }
 
-#ifdef T
-
 void lol(T* this, Object* second)
 {
+	printf("lol: ");
 	T* res;
+	TEMPLATE(GetComponent, ExampleClass)(second, &res);
+	printf("%f \n", res->ex);
 }
-
-#endif
