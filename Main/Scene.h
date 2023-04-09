@@ -4,13 +4,16 @@
 
 typedef struct Scene
 {
-	Object obj;
+	Object player;
+	Object wall1;
+	Object wall2;
 	KeyBoardState keyBoard;
 	Buffer renderer;
 	char is_running;
+	float time;
 	
 }Scene;
 
 void onCreate(Scene* scene);
 void onUpdate(Scene* scene);
-void render(Scene* scene);
+char render(Scene* scene);

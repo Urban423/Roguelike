@@ -4,7 +4,7 @@ int main()
 {
 	Scene scene;
 	onCreate(&scene);
-	while(scene.is_running)
+	while(scene.is_running == 1)
 	{
 		onUpdate(&scene);
 	}

@@ -18,7 +18,9 @@ void ObjectConstructor(Object* this, Vector2 start_pos, Vector2 start_scale)
 {
 	this->componentManager.next = NULL;
 	this->transform.position = start_pos;
-	this->transform.scale = start_scale;
+	this->transform.rotation = 0;
+	this->transform.scale.x = start_scale.x;
+	this->transform.scale.y = start_scale.y;
 }
 
 void UpdateAll(Object* this)
@@ -40,8 +42,9 @@ void TEMPLATE(AddComponent, T)(Object* this, T** result)
 }
    
 void TEMPLATE(GetComponent, T)(Object* this, T** result)
-{          
-	for(int i = 0; i < this->number_of_components; i++)
+{        
+	(*result) = NULL;
+	for(unsigned int i = 0; i < number_of_components; i++)
 	{
 		(*result) = (T*)this->componentManager.component;
 		break;

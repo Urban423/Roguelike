@@ -19,6 +19,7 @@ void AddComponentToComponentManager(ComponentManager* this, Component* add);
 typedef struct Transfrom
 {
 	Vector2 position;
+	float rotation;
 	Vector2 scale;
 }Transfrom;
 

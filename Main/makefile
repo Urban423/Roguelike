@@ -1,19 +1,20 @@
 Target = Roguelike
 CC = gcc
 
-IAODir = ../InputAndOutputSystem/
+WindowsIO = ../WindowsIO/
+ConsoleIO = ../ConsoleIO/
 GLDir = ../GameLogic/
 
-CFLAGS += -I${IAODir}
+CFLAGS += -I${WindowsIO}
 CFLAGS += -I${GLDir} 
-LDFLAGS += -L${IAODir} -lIAO
+LDFLAGS += -L${WindowsIO} -lWIO
 LDFLAGS += -L${GLDir} -lGL
 
 MAIN_C = ${wildcard *.c}
 MAIN_O = ${patsubst %.c, %.o, ${MAIN_C}}
 
 ${Target}: ${MAIN_O} 
-	${CC} -o ${Target} ${MAIN_O} ${LDFLAGS}
+	${CC} -o ${Target} ${MAIN_O} ${LDFLAGS} -lgdi32 
 
 %.o: %.c
 	${CC} ${CFLAGS} -c $< -o $@
