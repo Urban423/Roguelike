@@ -1,6 +1,7 @@
 #include "GraphicsEngine.h"
 #include "KeyBoardState.h"
 #include "ObjectHelper.h"
+#include "Matrix3x3.h"
 
 typedef struct Scene
 {
@@ -11,6 +12,9 @@ typedef struct Scene
 	Buffer renderer;
 	char is_running;
 	float time;
+	
+	Transfrom camera;
+	Matrix3x3 mat_cam;
 	
 }Scene;
 

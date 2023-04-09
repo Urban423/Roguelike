@@ -33,6 +33,14 @@ void SetRotation(Matrix3x3* this, float x)
 	this->m_mat[1][1] = this->m_mat[0][0];
 }
 
+void setOrthoLH(Matrix3x3* this, float width, float height, float near_plane, float far_plane)
+{
+	setIdentity(this);
+	this->m_mat[0][0] = 2.0f / width;
+	this->m_mat[1][1] = 2.0f / height;
+	this->m_mat[2][2] = 1.0f / (far_plane - near_plane);
+	this->m_mat[2][1] = -(near_plane / (far_plane - near_plane));
+}
 
 Matrix3x3 MultipleMatrixMatrix(Matrix3x3 a, Matrix3x3 b)
 {

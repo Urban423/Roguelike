@@ -15,9 +15,9 @@ void onCreate(Scene* scene)
 	scene->time = 0;
 	
 	Vector2 vect;
-	CreateVector2(&vect, 100, 100);
+	CreateVector2(&vect, 100, 120);
 	Vector2 sca;
-	CreateVector2(&sca, 30, 30);
+	CreateVector2(&sca, 100, 100);
 	ExampleClass* res;
 	Player* res2;
 	ObjectConstructor(&scene->player, vect, sca);
@@ -36,9 +36,12 @@ void onCreate(Scene* scene)
 
 void onUpdate(Scene* scene)
 {
-	scene->time += 1.1f;
+	scene->time += 0.5f;
 	UpdateKeyBoard(&(scene->keyBoard));
 	
+	scene->player.transform.rotation = 0;
+	scene->camera = scene->player.transform;
+	setOrthoLH(&scene->mat_cam, scene->renderer.width, scene->renderer.height, 0.3f, 10);
 	UpdateAll(&scene->wall1);
 	UpdateAll(&scene->player);
 	
@@ -77,9 +80,9 @@ char render(Scene* scene)
 	
 	//DrawLine(&scene->renderer, 120, 120 + scene->time,  133, 50 + scene->time, 0, 0, 0);
 	
-	BufferDrawObject(&scene->renderer, scene->player.transform, 0, 0, 0);
-	//BufferDrawObject(&scene->renderer, scene->wall1.transform.position.x, scene->wall1.transform.position.y, 3);
-	//BufferDrawObject(&scene->renderer, scene->wall2.transform.position.x, scene->wall2.transform.position.y, 3);
+	BufferDrawObject(&scene->renderer, scene->player.transform, 0, 0, 0, scene->mat_cam);
+	//BufferDrawObject(&scene->renderer, scene->wall1.transform,  0, 0, 0);
+	//BufferDrawObject(&scene->renderer, scene->wall2.transform,  0, 0, 0);
 	
 	if(BufferDraw(&scene->renderer))
 	{

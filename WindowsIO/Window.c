@@ -53,7 +53,7 @@ char createWindow(Buffer* buffer)
     wcl.cbClsExtra = 0;
     wcl.cbWndExtra = 0;
 	wcl.lpszClassName = "Roguelike";
-	wcl.lpfnWndProc = DefWindowProc;
+	wcl.lpfnWndProc = &WndProc;
 	
 	RegisterClass(&wcl);
 	
@@ -74,6 +74,7 @@ char updateWindow(Buffer* buffer)
 	{
 		DispatchMessage(&msg);
 	}
+
 	
 	HDC hdc = GetDC(buffer->hwnd);
 	
@@ -87,6 +88,12 @@ char updateWindow(Buffer* buffer)
 	DeleteDC(src);
 	DeleteObject(map);
 	ReleaseDC(buffer->hwnd, hdc);
+	
+	
+	if(0)
+	{
+		return 1;
+	}
 	
 	return 0;
 }

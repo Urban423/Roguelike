@@ -1,7 +1,20 @@
 #include "GraphicsEngine.h"
 #include "Vector2.h"
-#include "Matrix3x3.h"
 #include <stdlib.h>
+
+void swap_float(float* a, float* b)
+{
+	float temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void swap_int(int* a, int* b)
+{
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
 
 void DrawLine(Buffer* buffer,
 int x1, int y1, 
@@ -70,6 +83,105 @@ char r, char g, char b)
 	}
 }
 
+void DrawTriangle(Buffer* buffer, 
+int x1, int y1, 
+int x2, int y2, 
+int x3, int y3,
+char r, char g, char b)
+{
+	if (y2 < y1) 
+	{
+		swap_int(&y1, &y2);
+		swap_int(&x1, &x2);
+    }
+    if (y3 < y1)
+	{
+		swap_int(&y1, &y3);
+		swap_int(&x1, &x3);
+    }
+	if (y2 > y3)
+	{
+		swap_int(&y2, &y3);
+		swap_int(&x2, &x3); 
+    }
+	float dx13 = 0;
+	float dx12 = 0;
+	float dx23 = 0;
+	if (y3 != y1) 
+	{
+		dx13 = (float)(x3 - x1);
+		dx13 /= y3 - y1;
+    }
+	else
+	{
+		dx13 = 0;
+	}
+	if (y2 != y1)
+	{
+		dx12 = (float)(x2 - x1);
+		dx12 /= (y2 - y1);
+	}
+	else
+	{
+		dx12 = 0;
+	}
+	if (y3 != y2)
+	{
+		dx23 = (float)(x3 - x2);
+		dx23 /= (y3 - y2);
+    }
+	else
+	{
+		dx23 = 0;
+	}
+	
+	float wx1 = (float)x1;
+    float wx2 = wx1;
+	float _dx13 = dx13;
+	
+	if (dx13 > dx12)
+    {
+		swap_float(&dx13, &dx12);
+    }
+	
+	for (int i = y1; i < y2; i++)
+	{
+		for (int j = (int)wx1; j <= (int)wx2; j++)
+		{
+			unsigned int index = buffer->width * i + j;
+			index *= 4;
+			buffer->buffer[index] = r;
+			buffer->buffer[index + 1] = g;
+			buffer->buffer[index + 2] = b;
+		}
+		wx1 += dx13;
+		wx2 += dx12;
+    }
+	
+	if (y1 == y2)
+	{
+		wx1 = (float)x1;
+		wx2 = (float)x2;
+    }
+	if (_dx13 < dx23)
+	{
+		swap_float(&_dx13, &dx23);
+	}
+	for (int i = y2; i <= y3; i++)
+	{
+		for (int j = (int)wx1; j <= (int)wx2; j++)
+		{
+			unsigned int index = buffer->width * i + j;
+			index *= 4;
+			buffer->buffer[index] = r;
+			buffer->buffer[index + 1] = g;
+			buffer->buffer[index + 2] = b;
+		}
+		wx1 += _dx13;
+		wx2 += dx23;
+    }
+}
+
 void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height, char sprite) {
 	buffer->width = width;
     buffer->height = height;
@@ -91,7 +203,7 @@ void BufferClear(Buffer* buffer, char r, char g, char b)
     }
 }
 
-void BufferDrawObject(Buffer* buffer, Transfrom transform, char r, char g, char b) 
+void BufferDrawObject(Buffer* buffer, Transfrom transform, char r, char g, char b, Matrix3x3 camera) 
 {
 	Vector2 points[4];
 	CreateVector2(&points[0], -0.5f,  0.5f);
@@ -115,16 +227,24 @@ void BufferDrawObject(Buffer* buffer, Transfrom transform, char r, char g, char 
 	setIdentity(&temp);
 	setTranslation(&temp, transform.position);
 	mat = MultipleMatrixMatrix(mat, temp);
+	mat = MultipleMatrixMatrix(mat, camera);
 	
-	for(int i = 0; i < 3; i++)
+	for(int i = 0; i < 4; i++)
 	{
-		Vector2 a = MultipleMatrixVector2(mat, points[i]);
-		Vector2 a2 = MultipleMatrixVector2(mat, points[i + 1]);
-		DrawLine(buffer, (int)a.x, (int)a.y,(int)a2.x, (int)a2.y, r, g, b);
+		points[i] = MultipleMatrixVector2(mat, points[i]);
 	}
-	Vector2 a = MultipleMatrixVector2(mat, points[0]);
-	Vector2 a2 = MultipleMatrixVector2(mat, points[3]);
-	DrawLine(buffer, (int)a.x, (int)a.y, (int)a2.x, (int)a2.y, r, g, b);
+
+	DrawTriangle(buffer, 
+	points[0].x,  points[0].y,
+	points[1].x,  points[1].y,
+	points[2].x,  points[2].y,
+	r, g, b);
+	
+	DrawTriangle(buffer, 
+	points[0].x,  points[0].y,
+	points[3].x,  points[3].y,
+	points[2].x,  points[2].y,
+	r, g, b);
 }
 
 char BufferDraw(Buffer* buffer) {
