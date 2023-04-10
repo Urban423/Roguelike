@@ -13,6 +13,8 @@ void onCreate(Scene* scene)
 	CreateKeyBoard(&(scene->keyBoard));
 	scene->is_running = 1;
 	scene->time = 0;
+	CreateVertexMeshFromFile(&scene->meshes[0], "tesing.obj");
+	scene->meshes_size = size;
 	
 	Vector2 vect;
 	CreateVector2(&vect, 100, 120);
@@ -39,7 +41,7 @@ void onUpdate(Scene* scene)
 	scene->time += 0.5f;
 	UpdateKeyBoard(&(scene->keyBoard));
 	
-	scene->player.transform.rotation = 0;
+	//scene->player.transform.rotation = scene->time;
 	scene->camera = scene->player.transform;
 	setOrthoLH(&scene->mat_cam, scene->renderer.width, scene->renderer.height, 0.3f, 10);
 	UpdateAll(&scene->wall1);
@@ -76,13 +78,9 @@ void onUpdate(Scene* scene)
 
 char render(Scene* scene)
 {
-	BufferClear(&scene->renderer, 255, 0, 0);
+	BufferClear(&scene->renderer, 200, 0, 0);
 	
-	//DrawLine(&scene->renderer, 120, 120 + scene->time,  133, 50 + scene->time, 0, 0, 0);
-	
-	BufferDrawObject(&scene->renderer, scene->player.transform, 0, 0, 0, scene->mat_cam);
-	//BufferDrawObject(&scene->renderer, scene->wall1.transform,  0, 0, 0);
-	//BufferDrawObject(&scene->renderer, scene->wall2.transform,  0, 0, 0);
+	BufferDrawObject(&scene->renderer, scene->player.transform, &scene->meshes[0], 0, 0, 0, scene->mat_cam);
 	
 	if(BufferDraw(&scene->renderer))
 	{

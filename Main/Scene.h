@@ -2,6 +2,9 @@
 #include "KeyBoardState.h"
 #include "ObjectHelper.h"
 #include "Matrix3x3.h"
+#include "VertexMesh.h"
+
+#define size 5
 
 typedef struct Scene
 {
@@ -15,6 +18,9 @@ typedef struct Scene
 	
 	Transfrom camera;
 	Matrix3x3 mat_cam;
+	
+	VertexMesh meshes[size];
+	unsigned int meshes_size;
 	
 }Scene;
 

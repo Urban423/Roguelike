@@ -1,6 +1,7 @@
 #include "GraphicsEngine.h"
 #include "Vector2.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 void swap_float(float* a, float* b)
 {
@@ -203,14 +204,9 @@ void BufferClear(Buffer* buffer, char r, char g, char b)
     }
 }
 
-void BufferDrawObject(Buffer* buffer, Transfrom transform, char r, char g, char b, Matrix3x3 camera) 
-{
-	Vector2 points[4];
-	CreateVector2(&points[0], -0.5f,  0.5f);
-	CreateVector2(&points[1],  0.5f,  0.5f);
-	CreateVector2(&points[2],  0.5f, -0.5f);
-	CreateVector2(&points[3], -0.5f, -0.5f);
-	
+void BufferDrawObject(Buffer* buffer, Transfrom transform, VertexMesh* mesh, char r, char g, char b, Matrix3x3 camera) 
+{	
+	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
 	
 	Matrix3x3 mat;
 	Matrix3x3 temp;
@@ -227,24 +223,27 @@ void BufferDrawObject(Buffer* buffer, Transfrom transform, char r, char g, char 
 	setIdentity(&temp);
 	setTranslation(&temp, transform.position);
 	mat = MultipleMatrixMatrix(mat, temp);
-	mat = MultipleMatrixMatrix(mat, camera);
 	
-	for(int i = 0; i < 4; i++)
+	for(unsigned int i = 0; i < mesh->verticles_size; i++)
 	{
-		points[i] = MultipleMatrixVector2(mat, points[i]);
+		copy_of_verticles[i] = MultipleMatrixVector2(mat, mesh->verticles[i]);
 	}
-
-	DrawTriangle(buffer, 
-	points[0].x,  points[0].y,
-	points[1].x,  points[1].y,
-	points[2].x,  points[2].y,
-	r, g, b);
 	
-	DrawTriangle(buffer, 
-	points[0].x,  points[0].y,
-	points[3].x,  points[3].y,
-	points[2].x,  points[2].y,
-	r, g, b);
+	for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
+	{
+		printf("%d) %f %f\n", i, copy_of_verticles[mesh->faces[i]].x, copy_of_verticles[mesh->faces[i]].y);
+		
+		printf("%d) %f %f\n", i + 1, copy_of_verticles[mesh->faces[i + 1]].x, copy_of_verticles[mesh->faces[i + 1]].y);
+		
+		printf("%d) %f %f\n\n", i + 2, copy_of_verticles[mesh->faces[i + 2]].x, copy_of_verticles[mesh->faces[i + 2]].y);
+		DrawTriangle(buffer, 
+		copy_of_verticles[mesh->faces[i]].x,  copy_of_verticles[mesh->faces[i]].y,
+		copy_of_verticles[mesh->faces[i + 1]].x, copy_of_verticles[mesh->faces[i + 1]].y,
+		copy_of_verticles[mesh->faces[i + 2]].x, copy_of_verticles[mesh->faces[i + 2]].y,
+		r, g, b);
+	}
+	
+	free(copy_of_verticles);
 }
 
 char BufferDraw(Buffer* buffer) {
