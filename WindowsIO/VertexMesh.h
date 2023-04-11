@@ -14,4 +14,5 @@ Vector2* verticles, unsigned int verticles_size,
 unsigned int* faces, unsigned int faces_size);
 
 void CreateVertexMeshFromFile(VertexMesh* this, const char* filename);
+void CreateVertexBox(VertexMesh* this);
 

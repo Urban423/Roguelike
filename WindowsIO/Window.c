@@ -53,7 +53,7 @@ char createWindow(Buffer* buffer)
     wcl.cbClsExtra = 0;
     wcl.cbWndExtra = 0;
 	wcl.lpszClassName = "Roguelike";
-	wcl.lpfnWndProc = &WndProc;
+	wcl.lpfnWndProc = &DefWindowProcA;
 	
 	RegisterClass(&wcl);
 	
@@ -90,7 +90,7 @@ char updateWindow(Buffer* buffer)
 	ReleaseDC(buffer->hwnd, hdc);
 	
 	
-	if(0)
+	if(msg.message == 161 && msg.wParam == 20)
 	{
 		return 1;
 	}

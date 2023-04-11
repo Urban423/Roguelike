@@ -13,13 +13,13 @@ void onCreate(Scene* scene)
 	CreateKeyBoard(&(scene->keyBoard));
 	scene->is_running = 1;
 	scene->time = 0;
-	CreateVertexMeshFromFile(&scene->meshes[0], "tesing.obj");
+	CreateVertexBox(&scene->meshes[0]);
 	scene->meshes_size = size;
 	
 	Vector2 vect;
-	CreateVector2(&vect, 100, 120);
+	CreateVector2(&vect, 100, -120);
 	Vector2 sca;
-	CreateVector2(&sca, 100, 100);
+	CreateVector2(&sca, 300, 300);
 	ExampleClass* res;
 	Player* res2;
 	ObjectConstructor(&scene->player, vect, sca);
@@ -38,7 +38,7 @@ void onCreate(Scene* scene)
 
 void onUpdate(Scene* scene)
 {
-	scene->time += 0.5f;
+	scene->time += 0.1f;
 	UpdateKeyBoard(&(scene->keyBoard));
 	
 	//scene->player.transform.rotation = scene->time;

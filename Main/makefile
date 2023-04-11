@@ -1,6 +1,11 @@
 Target = Roguelike
 CC = gcc
 
+build = build
+buildDir = ./${build}/
+obj = bin
+objDir = ./${obj}/
+
 WindowsIO = ../WindowsIO/
 ConsoleIO = ../ConsoleIO/
 GLDir = ../GameLogic/
@@ -11,10 +16,10 @@ LDFLAGS += -L${WindowsIO} -lWIO
 LDFLAGS += -L${GLDir} -lGL
 
 MAIN_C = ${wildcard *.c}
-MAIN_O = ${patsubst %.c, %.o, ${MAIN_C}}
+MAIN_O = ${patsubst %.c, ${objDir}%.o, ${MAIN_C}}
 
 ${Target}: ${MAIN_O} 
-	${CC} -o ${Target} ${MAIN_O} ${LDFLAGS} -lgdi32 
+	${CC} -o ${buildDir}${Target} ${MAIN_O} ${LDFLAGS} -lgdi32 
 
-%.o: %.c
+${objDir}%.o: %.c
 	${CC} ${CFLAGS} -c $< -o $@

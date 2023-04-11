@@ -1,7 +1,7 @@
 Target = GL
 CC = gcc
 
-IAODir = ../InputAndOutputSystem/
+IAODir = ../WindowsIO/
 CFLAGS += -I${IAODir}
 LDFLAGS += -L${IAODir} -lIAO
 
