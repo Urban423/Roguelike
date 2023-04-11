@@ -3,6 +3,7 @@
 #include "ObjectHelper.h"
 #include "Matrix3x3.h"
 #include "VertexMesh.h"
+#include "Texture.h"
 
 #define size 5
 
@@ -22,6 +23,8 @@ typedef struct Scene
 	VertexMesh meshes[size];
 	unsigned int meshes_size;
 	
+	Texture textures[size];
+	unsigned int textures_size;
 }Scene;
 
 void onCreate(Scene* scene);

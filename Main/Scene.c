@@ -5,6 +5,7 @@
 #include "ObjectHelper.h"
 #include "Vector2.h"
 #include <stdio.h>
+#include <math.h>
 #include "Physics.h"
 
 void onCreate(Scene* scene)
@@ -15,11 +16,13 @@ void onCreate(Scene* scene)
 	scene->time = 0;
 	CreateVertexBox(&scene->meshes[0]);
 	scene->meshes_size = size;
+	scene->textures_size = size;
+	CreateTextureFromFile(&scene->textures[0], "./Assets/0034.bmp");
 	
 	Vector2 vect;
 	CreateVector2(&vect, 100, -120);
 	Vector2 sca;
-	CreateVector2(&sca, 300, 300);
+	CreateVector2(&sca, 111, 111);
 	ExampleClass* res;
 	Player* res2;
 	ObjectConstructor(&scene->player, vect, sca);
@@ -41,7 +44,7 @@ void onUpdate(Scene* scene)
 	scene->time += 0.1f;
 	UpdateKeyBoard(&(scene->keyBoard));
 	
-	//scene->player.transform.rotation = scene->time;
+	scene->player.transform.rotation = -90 + sin(0.3 * scene->time) * 12;
 	scene->camera = scene->player.transform;
 	setOrthoLH(&scene->mat_cam, scene->renderer.width, scene->renderer.height, 0.3f, 10);
 	UpdateAll(&scene->wall1);
@@ -80,7 +83,7 @@ char render(Scene* scene)
 {
 	BufferClear(&scene->renderer, 200, 0, 0);
 	
-	BufferDrawObject(&scene->renderer, scene->player.transform, &scene->meshes[0], 0, 0, 0, scene->mat_cam);
+	BufferDrawObject(&scene->renderer, scene->player.transform, &scene->meshes[0], &scene->textures[0]);
 	
 	if(BufferDraw(&scene->renderer))
 	{
