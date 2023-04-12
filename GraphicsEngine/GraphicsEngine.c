@@ -401,14 +401,10 @@ Vector2 uv3)
 			}
 			interPolation3 = (float)(j - (int)wx1) / delta_x;
 			Vector2 c3 = add(multiple(c1, interPolation3), multiple(c2, 1 - interPolation3));
-			if(tindex >= 198 * 198 * 3)
-			{
-				index += 4;
-				continue;
-			}
-			buffer->buffer[index] = texture->pixels[tindex];
-			buffer->buffer[index + 1] = texture->pixels[tindex];
-			buffer->buffer[index + 2] = texture->pixels[tindex];
+			
+			buffer->buffer[index] = 0;
+			buffer->buffer[index + 1] = 0;
+			buffer->buffer[index + 2] = 0;
 			index += 4;
 			tindex += 1;
 		}
@@ -433,15 +429,47 @@ Vector2 uv3)
 	{
 		swap_float(&wx1, &wx2);
 	}
+	
+	for (int i = y2; i < y3; i++)
+	{
+		if(i < 0)
+		{
+			wx1 += _dx13;
+			wx2 += dx23;
+			continue;
+		}
+		if(i > (int)buffer->height - 1)
+		{
+			break;
+		}
+		int st = (int)wx1;
+		if(st < 0)
+		{
+			st = 0;
+		}
+		unsigned int index = buffer->width * i + st;
+		index *= 4;
+		for (int j = st; j <= (int)wx2; j++)
+		{
+			if(j > (int)buffer->width - 1)
+			{
+				break;
+			}
+			buffer->buffer[index] = 0;
+			buffer->buffer[index + 1] = 0;
+			buffer->buffer[index + 2] = 0;
+			index += 4;
+		}
+		wx1 += _dx13;
+		wx2 += dx23;
+    }
 }
 
-void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height, char sprite) {
+
+void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height) {
 	buffer->width = width;
     buffer->height = height;
     buffer->buffer = (char*) malloc((width * height * 4) * sizeof(char));
-	
-	createWindow(buffer);
-	//updateWindow(buffer);
 }
 
 void BufferClear(Buffer* buffer, char r, char g, char b)
@@ -550,12 +578,4 @@ void BufferDrawObject(Buffer* buffer, Transfrom transform, VertexMesh* mesh, Tex
 		
 	
 	free(copy_of_verticles);
-}
-
-char BufferDraw(Buffer* buffer) {
-	if(updateWindow(buffer))
-	{
-		return 1;
-	}
-	return 0;
 }

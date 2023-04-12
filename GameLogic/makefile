@@ -1,9 +1,12 @@
 Target = GL
 CC = gcc
 
-IAODir = ../WindowsIO/
-CFLAGS += -I${IAODir}
-LDFLAGS += -L${IAODir} -lIAO
+MathDir = ../Math/
+CFLAGS += -I${MathDir}
+LDFLAGS += -L${MathDir} -lmath
+IODir = ../WindowsIO/
+CFLAGS += -I${IODir}
+LDFLAGS += -L${IODir} -lWIO
 
 obj = bin
 PREF_OBJ = ./${obj}/

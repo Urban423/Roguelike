@@ -1,9 +1,13 @@
-Target = WIO
+Target = FileReader
 CC = gcc
 
 MathDir = ../Math/
+GEDir = ../GraphicsEngine/
+
 CFLAGS += -I${MathDir}
-LDFLAGS += -L${MathDir} -lGL
+LDFLAGS += -L${MathDir} -lmath
+CFLAGS += -I${GEDir}
+LDFLAGS += -L${GEDir} -lGE
 
 obj = bin
 PREF_OBJ = ./${obj}/

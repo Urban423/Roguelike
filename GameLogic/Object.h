@@ -14,19 +14,11 @@ typedef struct ComponentManager
 
 void AddComponentToComponentManager(ComponentManager* this, Component* add);
 
-
-
-typedef struct Transfrom
-{
-	Vector2 position;
-	float rotation;
-	Vector2 scale;
-}Transfrom;
-
 typedef struct Object
 {
 	Transfrom transform;
 	unsigned int number_of_components;
+	unsigned int  index_of_figure;
 	ComponentManager componentManager;
 }Object;
 

@@ -1,9 +1,5 @@
-Target = WIO
+Target = math
 CC = gcc
-
-MathDir = ../Math/
-CFLAGS += -I${MathDir}
-LDFLAGS += -L${MathDir} -lGL
 
 obj = bin
 PREF_OBJ = ./${obj}/
@@ -15,4 +11,4 @@ ${Target}: ${OBJ}
 	ar rcs lib${Target}.a $^
 	
 ${PREF_OBJ}%.o: %.c
-	${CC} ${CFLAGS} -c $< -o $@
+	${CC} -c $< -o $@

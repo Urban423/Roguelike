@@ -46,7 +46,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
-char createWindow(Buffer* buffer)
+char createWindowsWindow(Buffer* buffer, HWND* this)
 {
 	WNDCLASS wcl;
 	memset(&wcl, 0, sizeof(WNDCLASSA));
@@ -57,17 +57,17 @@ char createWindow(Buffer* buffer)
 	
 	RegisterClass(&wcl);
 	
-	buffer->hwnd = CreateWindow(
+	*this = CreateWindow(
 	"Roguelike", "Roguelike", 
 	WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 	buffer->width, buffer->height, NULL, NULL, NULL, NULL);
 	
-	ShowWindow(buffer->hwnd, SW_SHOWNORMAL);
+	ShowWindow(*this, SW_SHOWNORMAL);
 	
 	return 0;
 }
 
-char updateWindow(Buffer* buffer)
+char updateWindow(Buffer* buffer, HWND* this)
 {
 	MSG msg;
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
@@ -76,7 +76,7 @@ char updateWindow(Buffer* buffer)
 	}
 
 	
-	HDC hdc = GetDC(buffer->hwnd);
+	HDC hdc = GetDC(*this);
 	
 	HBITMAP map = CreateBitmap(buffer->width, buffer->height,
 	1, 8 * 4, buffer->buffer);
@@ -87,7 +87,7 @@ char updateWindow(Buffer* buffer)
 	BitBlt(hdc, 0, 0, buffer->width, buffer->height, src, 0, 0, SRCCOPY);
 	DeleteDC(src);
 	DeleteObject(map);
-	ReleaseDC(buffer->hwnd, hdc);
+	ReleaseDC(*this, hdc);
 	
 	
 	if(msg.message == 161 && msg.wParam == 20)

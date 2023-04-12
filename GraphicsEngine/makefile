@@ -1,9 +1,9 @@
-Target = WIO
+Target = GE
 CC = gcc
 
-MathDir = ../Math/
-CFLAGS += -I${MathDir}
-LDFLAGS += -L${MathDir} -lGL
+IAODir = ../Math/
+CFLAGS += -I${IAODir}
+LDFLAGS += -L${IAODir} -lmath
 
 obj = bin
 PREF_OBJ = ./${obj}/

@@ -38,13 +38,14 @@ void TEMPLATE(AddComponent, T)(Object* this, T** result)
 	TEMPLATE(T, constructor)((*result));
 	TEMPLATE(T, Start)((*result));
 	(*result)->inherited_class.object = this;
+	this->number_of_components ++;
 	AddComponentToComponentManager(&this->componentManager, (Component*)(*result)); 
 }
    
 void TEMPLATE(GetComponent, T)(Object* this, T** result)
 {        
 	(*result) = NULL;
-	for(unsigned int i = 0; i < number_of_components; i++)
+	for(unsigned int i = 0; i < this->number_of_components; i++)
 	{
 		(*result) = (T*)this->componentManager.component;
 		break;

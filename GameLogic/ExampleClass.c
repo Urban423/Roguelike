@@ -2,6 +2,7 @@
 #include "ObjectHelper.h"
 #include <stdio.h>
 
+#undef T
 #define T ExampleClass
 
 template(T, functiontable) template(T, table) = {

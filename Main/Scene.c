@@ -6,18 +6,23 @@
 #include "Vector2.h"
 #include <stdio.h>
 #include <math.h>
+#include <unistd.h>
 #include "Physics.h"
+#include "BMPImage.h"
+#include "GraphicsEngine.h"
 
 void onCreate(Scene* scene)
 {
-	BufferConstructor(&scene->renderer, 640, 480, '-');
+	BufferConstructor(&scene->renderer, 640, 480);
+	
+	createWindowsWindow(&scene->renderer, &scene->hwnd);
 	CreateKeyBoard(&(scene->keyBoard));
 	scene->is_running = 1;
 	scene->time = 0;
 	CreateVertexBox(&scene->meshes[0]);
-	scene->meshes_size = size;
-	scene->textures_size = size;
-	CreateTextureFromFile(&scene->textures[0], "./Assets/0034.bmp");
+	scene->meshes_size = 5;
+	scene->textures_size = 5;
+	ReadBMPFile(&scene->textures[0], "./Assets/0034.bmp");
 	
 	Vector2 vect;
 	CreateVector2(&vect, 100, -120);
@@ -37,6 +42,7 @@ void onCreate(Scene* scene)
 	CreateVector2(&vect, 4.5f, 3.5f);
 	ObjectConstructor(&scene->wall2, vect, vect);
 	TEMPLATE(AddComponent, BoxCollider)(&scene->wall2, &boxCollider);
+	
 }
 
 void onUpdate(Scene* scene)
@@ -53,7 +59,7 @@ void onUpdate(Scene* scene)
 	BoxCollider* b1;
 	BoxCollider* b2;
 	TEMPLATE(GetComponent, BoxCollider)(&scene->wall1, &b1);
-	TEMPLATE(GetComponent, BoxCollider)(&scene->wall1, &b2);
+	TEMPLATE(GetComponent, BoxCollider)(&scene->wall2, &b2);
 	Vector2 collision = BoxVsBox(
 		scene->wall1.transform.position,
 		scene->player.transform.position,
@@ -69,8 +75,7 @@ void onUpdate(Scene* scene)
 		b1,
 		b2);
 		
-	scene->player.transform.position = add(collision, scene->player.transform.position);	
-	
+	scene->player.transform.position = add(collision, scene->player.transform.position);
 	
 	if(render(scene))
 	{
@@ -85,7 +90,7 @@ char render(Scene* scene)
 	
 	BufferDrawObject(&scene->renderer, scene->player.transform, &scene->meshes[0], &scene->textures[0]);
 	
-	if(BufferDraw(&scene->renderer))
+	if(updateWindow(&scene->renderer, &scene->hwnd))
 	{
 		return 1;
 	}

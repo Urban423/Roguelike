@@ -1,14 +1,6 @@
 #pragma once
 #include <Windows.h>
+#include "Vector2.h"
 
-typedef struct Buffer
-{
-	unsigned int width;
-	unsigned int height;
-	char* buffer;
-	HWND hwnd;
-}Buffer;
-
-char createWindow(Buffer* buffer);
-char updateWindow(Buffer* buffer);
-char setImage();
+char createWindowsWindow(Buffer* buffer, HWND* this);
+char updateWindow(Buffer* buffer, HWND* this);

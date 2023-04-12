@@ -1,11 +1,9 @@
-#include "GraphicsEngine.h"
 #include "KeyBoardState.h"
 #include "ObjectHelper.h"
 #include "Matrix3x3.h"
 #include "VertexMesh.h"
 #include "Texture.h"
-
-#define size 5
+#include "Window.h"
 
 typedef struct Scene
 {
@@ -16,14 +14,15 @@ typedef struct Scene
 	Buffer renderer;
 	char is_running;
 	float time;
+	HWND hwnd;
 	
 	Transfrom camera;
 	Matrix3x3 mat_cam;
 	
-	VertexMesh meshes[size];
+	VertexMesh meshes[5];
 	unsigned int meshes_size;
 	
-	Texture textures[size];
+	Texture textures[5];
 	unsigned int textures_size;
 }Scene;
 
