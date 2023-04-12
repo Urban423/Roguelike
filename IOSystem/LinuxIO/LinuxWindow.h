@@ -3,18 +3,17 @@
 
 #ifdef __linux__
 #include <X11/Xlib.h>
+#include "Vector2.h"
 
-typedef struct Buffer
+struct Renderer
 {
-    unsigned int width;
-    unsigned int height;
-    char* buffer;
-    Window window;
-    Display* display;
-} Buffer;
+	Buffer buffer;
+	Window window;
+	Display* display;
+};
 
-char createWindow(Buffer* buffer);
-char updateWindow(Buffer* buffer);
+char createLinuxWindow(Renderer* renderer);
+char updateLinuxWindow(Renderer* renderer);
 
 
 #endif

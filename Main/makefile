@@ -7,19 +7,25 @@ obj = bin
 objDir = ./${obj}/
 
 MathDir = ../Math/
-WindowsIO = ../WindowsIO/
-ConsoleIO = ../ConsoleIO/
+IOSystem = ../IOSystem/
+WindowIO = ${IOSystem}WindowsIO/
+LinuxIO = ${IOSystem}LinuxIO/
+ConsoleIO = ${IOSystem}ConsoleIO/
 GraphicsEngineDir = ../GraphicsEngine/
 FRDir = ../FileReader/
 GLDir = ../GameLogic/
 
-CFLAGS += -I${WindowsIO}
+CFLAGS += -I${IOSystem}
+CFLAGS += -I${WindowIO}
+CFLAGS += -I${LinuxIO}
 CFLAGS += -I${GLDir} 
 CFLAGS += -I${FRDir} 
 CFLAGS += -I${MathDir} 
 CFLAGS += -I${GraphicsEngineDir}
  
-LDFLAGS += -L${WindowsIO} -lWIO
+LDFLAGS += -L${IOSystem} -lLinuxIO
+LDFLAGS += -L${LinuxIO} -lIOSystem
+LDFLAGS += -L${WindowIO} -lWIO
 LDFLAGS += -L${GLDir} -lGL
 LDFLAGS += -L${FRDir} -lFileReader
 LDFLAGS += -L${GraphicsEngineDir} -lGE

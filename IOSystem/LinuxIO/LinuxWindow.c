@@ -1,9 +1,9 @@
 #ifdef __linux__
-
+#include "LinuxWindow.h"
 #include <stdio.h>
 
 
-char createWindow(Buffer* buffer)
+char createLinuxWindow(Renderer* renderer)
 {
     buffer->display = XOpenDisplay(NULL);
     if (buffer->display == NULL) {
@@ -21,7 +21,7 @@ char createWindow(Buffer* buffer)
     return 0;
 }
 
-char updateWindow(Buffer* buffer)
+char updateLinuxWindow(Renderer* renderer)
 {
     XEvent event;
     while (XPending(buffer->display) > 0) {

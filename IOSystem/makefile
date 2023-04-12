@@ -7,8 +7,21 @@ objDir = ./${obj}/
 SRC = ${wildcard *.c}
 OBJ = ${patsubst %.c, ${objDir}%.o, ${SRC}}
 
+MathDir = ../Math/
+WindowsIODir = ./WindowsIO/
+ConsoleIODir = ./ConsoleIO/
+LinuxIODir = ./LinuxIO/
+
+CFLAGS += -I${MathDir}
+CFLAGS += -I${WindowsIODir}
+CFLAGS += -I${ConsoleIODir}
+CFLAGS += -I${LinuxIODir}
+
 ${Target}: ${OBJ}
+	make -C ${WindowsIODir}
+	make -C ${ConsoleIODir}
+	make -C ${LinuxIODir}
 	ar rcs lib${Target}.a $^
 
 ${objDir}%.o: %.c
-	${CC} -c $< -o $@
+	${CC} ${CFLAGS}  -c $< -o $@

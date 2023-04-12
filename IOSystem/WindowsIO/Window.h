@@ -1,6 +1,17 @@
 #pragma once
+
+#ifdef WIN32
 #include <Windows.h>
 #include "Vector2.h"
 
-char createWindowsWindow(Buffer* buffer, HWND* this);
-char updateWindow(Buffer* buffer, HWND* this);
+
+typedef struct Renderer
+{
+	Buffer buffer;
+	HWND hwnd;
+}Renderer;
+
+char createWindowsWindow(Renderer* renderer);
+char updateWindowsWindow(Renderer* renderer);
+
+#endif

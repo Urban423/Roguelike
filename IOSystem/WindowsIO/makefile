@@ -1,9 +1,8 @@
 Target = WIO
 CC = gcc
 
-MathDir = ../Math/
+MathDir = ../../Math/
 CFLAGS += -I${MathDir}
-LDFLAGS += -L${MathDir} -lGL
 
 obj = bin
 PREF_OBJ = ./${obj}/

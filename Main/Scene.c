@@ -13,10 +13,10 @@
 
 void onCreate(Scene* scene)
 {
-	BufferConstructor(&scene->renderer, 640, 480);
+	BufferConstructor(&scene->renderer.buffer, 640, 480);
 	
-	createWindowsWindow(&scene->renderer, &scene->hwnd);
-	CreateKeyBoard(&(scene->keyBoard));
+	createWindow(&scene->renderer);
+	createKeyBoard(&(scene->keyBoard));
 	scene->is_running = 1;
 	scene->time = 0;
 	CreateVertexBox(&scene->meshes[0]);
@@ -42,19 +42,18 @@ void onCreate(Scene* scene)
 	CreateVector2(&vect, 4.5f, 3.5f);
 	ObjectConstructor(&scene->wall2, vect, vect);
 	TEMPLATE(AddComponent, BoxCollider)(&scene->wall2, &boxCollider);
-	
 }
 
 void onUpdate(Scene* scene)
 {
 	scene->time += 0.1f;
-	UpdateKeyBoard(&(scene->keyBoard));
+	updateKeyBoard(&scene->keyBoard);
 	
 	scene->player.transform.rotation = -90 + sin(0.3 * scene->time) * 12;
 	scene->camera = scene->player.transform;
-	setOrthoLH(&scene->mat_cam, scene->renderer.width, scene->renderer.height, 0.3f, 10);
-	UpdateAll(&scene->wall1);
-	UpdateAll(&scene->player);
+	//setOrthoLH(&scene->mat_cam, scene->renderer.width, scene->renderer.height, 0.3f, 10);
+	//UpdateAll(&scene->wall1);
+	//UpdateAll(&scene->player);
 	
 	BoxCollider* b1;
 	BoxCollider* b2;
@@ -86,11 +85,11 @@ void onUpdate(Scene* scene)
 
 char render(Scene* scene)
 {
-	BufferClear(&scene->renderer, 200, 0, 0);
+	BufferClear(&scene->renderer.buffer, 200, 0, 0);
 	
-	BufferDrawObject(&scene->renderer, scene->player.transform, &scene->meshes[0], &scene->textures[0]);
+	BufferDrawObject(&scene->renderer.buffer, scene->player.transform, &scene->meshes[0], &scene->textures[0]);
 	
-	if(updateWindow(&scene->renderer, &scene->hwnd))
+	if(updateWindow(&scene->renderer))
 	{
 		return 1;
 	}
