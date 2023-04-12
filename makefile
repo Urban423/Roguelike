@@ -5,13 +5,13 @@ MathDir = ./Math/
 LogicDir = ./GameLogic/
 GraphicsEngineDir = ./GraphicsEngine/
 FileReaderDir = ./FileReader/
-IOdir = ./WindowsIO/
-Maindir = ./Main/
+IODir = ./IOSystem/
+MainDir = ./Main/
 
 ${Target}: 
 	make -C ${MathDir}
 	make -C ${LogicDir}
 	make -C ${GraphicsEngineDir}
 	make -C ${FileReaderDir}
-	make -C ${IOdir}
-	make -C ${Maindir}
+	make -C ${IODir}
+	make -C ${MainDir}
