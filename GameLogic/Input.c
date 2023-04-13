@@ -3,6 +3,12 @@
 char* keyBoardState;
 char* oldKeyBoardState;
 
+char setKeyBoard(char* keyBoardStatePointer, char* oldKeyBoardStatePointer)
+{
+	keyBoardState = keyBoardStatePointer;
+	oldKeyBoardState = oldKeyBoardStatePointer;
+}
+
 char GetKey(char key_code)
 {
 	if(keyBoardState[key_code] == oldKeyBoardState[key_code] && keyBoardState[key_code] == 2)

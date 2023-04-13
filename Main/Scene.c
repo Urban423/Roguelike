@@ -10,6 +10,7 @@
 #include "Physics.h"
 #include "BMPImage.h"
 #include "GraphicsEngine.h"
+#include "Input.h"
 
 void onCreate(Scene* scene)
 {
@@ -17,6 +18,7 @@ void onCreate(Scene* scene)
 	
 	createWindow(&scene->renderer);
 	createKeyBoard(&(scene->keyBoard));
+	setKeyBoard(scene->keyBoard.key_board_state, scene->keyBoard.old_key_board_state);
 	scene->is_running = 1;
 	scene->time = 0;
 	CreateVertexBox(&scene->meshes[0]);
@@ -49,11 +51,12 @@ void onUpdate(Scene* scene)
 	scene->time += 0.1f;
 	updateKeyBoard(&scene->keyBoard);
 	
+	
 	scene->player.transform.rotation = -90 + sin(0.3 * scene->time) * 12;
 	scene->camera = scene->player.transform;
 	//setOrthoLH(&scene->mat_cam, scene->renderer.width, scene->renderer.height, 0.3f, 10);
 	//UpdateAll(&scene->wall1);
-	//UpdateAll(&scene->player);
+	UpdateAll(&scene->player);
 	
 	BoxCollider* b1;
 	BoxCollider* b2;
@@ -88,6 +91,8 @@ char render(Scene* scene)
 	BufferClear(&scene->renderer.buffer, 200, 0, 0);
 	
 	BufferDrawObject(&scene->renderer.buffer, scene->player.transform, &scene->meshes[0], &scene->textures[0]);
+	
+	SetImage(&scene->renderer.buffer, &scene->textures[0]);
 	
 	if(updateWindow(&scene->renderer))
 	{

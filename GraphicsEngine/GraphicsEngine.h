@@ -31,3 +31,4 @@ void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height);
 void BufferClear(Buffer* buffer, char r, char g, char b);
 void BufferDrawObject1(Buffer* buffer, Transfrom transform, VertexMesh* mesh, char r, char g, char b, Matrix3x3 camera);
 void BufferDrawObject(Buffer* buffer, Transfrom transform, VertexMesh* mesh, Texture* texture);
+void SetImage(Buffer* buffer, Texture* texture);
