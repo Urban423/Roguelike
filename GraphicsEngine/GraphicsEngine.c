@@ -585,14 +585,14 @@ void SetImage(Buffer* buffer, Texture* texture)
 	int pixel_index = 0;
 	for(int y = 0; y < texture->height; y++)
 	{
-		int index = y * buffer->width * 3;
+		int index = y * buffer->width * 4;
 		for(int x = 0; x < texture->width; x++)
 		{
 			buffer->buffer[index] = texture->pixels[pixel_index];
 			buffer->buffer[index + 1] = texture->pixels[pixel_index + 1];
 			buffer->buffer[index + 2] = texture->pixels[pixel_index + 2];
-			pixel_index+=3;
-			index += 3;
+			pixel_index += 4;
+			index += 4;
 		}
 	}
 }
