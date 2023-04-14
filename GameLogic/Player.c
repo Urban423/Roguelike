@@ -25,7 +25,7 @@ void template(T, Start)(T *this)
 
 void template(T, Update)(T *this)
 {
-	float speed = 0.3f;
+	float speed = 2.3f;
 	if(GetKey(87))
 	{
 		this->inherited_class.object->transform.position.y += speed;

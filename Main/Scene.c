@@ -48,7 +48,7 @@ void onCreate(Scene* scene)
 
 void onUpdate(Scene* scene)
 {
-	scene->time += 0.1f;
+	scene->time += 1.1f;
 	updateKeyBoard(&scene->keyBoard);
 	
 	

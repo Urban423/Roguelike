@@ -13,5 +13,6 @@ typedef struct Renderer
 
 char createWindowsWindow(Renderer* renderer);
 char updateWindowsWindow(Renderer* renderer);
+char drawImage(Renderer* renderer);
 
 #endif

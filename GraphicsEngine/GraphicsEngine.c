@@ -477,9 +477,9 @@ void BufferClear(Buffer* buffer, char r, char g, char b)
 	unsigned int size = buffer->width * buffer->height * 4;
     for (unsigned int index = 0; index < size; index += 4)
 	{
-        buffer->buffer[index + 0] = b;
+        buffer->buffer[index + 0] = r;
         buffer->buffer[index + 1] = g;
-        buffer->buffer[index + 2] = r;
+        buffer->buffer[index + 2] = b;
         buffer->buffer[index + 3] = 255;
     }
 }

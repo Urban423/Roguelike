@@ -19,9 +19,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 			break;
 		}
 		case WM_MOVE:
-		{			break;
+		{
+			break;
 		}
-
 		case WM_SETFOCUS:
 		{
 			break;
@@ -36,14 +36,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 		}
 		case WM_DESTROY:
 		{
-			PostQuitMessage(0);
+			PostQuitMessage(0); 
 			break;
 		}
 
 		default:
+		
 			return DefWindowProc(hwnd, msg, wparam, lparam);
-		}
-
+	}
 	return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
@@ -54,7 +54,7 @@ char createWindowsWindow(Renderer* renderer)
     wcl.cbClsExtra = 0;
     wcl.cbWndExtra = 0;
 	wcl.lpszClassName = "Roguelike";
-	wcl.lpfnWndProc = &DefWindowProcA;
+	wcl.lpfnWndProc = &WndProc;
 	
 	RegisterClass(&wcl);
 	
@@ -68,21 +68,20 @@ char createWindowsWindow(Renderer* renderer)
 	return 0;
 }
 
-char updateWindowsWindow(Renderer* renderer)
+char drawImage(Renderer* renderer)
 {
-	MSG msg;
-	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
-	{
-		if(msg.message == 161 && msg.wParam == 20)
-		{
-			return 1;
-		}
-		DispatchMessage(&msg);
-	}
-
-	
 	HDC hdc = GetDC(renderer->hwnd);
 	
+	char temp = 0;
+	int index = 0;
+	for(int i = 0; i < renderer->buffer.height * renderer->buffer.width; i++)
+	{
+		temp = renderer->buffer.buffer[index];
+		renderer->buffer.buffer[index] = renderer->buffer.buffer[index + 2];
+		renderer->buffer.buffer[index + 2] = temp;
+		index+=4;
+	}
+	Sleep(1);
 	HBITMAP map = CreateBitmap(renderer->buffer.width, renderer->buffer.height,
 	1, 8 * 4, renderer->buffer.buffer);
 
@@ -93,6 +92,20 @@ char updateWindowsWindow(Renderer* renderer)
 	DeleteDC(src);
 	DeleteObject(map);
 	ReleaseDC(renderer->hwnd, hdc);
+}
+
+char updateWindowsWindow(Renderer* renderer)
+{
+	MSG msg;
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) > 0)
+	{
+		if(msg.message == WM_QUIT)
+		{
+			return 1;
+		}
+		DispatchMessage(&msg);
+	}
+	drawImage(renderer);
 	
 	return 0;
 }
