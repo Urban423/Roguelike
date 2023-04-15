@@ -5,6 +5,24 @@
 #include <unistd.h>
 #include "Color.h"
 
+int min_int(int a, int b)
+{
+	if(a < b)
+	{
+		return a;
+	}
+	return b;
+}
+
+int max_int(int a, int b)
+{
+	if(a > b)
+	{
+		return a;
+	}
+	return b;
+}
+
 void swap_Vector2(Vector2* a, Vector2* b)
 {
 	Vector2 temp = *a;
@@ -287,6 +305,22 @@ Color color3)
     }
 }
 
+void getBarycentricCoordinates(float* resx, float* resy, float* resz, Vector2 p, Vector2 v0, Vector2 v1, Vector2 v2) {
+    Vector2 a = {v1.x - v0.x, v2.x - v0.x};
+    Vector2 b = {v1.y - v0.y, v2.y - v0.y};
+    Vector2 c = {p.x - v0.x,  p.y - v0.y};
+
+    float det = a.x * b.y - a.y * b.x;
+    *resy = (c.x * b.y - c.y * a.y) / det;
+    *resz = (a.x * c.y - b.x * c.x) / det;
+    *resx = 1.0f - *resy - *resz;
+}
+
+float edgeFunction(float ax, float ay, float bx, float by, float cx, float cy) 
+{
+    return (cx - ax) * (by - ay) - (cy - ay) * (bx - ax);
+}
+
 void DrawTriangleByTexture(Buffer* buffer, 
 int x1, int y1, 
 int x2, int y2, 
@@ -296,172 +330,43 @@ Vector2 uv1,
 Vector2 uv2,
 Vector2 uv3)
 {
+	int min_y = max_int(0, min_int(y1, min_int(y2, y3)));
+	int max_y = min_int(buffer->height - 1, max_int(y1, max_int(y2, y3)));
+	int min_x = max_int(0, min_int(x1, min_int(x2, x3)));
+	int max_x = min_int(buffer->width - 1,  max_int(x1, max_int(x2, x3)));
 	
-	if(y1 > y2)
-	{
-		swap_int(&x1, &x2);
-		swap_int(&y1, &y2);
-		swap_Vector2(&uv1, &uv2);
-	}
-	if(y1 > y3)
-	{
-		swap_int(&x1, &x3);
-		swap_int(&y1, &y3);
-		swap_Vector2(&uv1, &uv3);
-	}
-	if(y2 > y3)
-	{
-		swap_int(&x2, &x3);
-		swap_int(&y2, &y3);
-		swap_Vector2(&uv2, &uv3);
-	}
-	if(y3 < 0)
-	{
-		return;
-	}
-	if(y1 > (int)buffer->height - 1)
-	{
-		return;
-	}
+	Vector2 a = {x1, y1};
+	Vector2 b = {x2, y2};
+	Vector2 c = {x3, y3};
 	
-	int delta_color12 = abs(y1 - y2);
-	int delta_color13 = abs(y3 - y1);
-	int delta_color23 = abs(y3 - y2);
-	
-	char changed = 0;
-	float dx13 = 0;
-	float dx12 = 0;
-	float dx23 = 0;
-	if (y3 != y1) 
+	int index;
+	for (int i = min_y; i <= max_y; i++)
 	{
-		dx13 = (float)(x3 - x1);
-		dx13 /= y3 - y1;
-    }
-	if (y2 != y1)
-	{
-		dx12 = (float)(x2 - x1);
-		dx12 /= (y2 - y1);
-	}
-	if (y3 != y2)
-	{
-		dx23 = (float)(x3 - x2);
-		dx23 /= (y3 - y2);
-    }
-	if(x2 > x3)
-	{
-		changed = 1;
-	}
-	
-	float wx1 = (float)x1;
-    float wx2 = wx1;
-	float _dx13 = dx13;
-	
-	if (dx13 > dx12)
-    {
-		swap_float(&dx13, &dx12);
-    }
-	int tindex = 0;
-	for (int i = y1; i < y2; i++)
-	{
-		if(i < 0)
-		{
-			wx1 += dx13;
-			wx2 += dx12;
-			continue;
-		}
-		if(i > (int)buffer->height - 1)
-		{
-			break;
-		}
-		int st = (int)wx1;
-		if(st < 0)
-		{
-			st = 0;
-		}
-		
-		unsigned int index = buffer->width * i + st;
+		index = i * buffer->width + min_x;
 		index *= 4;
-		float interPolation1 = (float)(i - y1) / delta_color12;
-		float interPolation2 = (float)(i - y1) / delta_color13;
-		float interPolation3 = 0;
-		int delta_x = abs((int)wx2 - (int)wx1) + 1;
-		Vector2 c1 = add(multiple(uv3, interPolation2), multiple(uv1, 1 - interPolation2));
-		Vector2 c2 = add(multiple(uv2, interPolation1), multiple(uv1, 1 - interPolation1));
-		if(changed == 1)
+		for (int j = min_x; j <= max_x; j++)
 		{
-			Vector2 temp = c1;
-			c1 = c2;
-			c2 = temp;
-		}
-		for (int j = st; j <= (int)wx2; j++)
-		{
-			if(j > (int)buffer->width - 1)
+			float w1, w2, w3;
+			Vector2 p = {j, i};
+			getBarycentricCoordinates(&w1, &w2, &w3, p, a, b, c);
+			//float w1 = edgeFunction(x2, y2, x3, y3, j, i);
+            //float w2 = edgeFunction(x3, y3, x1, y1, j, i);
+            //float w3 = edgeFunction(x1, y1, x2, y2, j, i);
+            if (w1 >= 0 && w2 >= 0 && w3 >= 0) 
 			{
-				break;
-			}
-			interPolation3 = (float)(j - (int)wx1) / delta_x;
-			Vector2 c3 = add(multiple(c1, interPolation3), multiple(c2, 1 - interPolation3));
-			
-			buffer->buffer[index] = 0;
-			buffer->buffer[index + 1] = 0;
-			buffer->buffer[index + 2] = 0;
-			index += 4;
-			tindex += 1;
-		}
-		wx1 += dx13;
-		wx2 += dx12;
-    }
-	
-	if (y1 == y2)
-	{
-		if(x2 > x1 && changed == 0)
-		{
-			swap_Vector2(&uv1, &uv2);
-		}
-		wx1 = (float)x1;
-		wx2 = (float)x2;
-    }
-	if (_dx13 < dx23)
-	{
-		swap_float(&_dx13, &dx23);
-	}
-	if (wx1 > wx2)
-	{
-		swap_float(&wx1, &wx2);
-	}
-	
-	for (int i = y2; i < y3; i++)
-	{
-		if(i < 0)
-		{
-			wx1 += _dx13;
-			wx2 += dx23;
-			continue;
-		}
-		if(i > (int)buffer->height - 1)
-		{
-			break;
-		}
-		int st = (int)wx1;
-		if(st < 0)
-		{
-			st = 0;
-		}
-		unsigned int index = buffer->width * i + st;
-		index *= 4;
-		for (int j = st; j <= (int)wx2; j++)
-		{
-			if(j > (int)buffer->width - 1)
-			{
-				break;
-			}
-			buffer->buffer[index] = 0;
-			buffer->buffer[index + 1] = 0;
-			buffer->buffer[index + 2] = 0;
+                float u = w1 * uv1.x + w2 * uv2.x + w3 * uv3.x;
+                float v = w1 * uv1.y + w2 * uv2.y + w3 * uv3.y;
+					
+				int tex_x = min_int((int)(u * texture->width), texture->width - 1);
+				int tex_y = min_int((int)(v * texture->height), texture->height - 1);
+					
+				int tex_index = (tex_y * texture->width + tex_x) * 4;
+				buffer->buffer[index] = texture->pixels[tex_index];
+				buffer->buffer[index + 1] = texture->pixels[tex_index + 1];
+				buffer->buffer[index + 2] = texture->pixels[tex_index + 2];
+            }
 			index += 4;
 		}
-		wx1 += _dx13;
-		wx2 += dx23;
     }
 }
 
@@ -534,10 +439,10 @@ void BufferDrawObject1(Buffer* buffer, Transfrom transform, VertexMesh* mesh, ch
 void BufferDrawObject(Buffer* buffer, Transfrom transform, VertexMesh* mesh, Texture* texture)
 {
 	Vector2 UV_map[4] = {
-		{-1,  1},
-		{ 1,  1},
-		{ 1, -1},
-		{-1, -1}
+		{0, 1},
+		{1, 1},
+		{1, 0},
+		{0, 0}
 	};
 	
 	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
