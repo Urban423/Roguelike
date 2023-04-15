@@ -52,7 +52,7 @@ void onUpdate(Scene* scene)
 	updateKeyBoard(&scene->keyBoard);
 	
 	
-	scene->player.transform.rotation = -90 + sin(0.3 * scene->time) * 12;
+	scene->player.transform.rotation = sin(0.3 * scene->time) * 12;
 	scene->camera = scene->player.transform;
 	//setOrthoLH(&scene->mat_cam, scene->renderer.width, scene->renderer.height, 0.3f, 10);
 	//UpdateAll(&scene->wall1);
