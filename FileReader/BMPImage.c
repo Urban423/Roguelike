@@ -46,7 +46,7 @@ char ReadBMPFile(Texture* texture, const char* filename)
     fread(&biClrImportant, sizeof(int), 1, f);
 	
 	
-	//printf("%d %d %d %d %d %d %d %d\n", biSize, biWidth, biHeight, biPlanes, biBitCount, biCompression, biSizeImage, biXPelsPerMeter, biYPelsPerMeter, biClrUsed, biClrImportant);
+	printf("%d %d %d %d %d %d %d %d\n", biSize, biWidth, biHeight, biPlanes, biBitCount, biCompression, biSizeImage, biXPelsPerMeter, biYPelsPerMeter, biClrUsed, biClrImportant);
 
 	texture->width = biWidth;
 	texture->height = biHeight;
@@ -59,10 +59,15 @@ char ReadBMPFile(Texture* texture, const char* filename)
 		index = (biHeight - y - 1) * biWidth * 4;
         for(int x = 0; x < biWidth; x++) 
 		{
-			fread(&texture->pixels[index], 3, 1, f);
+			fread(&texture->pixels[index], biBitCount / 8, 1, f);
 			temp = texture->pixels[index];
 			texture->pixels[index] = texture->pixels[index + 2];
 			texture->pixels[index + 2] = temp;
+			if(biBitCount < 32)
+			{
+				texture->pixels[index + 3] = 255;
+			}
+			//printf("%d\n", texture->pixels[index + 3]); 
 			index+=4;
         }
 		fseek(f,  (biWidth* (biBitCount / 8)) % 4, SEEK_CUR);

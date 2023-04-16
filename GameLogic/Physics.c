@@ -30,6 +30,29 @@ float max(float a, float b)
 }
 
 
+	/*
+	BoxCollider* b1;
+	BoxCollider* b2;
+	TEMPLATE(GetComponent, BoxCollider)(&scene->wall1, &b1);
+	TEMPLATE(GetComponent, BoxCollider)(&scene->wall2, &b2);
+	Vector2 collision = BoxVsBox(
+		scene->wall1.transform.position,
+		scene->player.transform.position,
+		b1,
+		b2);
+		
+	scene->player.transform.position = add(collision, scene->player.transform.position);	
+	
+	TEMPLATE(GetComponent, BoxCollider)(&scene->wall2, &b2);
+	collision = BoxVsBox(
+		scene->wall2.transform.position,
+		scene->player.transform.position,
+		b1,
+		b2);
+		
+	scene->player.transform.position = add(collision, scene->player.transform.position);
+	*/
+
 Vector2 BoxVsBox(
 Vector2 center1, Vector2 center2,
 BoxCollider* box1, BoxCollider* box2)

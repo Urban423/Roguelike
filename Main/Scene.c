@@ -1,21 +1,16 @@
 #include "Scene.h"
-#include "ExampleClass.h"
-#include "BoxCollider.h"
-#include "Player.h"
 #include "ObjectHelper.h"
 #include "Vector2.h"
-#include <stdio.h>
 #include <math.h>
-#include <unistd.h>
 #include "Physics.h"
 #include "BMPImage.h"
 #include "GraphicsEngine.h"
 #include "Input.h"
+#include "SceneLoader.h"
 
 void onCreate(Scene* scene)
 {
 	BufferConstructor(&scene->renderer.buffer, 640, 480);
-	
 	createWindow(&scene->renderer);
 	createKeyBoard(&(scene->keyBoard));
 	setKeyBoard(scene->keyBoard.key_board_state, scene->keyBoard.old_key_board_state);
@@ -25,59 +20,51 @@ void onCreate(Scene* scene)
 	scene->meshes_size = 5;
 	scene->textures_size = 5;
 	ReadBMPFile(&scene->textures[0], "./Assets/0034.bmp");
+	ReadBMPFile(&scene->textures[1], "./Assets/LoadGame.bmp");
+	ReadBMPFile(&scene->textures[2], "./Assets/Statistic.bmp");
+	ReadBMPFile(&scene->textures[3], "./Assets/Exit.bmp");
 	
-	Vector2 vect;
-	CreateVector2(&vect, 100, -120);
-	Vector2 sca;
-	CreateVector2(&sca, 111, 111);
-	ExampleClass* res;
-	Player* res2;
-	ObjectConstructor(&scene->player, vect, sca);
-	TEMPLATE(AddComponent, ExampleClass)(&scene->player, &res);
-	TEMPLATE(AddComponent, Player)(&scene->player, &res2);
+	CreateSceneMenu(scene);
 	
-	CreateVector2(&vect, 3.5f, 3.5f);
-	BoxCollider* boxCollider;
-	ObjectConstructor(&scene->wall1, vect, vect);
-	TEMPLATE(AddComponent, BoxCollider)(&scene->wall1, &boxCollider);
+	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 0, 10);
+}
+
+void UpdateCamera(Scene* scene, Object* object)
+{
+	Matrix3x3 m_view, temp;
+	setIdentity(&m_view);
+	SetRotation(&m_view, object->transform.rotation);
+
+
+	setIdentity(&temp);
+	setTranslation(&temp, object->transform.position);
+	m_view = MultipleMatrixMatrix(m_view, temp);
 	
-	CreateVector2(&vect, 4.5f, 3.5f);
-	ObjectConstructor(&scene->wall2, vect, vect);
-	TEMPLATE(AddComponent, BoxCollider)(&scene->wall2, &boxCollider);
+	scene->world_cam  = inverse(m_view);
 }
 
 void onUpdate(Scene* scene)
 {
+	
 	scene->time += 1.1f;
 	updateKeyBoard(&scene->keyBoard);
 	
+	Object* obj;
+	ObjectList* list = scene->objectManager.list;
 	
-	scene->player.transform.rotation = sin(0.07 * scene->time) * 14;
-	scene->camera = scene->player.transform;
-	//setOrthoLH(&scene->mat_cam, scene->renderer.width, scene->renderer.height, 0.3f, 10);
-	//UpdateAll(&scene->wall1);
-	UpdateAll(&scene->player);
+	obj = list->object;
+	UpdateAll(obj);
+	UpdateCamera(scene, obj);
+	ProcessWorldPos(obj, scene->view_proj, scene->world_cam);
+	list = list->next;
 	
-	BoxCollider* b1;
-	BoxCollider* b2;
-	TEMPLATE(GetComponent, BoxCollider)(&scene->wall1, &b1);
-	TEMPLATE(GetComponent, BoxCollider)(&scene->wall2, &b2);
-	Vector2 collision = BoxVsBox(
-		scene->wall1.transform.position,
-		scene->player.transform.position,
-		b1,
-		b2);
-		
-	scene->player.transform.position = add(collision, scene->player.transform.position);	
-	
-	TEMPLATE(GetComponent, BoxCollider)(&scene->wall2, &b2);
-	collision = BoxVsBox(
-		scene->wall2.transform.position,
-		scene->player.transform.position,
-		b1,
-		b2);
-		
-	scene->player.transform.position = add(collision, scene->player.transform.position);
+	for(int i = 1; i < scene->objectManager.size; i++)
+	{
+		obj = list->object;
+		list = list->next;
+		UpdateAll(obj);
+		ProcessWorldPos(obj, scene->view_proj, scene->world_cam);
+	}
 	
 	if(render(scene))
 	{
@@ -88,11 +75,18 @@ void onUpdate(Scene* scene)
 
 char render(Scene* scene)
 {
-	BufferClear(&scene->renderer.buffer, 200, 0, 0);
+	BufferClear(&scene->renderer.buffer, 0, 255, 0);
 	
-	BufferDrawObject(&scene->renderer.buffer, scene->player.transform, &scene->meshes[0], &scene->textures[0]);
+	Object* obj;
+	ObjectList* list = scene->objectManager.list;
+	for(int i = 0; i < scene->objectManager.size; i++)
+	{
+		obj = list->object;
+		list = list->next;
+		BufferDrawObject(&scene->renderer.buffer, obj->world_pos, &scene->meshes[0], &scene->textures[0]);
+	}
 	
-	SetImage(&scene->renderer.buffer, &scene->textures[0]);
+	//SetImage(&scene->renderer.buffer, &scene->textures[0]);
 	
 	if(updateWindow(&scene->renderer))
 	{

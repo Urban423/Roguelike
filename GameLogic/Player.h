@@ -18,6 +18,7 @@ typedef struct
 typedef struct T
 {
     Component inherited_class;
+	float t;
 }T;
 
 void template(T, constructor)(T* this);

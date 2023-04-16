@@ -1,3 +1,4 @@
+#pragma once
 #include "ObjectHelper.h"
 #include "Matrix3x3.h"
 #include "VertexMesh.h"
@@ -6,16 +7,15 @@
 
 typedef struct Scene
 {
-	Object player;
-	Object wall1;
-	Object wall2;
+	ObjectManager objectManager;
+	
 	KeyBoardState keyBoard;
 	Renderer renderer;
 	char is_running;
 	float time;
 	
-	Transfrom camera;
-	Matrix3x3 mat_cam;
+	Matrix3x3 world_cam;
+	Matrix3x3 view_proj;
 	
 	VertexMesh meshes[5];
 	unsigned int meshes_size;

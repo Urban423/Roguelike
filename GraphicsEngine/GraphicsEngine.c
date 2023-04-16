@@ -316,9 +316,9 @@ void getBarycentricCoordinates(float* resx, float* resy, float* resz, Vector2 p,
     *resx = 1.0f - *resy - *resz;
 }
 
-float edgeFunction(float ax, float ay, float bx, float by, float cx, float cy) 
+char lerp(char a, char b, float percent)
 {
-    return (cx - ax) * (by - ay) - (cy - ay) * (bx - ax);
+	return (1 - percent) * b + percent * a;
 }
 
 void DrawTriangleByTexture(Buffer* buffer, 
@@ -330,6 +330,20 @@ Vector2 uv1,
 Vector2 uv2,
 Vector2 uv3)
 {
+	float perc = (float)1 / 255;
+	
+	float x_size = 1;
+	float xOffset = 0;
+	float y_size = 1;
+	float yOffset = 0.0f;
+	
+	uv1.x = uv1.x * x_size + xOffset;
+	uv2.x = uv2.x * x_size + xOffset;
+	uv3.x = uv3.x * x_size + xOffset;
+	uv1.y = uv1.y * y_size + yOffset;
+	uv2.y = uv2.y * y_size + yOffset;
+	uv3.y = uv3.y * y_size + yOffset;
+	
 	int min_y = max_int(0, min_int(y1, min_int(y2, y3)));
 	int max_y = min_int(buffer->height - 1, max_int(y1, max_int(y2, y3)));
 	int min_x = max_int(0, min_int(x1, min_int(x2, x3)));
@@ -349,21 +363,33 @@ Vector2 uv3)
 			float w1, w2, w3;
 			Vector2 p = {j, i};
 			getBarycentricCoordinates(&w1, &w2, &w3, p, a, b, c);
-			//float w1 = edgeFunction(x2, y2, x3, y3, j, i);
-            //float w2 = edgeFunction(x3, y3, x1, y1, j, i);
-            //float w3 = edgeFunction(x1, y1, x2, y2, j, i);
             if (w1 >= 0 && w2 >= 0 && w3 >= 0) 
 			{
                 float u = w1 * uv1.x + w2 * uv2.x + w3 * uv3.x;
                 float v = w1 * uv1.y + w2 * uv2.y + w3 * uv3.y;
+				
+				if(u > 1)
+				{
+					u = u - (int)u;
+				}
+				if(v > 1)
+				{
+					v = v - (int)v;
+				}
 					
 				int tex_x = min_int((int)(u * texture->width), texture->width - 1);
 				int tex_y = min_int((int)(v * texture->height), texture->height - 1);
 					
 				int tex_index = (tex_y * texture->width + tex_x) * 4;
-				buffer->buffer[index] = texture->pixels[tex_index];
-				buffer->buffer[index + 1] = texture->pixels[tex_index + 1];
-				buffer->buffer[index + 2] = texture->pixels[tex_index + 2];
+				
+				if(texture->pixels[tex_index + 3] != 0)
+				{
+					
+					float percent = (float)((unsigned char)texture->pixels[tex_index + 3]) * perc;
+					buffer->buffer[index] = lerp(buffer->buffer[index], texture->pixels[tex_index], 0);
+					buffer->buffer[index + 1] = lerp(buffer->buffer[index + 1], texture->pixels[tex_index + 1], 0);
+					buffer->buffer[index + 2] = lerp(buffer->buffer[index + 2], texture->pixels[tex_index + 2], 0);
+				}
             }
 			index += 4;
 		}
@@ -436,37 +462,13 @@ void BufferDrawObject1(Buffer* buffer, Transfrom transform, VertexMesh* mesh, ch
 	free(copy_of_verticles);
 }
 
-void BufferDrawObject(Buffer* buffer, Transfrom transform, VertexMesh* mesh, Texture* texture)
+void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture)
 {
-	Vector2 UV_map[4] = {
-		{0, 1},
-		{1, 1},
-		{1, 0},
-		{0, 0}
-	};
-	
 	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
-	
-	Matrix3x3 mat;
-	Matrix3x3 temp;
-	setIdentity(&mat);
-	
-	setIdentity(&temp);
-	SetScale(&temp, transform.scale);
-	mat = MultipleMatrixMatrix(mat, temp);
-	
-	setIdentity(&temp);
-	SetRotation(&temp, transform.rotation);
-	mat = MultipleMatrixMatrix(mat, temp);
-	
-	setIdentity(&temp);
-	transform.position.y *= -1;
-	setTranslation(&temp, transform.position);
-	mat = MultipleMatrixMatrix(mat, temp);
 	
 	for(unsigned int i = 0; i < mesh->verticles_size; i++)
 	{
-		copy_of_verticles[i] = MultipleMatrixVector2(mat, mesh->verticles[i]);
+		copy_of_verticles[i] = MultipleMatrixVector2(world_pos, mesh->verticles[i]);
 	}
 	
 	for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
@@ -476,9 +478,9 @@ void BufferDrawObject(Buffer* buffer, Transfrom transform, VertexMesh* mesh, Tex
 				copy_of_verticles[mesh->faces[i + 1]].x, copy_of_verticles[mesh->faces[i + 1]].y,
 				copy_of_verticles[mesh->faces[i + 2]].x, copy_of_verticles[mesh->faces[i + 2]].y,
 				texture, 
-				UV_map[mesh->faces[i]],
-				UV_map[mesh->faces[i + 1]],
-				UV_map[mesh->faces[i + 2]]);
+				mesh->UV_map[mesh->faces[i]],
+				mesh->UV_map[mesh->faces[i + 1]],
+				mesh->UV_map[mesh->faces[i + 2]]);
 	}
 		
 	

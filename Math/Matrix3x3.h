@@ -13,3 +13,6 @@ void SetRotation(Matrix3x3* this, float x);
 void setOrthoLH(Matrix3x3* this, float width, float height, float near_plane, float far_plane);
 Matrix3x3 MultipleMatrixMatrix(Matrix3x3 a, Matrix3x3 b);
 Vector2 MultipleMatrixVector2(Matrix3x3 a, Vector2 b);
+
+float getDeterminant(Matrix3x3* matrix);
+Matrix3x3 inverse(Matrix3x3 matrix);

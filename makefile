@@ -15,3 +15,7 @@ ${Target}:
 	make -C ${FileReaderDir}
 	make -C ${IODir}
 	make -C ${MainDir}
+	
+clean:
+	${MAKE} clean -C ${LogicDir}
+	${MAKE} clean -C ${MainDir}
