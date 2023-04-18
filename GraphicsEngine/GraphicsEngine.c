@@ -474,8 +474,8 @@ void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Tex
 	for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
 	{
 		DrawTriangleByTexture(buffer, 
-				copy_of_verticles[mesh->faces[i]].x - 15,  copy_of_verticles[mesh->faces[i]].y- 15,
-				copy_of_verticles[mesh->faces[i + 1]].x - 15, copy_of_verticles[mesh->faces[i + 1]].y- 15,
+				copy_of_verticles[mesh->faces[i]].x - 15,  copy_of_verticles[mesh->faces[i]].y - 15,
+				copy_of_verticles[mesh->faces[i + 1]].x - 15, copy_of_verticles[mesh->faces[i + 1]].y - 15,
 				copy_of_verticles[mesh->faces[i + 2]].x- 15, copy_of_verticles[mesh->faces[i + 2]].y- 15,
 				texture, 
 				mesh->UV_map[mesh->faces[i]],

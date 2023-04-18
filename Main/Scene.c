@@ -26,7 +26,7 @@ void onCreate(Scene* scene)
 	
 	CreateSceneMenu(scene);
 	
-	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 0, 10);
+	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 10, 30);
 }
 
 void UpdateCamera(Scene* scene, Object* object)

@@ -27,7 +27,7 @@ void template(T, Start)(T *this)
 void template(T, Update)(T *this)
 {
 	float speed = 1.3f * 0.033f;
-		//this->t += 0.1f;
+	this->t += 0.1f;
 	if(GetKey(87))
 	{
 		this->t += 0.1f;
