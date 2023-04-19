@@ -9,12 +9,12 @@ IODir = ./IOSystem/
 MainDir = ./Main/
 
 ${Target}: 
-	make -C ${MathDir}
-	make -C ${LogicDir}
-	make -C ${GraphicsEngineDir}
-	make -C ${FileReaderDir}
-	make -C ${IODir}
-	make -C ${MainDir}
+	${MAKE} -C ${MathDir}
+	${MAKE} -C ${LogicDir}
+	${MAKE} -C ${GraphicsEngineDir}
+	${MAKE} -C ${FileReaderDir}
+	${MAKE} -C ${IODir}
+	${MAKE} -C ${MainDir}
 	
 clean:
 	${MAKE} clean -C ${LogicDir}

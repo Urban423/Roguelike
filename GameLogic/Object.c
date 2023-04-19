@@ -41,7 +41,7 @@ void ProcessWorldPos(Object* this, Matrix3x3 camera_pos, Matrix3x3 cam_world_pos
 	this->world_pos = MultipleMatrixMatrix(this->world_pos, camera_pos);
 }
 
-void UpdateAll(Object* this)
+void UpdateObject(Object* this)
 {
 	this->componentManager.component->virtual_table->Update(this->componentManager.component);
 }

@@ -53,7 +53,7 @@ void onUpdate(Scene* scene)
 	ObjectList* list = scene->objectManager.list;
 	
 	obj = list->object;
-	UpdateAll(obj);
+	UpdateObject(obj);
 	UpdateCamera(scene, obj);
 	ProcessWorldPos(obj, scene->view_proj, scene->world_cam);
 	list = list->next;
@@ -62,7 +62,7 @@ void onUpdate(Scene* scene)
 	{
 		obj = list->object;
 		list = list->next;
-		UpdateAll(obj);
+		UpdateObject(obj);
 		ProcessWorldPos(obj, scene->view_proj, scene->world_cam);
 	}
 	
