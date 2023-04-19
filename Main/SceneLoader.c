@@ -12,12 +12,14 @@ void CreateSceneMenu(Scene* scene)
 	Vector2 sca;
 	CreateVector2(&sca, 2, 2);
 	
-
+	
+	ExampleClass* res;
 	Player* res2;
 	
 	
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, ExampleClass)(object, &res);
 	TEMPLATE(AddComponent, Player)(object, &res2);
 	AddObject(&scene->objectManager, object);
 	
