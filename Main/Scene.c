@@ -19,7 +19,7 @@ void onCreate(Scene* scene)
 	CreateVertexBox(&scene->meshes[0]);
 	scene->meshes_size = 5;
 	scene->textures_size = 5;
-	ReadBMPFile(&scene->textures[0], "./Assets/0034.bmp");
+	ReadBMPFile(&scene->textures[0], "./Assets/LoadGame.bmp");
 	ReadBMPFile(&scene->textures[1], "./Assets/LoadGame.bmp");
 	ReadBMPFile(&scene->textures[2], "./Assets/Statistic.bmp");
 	ReadBMPFile(&scene->textures[3], "./Assets/Exit.bmp");

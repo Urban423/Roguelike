@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector2.h"
+#include <Vector2.h>
 #include "Matrix3x3.h"
 #include "VertexMesh.h"
 #include "Color.h"
@@ -29,6 +29,8 @@ Vector2 uv3);
 
 void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height);
 void BufferClear(Buffer* buffer, char r, char g, char b);
-void BufferDrawObject1(Buffer* buffer, Transfrom transform, VertexMesh* mesh, char r, char g, char b, Matrix3x3 camera);
 void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture);
+
+
+void BufferDrawObject1(Buffer* buffer, Transfrom transform, VertexMesh* mesh, char r, char g, char b, Matrix3x3 camera);
 void SetImage(Buffer* buffer, Texture* texture);
