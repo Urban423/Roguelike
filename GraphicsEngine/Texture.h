@@ -8,5 +8,3 @@ typedef struct Texture
 	unsigned int width;
 	unsigned int height;
 }Texture;
-
-void CreateTextureFromFile(Texture* this, const char* filename);

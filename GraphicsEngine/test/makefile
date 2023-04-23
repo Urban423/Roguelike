@@ -11,10 +11,10 @@ OBJ = ${patsubst %.c,%.o, ${SCR}}
 ${Target}: clean builder
 
 builder: ${OBJ}
-	${CC} -o ${Target} $^
+	${CC} ${CFLAGS} -o ${Target} $^ -Lmath.a -LGE.a
 
 %.o: %.c
-	${CC} ${CFLAGS} -c  $< -o $@ -lmath.a -lGE.a
+	${CC} ${CFLAGS} -c  $< -o $@
 
 test:
 	${Target}

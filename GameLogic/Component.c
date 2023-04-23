@@ -4,7 +4,8 @@
 component_functiontable component_table = {
 	Component_constructor,
 	Start,
-	Update
+	Update,
+	OnTriggerStay
 };
 
 void Component_constructor(Component *this)
@@ -21,4 +22,9 @@ void Start(Component *this)
 void Update(Component *this)
 {
 	printf("updated Component\n");
+}
+
+void OnTriggerStay(Component* this, struct Object* entered_one)
+{
+	printf("on Trigger stay Component\n");
 }

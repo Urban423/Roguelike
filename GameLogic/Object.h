@@ -9,10 +9,11 @@
 typedef struct ComponentManager
 {
 	struct ComponentManager* next;
+	const char* name;
 	Component* component;
 }ComponentManager;
 
-void AddComponentToComponentManager(ComponentManager* this, Component* add);
+void AddComponentToComponentManager(ComponentManager* this, Component* add, const char* name);
 
 typedef struct Object
 {
@@ -23,9 +24,10 @@ typedef struct Object
 	ComponentManager componentManager;
 }Object;
 
-void ProcessWorldPos(Object* this, Matrix3x3 camera_pos, Matrix3x3 cam_world_pos);
+void ProcessWorldPos(Object* this);
 void ObjectConstructor(Object* this, Vector2 start_pos, Vector2 start_scale);
 void UpdateObject(Object* this);
+void TriggerStayObject(Object* this, Object* enter_one);
 
 typedef struct ObjectList
 {

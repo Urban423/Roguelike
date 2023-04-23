@@ -17,6 +17,8 @@ typedef struct Scene
 	Matrix3x3 world_cam;
 	Matrix3x3 view_proj;
 	
+	Transfrom* camera_tf;
+	
 	VertexMesh meshes[5];
 	unsigned int meshes_size;
 	

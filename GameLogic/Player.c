@@ -9,8 +9,9 @@
 
 template(T, functiontable) template(T, table) = {
 	Player_constructor,
-	Player_Start,
-	Player_Update
+	template(T, Start),
+	template(T, Update),
+	template(T, OnTriggerStay)
 };
 
 void template(T, constructor)(T *this) 
@@ -53,4 +54,9 @@ void template(T, Update)(T *this)
 		//printf("a");
 	}
 	//this->inherited_class.object->transform.rotation = this->t * 14;
+}
+
+void template(T, OnTriggerStay)(T* this, Object* entered)
+{
+	printf("Player entered a trigger\n");
 }

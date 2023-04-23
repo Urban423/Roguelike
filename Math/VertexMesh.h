@@ -14,7 +14,6 @@ typedef struct VertexMesh
 }VertexMesh;
 
 void copyVertexMesh(VertexMesh* this, VertexMesh* copy);
-
 void CreateVertexMeshFromFile(VertexMesh* this, const char* filename);
 void CreateVertexBox(VertexMesh* this);
 

@@ -19,7 +19,7 @@ char ReadBMPFile(Texture* texture, const char* filename)
     fread(&bfOffBits, sizeof(int), 1, f);
 	
 	
-	//printf("%d %d %d %d %d\n", bfType, bfSize, bfReserved1, bfReserved2, bfOffBits);
+	printf("%d %d %d %d %d\n", bfType, bfSize, bfReserved1, bfReserved2, bfOffBits);
 	
 	int    biSize;
 	int    biWidth;
@@ -51,6 +51,8 @@ char ReadBMPFile(Texture* texture, const char* filename)
 	texture->width = biWidth;
 	texture->height = biHeight;
     texture->pixels = (char*)malloc(biWidth * biHeight * 4);
+
+	fseek(f, bfOffBits, SEEK_SET);
 
 	char temp;
 	int index = 0;

@@ -3,6 +3,8 @@
 #include "Object.h"
 #include "BoxCollider.h"
 
+void CalculatePhysic(ObjectManager* manager);
+
 Vector2 BoxVsBox(
-Vector2 center1, Vector2 center2,
+Transfrom transform1, Transfrom transform2,
 BoxCollider* box1, BoxCollider* box2);

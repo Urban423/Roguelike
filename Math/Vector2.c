@@ -6,6 +6,12 @@ void CreateVector2(Vector2* vector, float x, float y)
 	vector->y = y;
 }
 
+Vector2 newVector2(float x, float y)
+{
+	Vector2 res = {x, y};
+	return res;
+}
+
 Vector2 add(Vector2 a, Vector2 b)
 {
 	Vector2 ret = a;

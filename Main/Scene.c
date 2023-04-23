@@ -19,28 +19,29 @@ void onCreate(Scene* scene)
 	CreateVertexBox(&scene->meshes[0]);
 	scene->meshes_size = 5;
 	scene->textures_size = 5;
-	ReadBMPFile(&scene->textures[0], "./Assets/LoadGame.bmp");
+	ReadBMPFile(&scene->textures[0], "./Assets/0034.bmp");
 	ReadBMPFile(&scene->textures[1], "./Assets/LoadGame.bmp");
 	ReadBMPFile(&scene->textures[2], "./Assets/Statistic.bmp");
 	ReadBMPFile(&scene->textures[3], "./Assets/Exit.bmp");
 	
 	CreateSceneMenu(scene);
+	scene->camera_tf = &scene->objectManager.list->object->transform;
 	
 	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 10, 30);
 }
 
-void UpdateCamera(Scene* scene, Object* object)
+void UpdateCamera(Scene* scene, Transfrom* tf)
 {
 	Matrix3x3 m_view, temp;
 	setIdentity(&m_view);
-	SetRotation(&m_view, object->transform.rotation);
+	SetRotation(&m_view, tf->rotation);
 
 
 	setIdentity(&temp);
-	setTranslation(&temp, object->transform.position);
+	setTranslation(&temp, tf->position);
 	m_view = MultipleMatrixMatrix(m_view, temp);
 	
-	scene->world_cam  = inverse(m_view);
+	scene->world_cam = inverse(m_view);
 }
 
 void onUpdate(Scene* scene)
@@ -52,19 +53,24 @@ void onUpdate(Scene* scene)
 	Object* obj;
 	ObjectList* list = scene->objectManager.list;
 	
-	obj = list->object;
-	UpdateObject(obj);
-	UpdateCamera(scene, obj);
-	ProcessWorldPos(obj, scene->view_proj, scene->world_cam);
-	list = list->next;
-	
-	for(int i = 1; i < scene->objectManager.size; i++)
+	for(int i = 0; i < scene->objectManager.size; i++)
 	{
 		obj = list->object;
 		list = list->next;
 		UpdateObject(obj);
-		ProcessWorldPos(obj, scene->view_proj, scene->world_cam);
 	}
+	
+	CalculatePhysic(&scene->objectManager);
+	
+	list = scene->objectManager.list;
+	for(int i = 0; i < scene->objectManager.size; i++)
+	{
+		obj = list->object;
+		list = list->next;
+		ProcessWorldPos(obj);
+	}
+	
+	UpdateCamera(scene, scene->camera_tf);
 	
 	if(render(scene))
 	{
@@ -79,11 +85,14 @@ char render(Scene* scene)
 	
 	Object* obj;
 	ObjectList* list = scene->objectManager.list;
+	Matrix3x3 temp;
 	for(int i = 0; i < scene->objectManager.size; i++)
 	{
 		obj = list->object;
 		list = list->next;
-		BufferDrawObject(&scene->renderer.buffer, obj->world_pos, &scene->meshes[0], &scene->textures[0]);
+		temp = MultipleMatrixMatrix(obj->world_pos, scene->world_cam);
+		temp = MultipleMatrixMatrix(temp, scene->view_proj);
+		BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[0]);
 	}
 	
 	//SetImage(&scene->renderer.buffer, &scene->textures[0]);
