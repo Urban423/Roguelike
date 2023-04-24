@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Rigidbody.h"
 #include "TextMesh.h"
+#include "MeshRenderer.h"
 
 #undef T 
 #define T Player  
@@ -19,4 +20,8 @@
 
 #undef T 
 #define T TextMesh 
+#include "Object.h" 
+
+#undef T 
+#define T MeshRenderer 
 #include "Object.h" 

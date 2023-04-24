@@ -6,7 +6,7 @@
 
 void CreateSceneMenu(Scene* scene)
 {
-	scene->objectManager.size = 0;
+	ClearManager(&scene->objectManager);
 	Object* object;
 	
 	
@@ -16,36 +16,48 @@ void CreateSceneMenu(Scene* scene)
 	CreateVector2(&sca, 2, 2);
 	
 	
-	Player* res2;
+	MeshRenderer* meshRenderer;
+	Player* pl;
 	BoxCollider* box;
 	Rigidbody* rigidbody;
 	TextMesh* text;
 	
+	CreateVector2(&sca, 88, 44);
+	object = (Object*)malloc(sizeof(Object));
+	CreateVector2(&vect, 1, -3);
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	TEMPLATE(AddComponent, BoxCollider)(object, &box);
+	AddObject(&scene->objectManager, object);
+	box->isTrigger = 1;
+	meshRenderer->textureNumber = 1;
 	
+	CreateVector2(&sca, 2, 2);
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, Player)(object, &res2);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	TEMPLATE(AddComponent, Player)(object, &pl);
 	TEMPLATE(AddComponent, BoxCollider)(object, &box);
 	TEMPLATE(AddComponent, Rigidbody)(object, &rigidbody);
 	TEMPLATE(AddComponent, TextMesh)(object, &text);
 	AddObject(&scene->objectManager, object);
 	
-	object = (Object*)malloc(sizeof(Object));
-	CreateVector2(&vect, 1, -1);
-	BoxCollider* boxCollider;
-	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, BoxCollider)(object, &boxCollider);
-	boxCollider->isTrigger = 1;
-	TEMPLATE(AddComponent, Rigidbody)(object, &rigidbody);
-	rigidbody->isKinematic = 1;
-	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 0;
 	
-	
-	object = (Object*)malloc(sizeof(Object));
-	CreateVector2(&vect, 1, -3);
-	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, BoxCollider)(object, &boxCollider);
-	AddObject(&scene->objectManager, object);
+	for(int i = 0; i < 5; i++)
+	{
+		CreateVector2(&sca, 2, 2);
+		object = (Object*)malloc(sizeof(Object));
+		CreateVector2(&vect, 1 + i * 2, -1);
+		ObjectConstructor(object, vect, sca);
+		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+		TEMPLATE(AddComponent, BoxCollider)(object, &box);
+		TEMPLATE(AddComponent, Rigidbody)(object, &rigidbody);
+		rigidbody->isKinematic = 1;
+		AddObject(&scene->objectManager, object);
+		meshRenderer->inherited_class.enabled = 1;
+		meshRenderer->textureNumber = 2;
+	}
 }
 
 void CreateSceneGame(Scene* scene)

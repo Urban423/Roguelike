@@ -7,8 +7,8 @@
 #include "GraphicsEngine.h"
 #include "Input.h"
 #include "SceneLoader.h"
-
 #include <stdio.h>
+includeTime
 
 void onCreate(Scene* scene)
 {
@@ -21,9 +21,9 @@ void onCreate(Scene* scene)
 	CreateVertexBox(&scene->meshes[0]);
 	scene->meshes_size = 5;
 	scene->textures_size = 5;
-	ReadBMPFile(&scene->textures[0], "./Assets/0034.bmp");
-	ReadBMPFile(&scene->textures[1], "./Assets/LoadGame.bmp");
-	ReadBMPFile(&scene->textures[2], "./Assets/Statistic.bmp");
+	ReadBMPFile(&scene->textures[0], "./Assets/0012.bmp");
+	ReadBMPFile(&scene->textures[1], "./Assets/Mercury.bmp");
+	ReadBMPFile(&scene->textures[2], "./Assets/Wall.bmp");
 	ReadBMPFile(&scene->textures[3], "./Assets/Exit.bmp");
 	
 	const char* alphabetDir = "./Asstets/alphabet/A.bmp";
@@ -56,10 +56,11 @@ void onCreate(Scene* scene)
 		index++;
 	}
 	
+	memset(&scene->objectManager, 0, sizeof(ObjectManager));
 	CreateSceneMenu(scene);
 	scene->camera_tf = &scene->objectManager.list->object->transform;
-	
-	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 10, 30);
+	CreateTime(&Time);
+	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 10, 40);
 }
 
 void UpdateCamera(Scene* scene, Transfrom* tf)
@@ -78,7 +79,7 @@ void UpdateCamera(Scene* scene, Transfrom* tf)
 
 void onUpdate(Scene* scene)
 {
-	
+	UpdateTime(&Time);
 	scene->time += 1.1f;
 	updateKeyBoard(&scene->keyBoard);
 	
@@ -104,12 +105,14 @@ void onUpdate(Scene* scene)
 
 char render(Scene* scene)
 {
-	BufferClear(&scene->renderer.buffer, 0, 0, 0);
+	BufferClear(&scene->renderer.buffer, 255, 255, 0);
 	
 	TextMesh* text = NULL;
+	MeshRenderer* mesh = NULL;
 	Object* obj;
 	ObjectList* list = scene->objectManager.list;
 	Matrix3x3 temp;
+	
 	for(int i = 0; i < scene->objectManager.size; i++)
 	{
 		obj = list->object;
@@ -118,13 +121,13 @@ char render(Scene* scene)
 		temp = MultipleMatrixMatrix(obj->world_pos, scene->world_cam);
 		temp = MultipleMatrixMatrix(temp, scene->view_proj);
 		
-		TEMPLATE(GetCompopnent, TextMesh)(obj, &text);
-		if(text != NULL)
-		{
-			BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[0]);
+		TEMPLATE(GetComponent, MeshRenderer)(obj, &mesh);
+		if(mesh == NULL || mesh->inherited_class.enabled == 0) 
+		{ 
 			continue;
 		}
-		BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[0]);
+		
+		BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[mesh->textureNumber]);
 	}
 	
 	//SetImage(&scene->renderer.buffer, &scene->textures[0]);

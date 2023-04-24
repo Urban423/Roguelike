@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 #include "templates.h" 
 
 #ifndef OBJECT_H_
@@ -26,6 +27,7 @@ void ObjectConstructor(Object* this, Vector2 start_pos, Vector2 start_scale)
 	this->componentManager.next = NULL;
 	this->transform.position = start_pos;
 	this->transform.rotation = 0;
+	this->number_of_components = 0;
 	this->transform.scale.x = start_scale.x;
 	this->transform.scale.y = start_scale.y;
 }
@@ -50,7 +52,12 @@ void ProcessWorldPos(Object* this)
 
 void UpdateObject(Object* this)
 {
-	this->componentManager.component->virtual_table->Update(this->componentManager.component);
+	ComponentManager* comManager = &this->componentManager;
+	for(unsigned int i = 0; i < this->number_of_components; i++)
+	{
+		comManager->component->virtual_table->Update(comManager->component);
+		comManager = comManager->next;
+	}
 }
 
 void TriggerStayObject(Object* this, Object* enter_one)
@@ -58,7 +65,7 @@ void TriggerStayObject(Object* this, Object* enter_one)
 	ComponentManager* comManager = &this->componentManager;
 	for(unsigned int i = 0; i < this->number_of_components; i++)
 	{
-		comManager->component->virtual_table->OnTriggerStay(this->componentManager.component, enter_one);
+		comManager->component->virtual_table->OnTriggerStay(comManager->component, enter_one);
 		comManager = comManager->next;
 	}
 }
@@ -84,6 +91,36 @@ void AddObject(ObjectManager* this, Object* add)
 	list->next = (ObjectList*)malloc(sizeof(ObjectList));
 	list->next->object = add;
 	list->next->next = NULL;
+}
+
+void DeleteObjectWithInit(Object* this)
+{
+	ComponentManager* comManager = &this->componentManager;
+	ComponentManager* comManagerToDelete = comManager;
+	for(unsigned int i = 0; i < this->number_of_components; i++)
+	{
+		comManagerToDelete = comManager;
+		free(comManager->component);
+		comManager = comManager->next;
+		
+		free(comManagerToDelete);
+	}
+	free(this);
+}
+
+void ClearManager(ObjectManager* this)
+{
+	ObjectList* list = this->list;
+	ObjectList* listToDelete = this->list;
+	for(int i = 0; i < this->size; i++)
+	{
+		listToDelete = list;
+		DeleteObjectWithInit(list->object);
+		list = list->next;
+		
+		free(listToDelete);
+	}
+	this->size = 0;
 }
 
 #endif
@@ -116,8 +153,6 @@ void TEMPLATE(GetComponent, T)(Object* this, T** result)
 		char flag = 1;
 		while(1)
 		{
-			
-			//printf("%c   %c\n", comManager->name[index], st[index]);
 			if(comManager->name[index] != st[index])
 			{
 				flag = 0;

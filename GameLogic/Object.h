@@ -41,7 +41,9 @@ typedef struct ObjectManager
 	unsigned int size;
 }ObjectManager;
 
+void ClearManager(ObjectManager* this);
 void AddObject(ObjectManager* this, Object* add);
+void DeleteObjectWithInit(Object* this);
 #endif 
 
 
