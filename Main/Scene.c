@@ -8,6 +8,8 @@
 #include "Input.h"
 #include "SceneLoader.h"
 
+#include <stdio.h>
+
 void onCreate(Scene* scene)
 {
 	BufferConstructor(&scene->renderer.buffer, 640, 480);
@@ -23,6 +25,36 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[1], "./Assets/LoadGame.bmp");
 	ReadBMPFile(&scene->textures[2], "./Assets/Statistic.bmp");
 	ReadBMPFile(&scene->textures[3], "./Assets/Exit.bmp");
+	
+	const char* alphabetDir = "./Asstets/alphabet/A.bmp";
+	int size = 0;
+	while(1)
+	{
+		if(alphabetDir[size] == 0)
+		{
+			break;
+		}
+		size++;
+	}
+	int index = 0;
+	char* alDir = (char*)malloc(size  + 1);
+	for(int i = 0; i < size; i++)
+	{
+		alDir[i] = alphabetDir[i];
+	}
+	alDir[size] = 0;
+	for(int i = 0; i < 26; i++)
+	{
+		alDir[19] = 65 + i;
+		ReadBMPFile(&scene->alphabet[index], alDir);
+		index++;
+	}
+	for(int i = 0; i < 10; i++)
+	{
+		alDir[19] = 48 + i;
+		ReadBMPFile(&scene->alphabet[index], alDir);
+		index++;
+	}
 	
 	CreateSceneMenu(scene);
 	scene->camera_tf = &scene->objectManager.list->object->transform;
@@ -61,15 +93,6 @@ void onUpdate(Scene* scene)
 	}
 	
 	CalculatePhysic(&scene->objectManager);
-	
-	list = scene->objectManager.list;
-	for(int i = 0; i < scene->objectManager.size; i++)
-	{
-		obj = list->object;
-		list = list->next;
-		ProcessWorldPos(obj);
-	}
-	
 	UpdateCamera(scene, scene->camera_tf);
 	
 	if(render(scene))
@@ -81,8 +104,9 @@ void onUpdate(Scene* scene)
 
 char render(Scene* scene)
 {
-	BufferClear(&scene->renderer.buffer, 0, 255, 0);
+	BufferClear(&scene->renderer.buffer, 0, 0, 0);
 	
+	TextMesh* text = NULL;
 	Object* obj;
 	ObjectList* list = scene->objectManager.list;
 	Matrix3x3 temp;
@@ -90,8 +114,16 @@ char render(Scene* scene)
 	{
 		obj = list->object;
 		list = list->next;
+		ProcessWorldPos(obj);
 		temp = MultipleMatrixMatrix(obj->world_pos, scene->world_cam);
 		temp = MultipleMatrixMatrix(temp, scene->view_proj);
+		
+		TEMPLATE(GetCompopnent, TextMesh)(obj, &text);
+		if(text != NULL)
+		{
+			BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[0]);
+			continue;
+		}
 		BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[0]);
 	}
 	

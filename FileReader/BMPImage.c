@@ -19,7 +19,7 @@ char ReadBMPFile(Texture* texture, const char* filename)
     fread(&bfOffBits, sizeof(int), 1, f);
 	
 	
-	printf("%d %d %d %d %d\n", bfType, bfSize, bfReserved1, bfReserved2, bfOffBits);
+	//printf("%d %d %d %d %d\n", bfType, bfSize, bfReserved1, bfReserved2, bfOffBits);
 	
 	int    biSize;
 	int    biWidth;
@@ -46,7 +46,7 @@ char ReadBMPFile(Texture* texture, const char* filename)
     fread(&biClrImportant, sizeof(int), 1, f);
 	
 	
-	printf("%d %d %d %d %d %d %d %d\n", biSize, biWidth, biHeight, biPlanes, biBitCount, biCompression, biSizeImage, biXPelsPerMeter, biYPelsPerMeter, biClrUsed, biClrImportant);
+	//printf("%d %d %d %d %d %d %d %d\n", biSize, biWidth, biHeight, biPlanes, biBitCount, biCompression, biSizeImage, biXPelsPerMeter, biYPelsPerMeter, biClrUsed, biClrImportant);
 
 	texture->width = biWidth;
 	texture->height = biHeight;

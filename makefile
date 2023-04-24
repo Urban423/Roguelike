@@ -8,7 +8,7 @@ FileReaderDir = ./FileReader/
 IODir = ./IOSystem/
 MainDir = ./Main/
 
-${Target}: 
+${Target}: clean
 	${MAKE} -C ${MathDir}
 	${MAKE} -C ${LogicDir}
 	${MAKE} -C ${GraphicsEngineDir}

@@ -22,6 +22,7 @@ typedef struct Scene
 	VertexMesh meshes[5];
 	unsigned int meshes_size;
 	
+	Texture alphabet[36];
 	Texture textures[5];
 	unsigned int textures_size;
 }Scene;

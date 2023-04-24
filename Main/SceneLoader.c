@@ -19,6 +19,7 @@ void CreateSceneMenu(Scene* scene)
 	Player* res2;
 	BoxCollider* box;
 	Rigidbody* rigidbody;
+	TextMesh* text;
 	
 	
 	object = (Object*)malloc(sizeof(Object));
@@ -26,6 +27,7 @@ void CreateSceneMenu(Scene* scene)
 	TEMPLATE(AddComponent, Player)(object, &res2);
 	TEMPLATE(AddComponent, BoxCollider)(object, &box);
 	TEMPLATE(AddComponent, Rigidbody)(object, &rigidbody);
+	TEMPLATE(AddComponent, TextMesh)(object, &text);
 	AddObject(&scene->objectManager, object);
 	
 	object = (Object*)malloc(sizeof(Object));
