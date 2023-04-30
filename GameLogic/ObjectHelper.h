@@ -5,6 +5,7 @@
 #include "Rigidbody.h"
 #include "TextMesh.h"
 #include "MeshRenderer.h"
+#include "Switcher.h"
 
 #undef T 
 #define T Player  
@@ -24,4 +25,8 @@
 
 #undef T 
 #define T MeshRenderer 
+#include "Object.h" 
+
+#undef T 
+#define T Switcher 
 #include "Object.h" 

@@ -17,6 +17,65 @@ void CreateSceneMenu(Scene* scene)
 	
 	
 	MeshRenderer* meshRenderer;
+	Switcher* switcher;
+	
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	AddObject(&scene->objectManager, object);
+	
+	CreateVector2(&sca, 33, 5);
+	CreateVector2(&vect, -7, -9 + 4 * 4);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 3;
+	
+	for(int i = 0; i < 3; i++)
+	{
+		CreateVector2(&sca, 10, 3);
+		object = (Object*)malloc(sizeof(Object));
+		CreateVector2(&vect, 0, -7 + i * 5);
+		ObjectConstructor(object, vect, sca);
+		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+		AddObject(&scene->objectManager, object);
+		meshRenderer->textureNumber = 4;
+	}
+	
+	CreateVector2(&sca, 10, 3);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	TEMPLATE(AddComponent, Switcher)(object, &switcher);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 5;
+	
+	for(int i = 0; i < 3; i++)
+	{
+		CreateVector2(&sca, 22, 3);
+		object = (Object*)malloc(sizeof(Object));
+		CreateVector2(&vect, 0, -7 + i * 5);
+		ObjectConstructor(object, vect, sca);
+		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+		AddObject(&scene->objectManager, object);
+		meshRenderer->textureNumber = 6 + i;
+	}
+	
+}
+
+void CreateSceneGame(Scene* scene)
+{
+	ClearManager(&scene->objectManager);
+	Object* object;
+	
+	
+	Vector2 vect;
+	CreateVector2(&vect, 0, 0);
+	Vector2 sca;
+	CreateVector2(&sca, 2, 2);
+	
+	
+	MeshRenderer* meshRenderer;
 	Player* pl;
 	BoxCollider* box;
 	Rigidbody* rigidbody;
@@ -58,42 +117,4 @@ void CreateSceneMenu(Scene* scene)
 		meshRenderer->inherited_class.enabled = 1;
 		meshRenderer->textureNumber = 2;
 	}
-}
-
-void CreateSceneGame(Scene* scene)
-{
-	scene->objectManager.size = 0;
-	Object* object;
-	
-	
-	Vector2 vect;
-	CreateVector2(&vect, 0, 0);
-	Vector2 sca;
-	CreateVector2(&sca, 2, 2);
-	
-	
-	Player* res2;
-	BoxCollider* box;
-	
-	
-	object = (Object*)malloc(sizeof(Object));
-	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, Player)(object, &res2);
-	TEMPLATE(AddComponent, BoxCollider)(object, &box);
-	AddObject(&scene->objectManager, object);
-	
-	
-	object = (Object*)malloc(sizeof(Object));
-	CreateVector2(&vect, 1, -1);
-	BoxCollider* boxCollider;
-	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, BoxCollider)(object, &boxCollider);
-	AddObject(&scene->objectManager, object);
-	
-	
-	object = (Object*)malloc(sizeof(Object));
-	CreateVector2(&vect, 1, -3);
-	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, BoxCollider)(object, &boxCollider);
-	AddObject(&scene->objectManager, object);
 }

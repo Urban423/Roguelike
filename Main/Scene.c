@@ -24,7 +24,12 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[0], "./Assets/0012.bmp");
 	ReadBMPFile(&scene->textures[1], "./Assets/Mercury.bmp");
 	ReadBMPFile(&scene->textures[2], "./Assets/Wall.bmp");
-	ReadBMPFile(&scene->textures[3], "./Assets/Exit.bmp");
+	ReadBMPFile(&scene->textures[3], "./Assets/Roguelike.bmp");
+	ReadBMPFile(&scene->textures[4], "./Assets/WhiteBlock.bmp");
+	ReadBMPFile(&scene->textures[5], "./Assets/BlueBlock.bmp");
+	ReadBMPFile(&scene->textures[6], "./Assets/Exit.bmp");
+	ReadBMPFile(&scene->textures[7], "./Assets/Statistic.bmp");
+	ReadBMPFile(&scene->textures[8], "./Assets/NewGame.bmp");
 	
 	const char* alphabetDir = "./Asstets/alphabet/A.bmp";
 	int size = 0;
@@ -105,7 +110,7 @@ void onUpdate(Scene* scene)
 
 char render(Scene* scene)
 {
-	BufferClear(&scene->renderer.buffer, 255, 255, 0);
+	BufferClear(&scene->renderer.buffer, 255, 0, 0);
 	
 	TextMesh* text = NULL;
 	MeshRenderer* mesh = NULL;

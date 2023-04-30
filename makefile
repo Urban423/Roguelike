@@ -19,3 +19,8 @@ ${Target}: clean
 clean:
 	${MAKE} clean -C ${LogicDir}
 	${MAKE} clean -C ${MainDir}
+	${MAKE} clean -C ${FileReaderDir}
+	
+	${MAKE} clean -C ${GraphicsEngineDir}
+	${MAKE} clean -C ${MathDir}
+	${MAKE} clean -C ${IODir}

@@ -1,23 +1,34 @@
 Target = test_GE
 CC = gcc
 
-Include = ../
-Include += -I../../Math/
-CFLAGS += -I${Include}
+bin = ./bin/
+
+MathDir = ../../Math
+testDir = ..
+
+CFLAGS += -I${MathDir}/
+CFLAGS += -I${testDir}/
+LDFLAGS += -L${testDir} -lGE
+LDFLAGS += -L${MathDir} -lmath
+
+
 
 SCR = ${wildcard *.c}
-OBJ = ${patsubst %.c,%.o, ${SCR}}
+OBJ = ${patsubst %.c,${bin}%.o, ${SCR}}
+
+OBJ_DEL = ${subst /,\, ${OBJ}}
 
 ${Target}: clean builder
+	${Target}.exe
 
 builder: ${OBJ}
-	${CC} ${CFLAGS} -o ${Target} $^ -Lmath.a -LGE.a
+	${CC} -o ${Target} $^ ${LDFLAGS}
 
-%.o: %.c
-	${CC} ${CFLAGS} -c  $< -o $@
+${bin}%.o: %.c
+	${CC} ${CFLAGS} -c $^ -o $@
 
 test:
 	${Target}
 	
 clean:
-	del ${OBJ}
+	del ${OBJ_DEL}

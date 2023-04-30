@@ -7,6 +7,8 @@ objDir = ./${obj}/
 SRC = ${wildcard *.c}
 OBJ = ${patsubst %.c, ${objDir}%.o, ${SRC}}
 
+OBJ_DEL = ${subst /,\, ${OBJ}}
+
 MathDir = ../Math/
 WindowsIODir = ./WindowsIO/
 ConsoleIODir = ./ConsoleIO/
@@ -25,3 +27,6 @@ ${Target}: ${OBJ}
 
 ${objDir}%.o: %.c
 	${CC} ${CFLAGS}  -c $< -o $@
+
+clean:
+	del ${OBJ_DEL}
