@@ -17,10 +17,12 @@ void AddComponentToComponentManager(ComponentManager* this, Component* add, cons
 
 typedef struct Object
 {
+	char enabled;
 	Transfrom transform;
 	unsigned int number_of_components;
 	int  index_of_figure;
 	Matrix3x3 world_pos;
+	struct Object* parent;
 	ComponentManager componentManager;
 }Object;
 

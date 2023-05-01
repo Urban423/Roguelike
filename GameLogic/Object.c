@@ -24,16 +24,25 @@ void AddComponentToComponentManager(ComponentManager* this, Component* add, cons
 
 void ObjectConstructor(Object* this, Vector2 start_pos, Vector2 start_scale)
 {
+	this->enabled = 1;
 	this->componentManager.next = NULL;
 	this->transform.position = start_pos;
 	this->transform.rotation = 0;
 	this->number_of_components = 0;
 	this->transform.scale.x = start_scale.x;
 	this->transform.scale.y = start_scale.y;
+	this->parent = NULL;
 }
 
 void ProcessWorldPos(Object* this)
 {
+	Vector2 world_pos = this->transform.position;
+	Object* tf = this;
+	while(tf->parent != NULL)
+	{
+		tf = tf->parent;
+		world_pos = add(world_pos, tf->transform.position);
+	}
 	setIdentity(&this->world_pos);
 	SetRotation(&this->world_pos, this->transform.rotation);
 	
@@ -43,7 +52,7 @@ void ProcessWorldPos(Object* this)
 	this->world_pos = MultipleMatrixMatrix(this->world_pos, temp);
 	
 	setIdentity(&temp);
-	setTranslation(&temp, this->transform.position);
+	setTranslation(&temp, world_pos);
 	this->world_pos = MultipleMatrixMatrix(this->world_pos, temp);
 	
 	//this->world_pos = MultipleMatrixMatrix(this->world_pos, cam_world_pos);
@@ -55,6 +64,11 @@ void UpdateObject(Object* this)
 	ComponentManager* comManager = &this->componentManager;
 	for(unsigned int i = 0; i < this->number_of_components; i++)
 	{
+		if(comManager->component->enabled == 0)
+		{
+			comManager = comManager->next;
+			continue;
+		}
 		comManager->component->virtual_table->Update(comManager->component);
 		comManager = comManager->next;
 	}
@@ -115,11 +129,12 @@ void ClearManager(ObjectManager* this)
 	for(int i = 0; i < this->size; i++)
 	{
 		listToDelete = list;
-		DeleteObjectWithInit(list->object);
+		//DeleteObjectWithInit(list->object);
 		list = list->next;
 		
 		free(listToDelete);
 	}
+	this->list = 0;
 	this->size = 0;
 }
 

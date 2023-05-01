@@ -1,4 +1,5 @@
 #pragma once
+#include "GameMessages.h"
 
 char setKeyBoard(char* keyBoardStatePointer, char* oldKeyBoardStatePointer);
 

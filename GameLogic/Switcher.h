@@ -20,6 +20,7 @@ typedef struct T
 {
     Component inherited_class;
 	int pos;
+	Object* statistic;
 }T;
 
 void template(T, constructor)(T* this);

@@ -44,19 +44,20 @@ void template(T, Update)(T *this)
 			this->pos = 2;
 		}
 	}
-	if(GetKeyDown == 13)
+	if(GetKeyDown(13))
 	{
 		if(this->pos == 2)
 		{
-			//new Game
+			addMessage(3); //new Game
 		}
 		else if(this->pos == 1)
 		{
-			//statistic
+			this->inherited_class.enabled = 0;
+			this->statistic->enabled = 1; //statistic
 		}
 		else if(this->pos == 0)
 		{
-			//exit
+			addMessage(1); //exit
 		}
 	}
 	this->inherited_class.object->transform.position.y = -7 + this->pos * 5;

@@ -21,6 +21,7 @@ typedef struct T
     Component inherited_class;
 	float walkSpeed;
 	float RunSpeed;
+	char pause;
 }T;
 
 void template(T, constructor)(T* this);

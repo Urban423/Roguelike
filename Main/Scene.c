@@ -7,11 +7,13 @@
 #include "GraphicsEngine.h"
 #include "Input.h"
 #include "SceneLoader.h"
+#include "GameMessages.h"
 #include <stdio.h>
 includeTime
 
 void onCreate(Scene* scene)
 {
+	CreateMessageList();
 	BufferConstructor(&scene->renderer.buffer, 640, 480);
 	createWindow(&scene->renderer);
 	createKeyBoard(&(scene->keyBoard));
@@ -30,6 +32,7 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[6], "./Assets/Exit.bmp");
 	ReadBMPFile(&scene->textures[7], "./Assets/Statistic.bmp");
 	ReadBMPFile(&scene->textures[8], "./Assets/NewGame.bmp");
+	ReadBMPFile(&scene->textures[9], "./Assets/Statistic.bmp");
 	
 	const char* alphabetDir = "./Asstets/alphabet/A.bmp";
 	int size = 0;
@@ -63,7 +66,6 @@ void onCreate(Scene* scene)
 	
 	memset(&scene->objectManager, 0, sizeof(ObjectManager));
 	CreateSceneMenu(scene);
-	scene->camera_tf = &scene->objectManager.list->object->transform;
 	CreateTime(&Time);
 	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 10, 40);
 }
@@ -90,16 +92,57 @@ void onUpdate(Scene* scene)
 	
 	Object* obj;
 	ObjectList* list = scene->objectManager.list;
+	char galka = 0;
 	
 	for(int i = 0; i < scene->objectManager.size; i++)
 	{
 		obj = list->object;
 		list = list->next;
+		if(galka == 1)
+		{
+			if(obj->parent == NULL)
+			{
+				galka = 0;
+			}
+			continue;
+		}
+		if(obj->enabled == 0)
+		{
+			galka = 1;
+			continue;
+		}
 		UpdateObject(obj);
 	}
 	
 	CalculatePhysic(&scene->objectManager);
 	UpdateCamera(scene, scene->camera_tf);
+	
+	char msg;
+	while(1)
+	{
+		msg = getFirstMessageWithDelete();
+		if(msg == 0)
+		{
+			break;
+		}
+		
+		if(msg == 1)
+		{
+			scene->is_running = 0;
+			return;
+		}
+		
+		if(msg == 2)
+		{
+			continue;
+		}
+		
+		if(msg == 3)
+		{
+			CreateSceneGame(scene);
+			continue;
+		}
+	}
 	
 	if(render(scene))
 	{
@@ -117,11 +160,25 @@ char render(Scene* scene)
 	Object* obj;
 	ObjectList* list = scene->objectManager.list;
 	Matrix3x3 temp;
+	char galka = 0;
 	
 	for(int i = 0; i < scene->objectManager.size; i++)
 	{
 		obj = list->object;
 		list = list->next;
+		if(galka == 1)
+		{
+			if(obj->parent == NULL)
+			{
+				galka = 0;
+			}
+			continue;
+		}
+		if(obj->enabled == 0)
+		{
+			galka = 1;
+			continue;
+		}
 		ProcessWorldPos(obj);
 		temp = MultipleMatrixMatrix(obj->world_pos, scene->world_cam);
 		temp = MultipleMatrixMatrix(temp, scene->view_proj);
