@@ -33,6 +33,10 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[7], "./Assets/Statistic.bmp");
 	ReadBMPFile(&scene->textures[8], "./Assets/NewGame.bmp");
 	ReadBMPFile(&scene->textures[9], "./Assets/Statistic.bmp");
+	ReadBMPFile(&scene->textures[10], "./Assets/RedBlock.bmp");
+	ReadBMPFile(&scene->textures[11], "./Assets/Pause.bmp");
+	ReadBMPFile(&scene->textures[12], "./Assets/Quit.bmp");
+	ReadBMPFile(&scene->textures[13], "./Assets/Continue.bmp");
 	
 	const char* alphabetDir = "./Asstets/alphabet/A.bmp";
 	int size = 0;
@@ -134,6 +138,7 @@ void onUpdate(Scene* scene)
 		
 		if(msg == 2)
 		{
+			CreateSceneMenu(scene);
 			continue;
 		}
 		

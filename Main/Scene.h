@@ -23,7 +23,7 @@ typedef struct Scene
 	unsigned int meshes_size;
 	
 	Texture alphabet[36];
-	Texture textures[11];
+	Texture textures[15];
 	unsigned int textures_size;
 }Scene;
 

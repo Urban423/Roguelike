@@ -57,3 +57,16 @@ char addMessage(char add)
 	listOfMessages.size++;
 	return 0;
 }
+
+
+
+char QuitMessage()
+{
+	addMessage(1);
+}
+
+
+char LoadScene(char number)
+{
+	addMessage(number);
+}

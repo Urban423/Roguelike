@@ -24,7 +24,7 @@ void template(T, constructor)(T *this)
 void template(T, Start)(T *this)
 {
 	this->pause = 0;
-	this->walkSpeed = 1;
+	this->walkSpeed = 8.3f;
 }
 
 void template(T, Update)(T *this)
@@ -34,8 +34,9 @@ void template(T, Update)(T *this)
 		//printf("escape");
 		this->pause = !this->pause;
 		Time.timescale = !this->pause;
+		this->pauseMenu->enabled = this->pause;
 	}
-	float speed = 8.3f * Time.deltaTime;
+	float speed = this->walkSpeed * Time.deltaTime;
 	this->walkSpeed = 1;
 	if(GetKey(87))
 	{

@@ -22,6 +22,7 @@ typedef struct T
 	float walkSpeed;
 	float RunSpeed;
 	char pause;
+	Object* pauseMenu;
 }T;
 
 void template(T, constructor)(T* this);

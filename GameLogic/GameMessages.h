@@ -15,3 +15,5 @@ typedef struct MessageList
 char CreateMessageList();
 char getFirstMessageWithDelete();
 char addMessage(char add);
+char QuitMessage();
+char LoadScene(char number);

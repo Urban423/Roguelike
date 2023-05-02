@@ -20,6 +20,8 @@ typedef struct T
 {
     Component inherited_class;
 	int pos;
+	int size;
+	int flag;
 	Object* statistic;
 }T;
 

@@ -19,6 +19,8 @@ void template(T, constructor)(T *this)
 {
     Component_constructor((Component*)this);
     this->inherited_class.virtual_table = (component_functiontable*)&template(T, table);
+	this->size = 3;
+	this->flag = 0;
 }
 
 void template(T, Start)(T *this)
@@ -48,19 +50,35 @@ void template(T, Update)(T *this)
 	{
 		if(this->pos == 2)
 		{
-			addMessage(3); //new Game
+			LoadScene(3); //new Game
 		}
 		else if(this->pos == 1)
 		{
-			this->inherited_class.enabled = 0;
-			this->statistic->enabled = 1; //statistic
+			if(this->flag == 0)
+			{
+				this->inherited_class.enabled = 0;
+				this->statistic->enabled = 1; //statistic
+			}
+			else
+			{
+				this->inherited_class.enabled = 0;
+			}
 		}
 		else if(this->pos == 0)
 		{
-			addMessage(1); //exit
+			if(this->flag == 0)
+			{
+				QuitMessage();
+			}
+			else
+			{
+				LoadScene(2); //MainMenu
+			}
 		}
 	}
-	this->inherited_class.object->transform.position.y = -7 + this->pos * 5;
+	const int y_offset = -7;
+	const int y_size = 5;
+	this->inherited_class.object->transform.position.y = y_offset + this->pos * y_size;
 }
 
 void template(T, OnTriggerStay)(T* this, Object* entered)
