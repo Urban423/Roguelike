@@ -18,7 +18,7 @@ OBJ = ${patsubst %.c,${bin}%.o, ${SCR}}
 
 OBJ_DEL = ${subst /,\, ${OBJ}}
 
-${Target}: clean builder test
+${Target}: clean builder
 
 builder: ${OBJ}
 	${CC} -o ${Target} $^ ${LDFLAGS}  -lgdi32 

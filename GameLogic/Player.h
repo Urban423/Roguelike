@@ -14,15 +14,13 @@ typedef struct
 	void (*Start)(struct T*);
 	void (*Update)(struct T*);
 	void (*OnTriggerStay)(struct T*, Object*);
-}Player_functiontable;
+}template(T, functiontable);
 
 typedef struct T
 {
     Component inherited_class;
 	float walkSpeed;
 	float RunSpeed;
-	char pause;
-	Object* pauseMenu;
 }T;
 
 void template(T, constructor)(T* this);

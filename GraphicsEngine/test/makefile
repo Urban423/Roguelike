@@ -19,7 +19,6 @@ OBJ = ${patsubst %.c,${bin}%.o, ${SCR}}
 OBJ_DEL = ${subst /,\, ${OBJ}}
 
 ${Target}: clean builder
-	${Target}.exe
 
 builder: ${OBJ}
 	${CC} -o ${Target} $^ ${LDFLAGS}

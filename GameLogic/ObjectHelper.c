@@ -6,6 +6,7 @@
 #include "TextMesh.h"
 #include "MeshRenderer.h"
 #include "Switcher.h"
+#include "Pause.h"
 
 #undef T  
 #define T Player  
@@ -29,4 +30,8 @@
 
 #undef T 
 #define T Switcher  
+#include "Object.c" 
+
+#undef T 
+#define T Pause  
 #include "Object.c" 

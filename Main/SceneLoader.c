@@ -113,13 +113,12 @@ void CreateSceneGame(Scene* scene)
 	Vector2 sca;
 	CreateVector2(&sca, 2, 2);
 	
-	
+	Pause* pause;
 	MeshRenderer* meshRenderer;
 	Player* pl;
 	BoxCollider* box;
 	Rigidbody* rigidbody;
 	TextMesh* text;
-	Switcher* switcher;
 	
 	CreateVector2(&sca, 88, 44);
 	object = (Object*)malloc(sizeof(Object));
@@ -127,6 +126,7 @@ void CreateSceneGame(Scene* scene)
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 	TEMPLATE(AddComponent, BoxCollider)(object, &box);
+	TEMPLATE(AddComponent, Pause)(object, &pause);
 	AddObject(&scene->objectManager, object);
 	box->isTrigger = 1;
 	meshRenderer->textureNumber = 1;
@@ -143,17 +143,6 @@ void CreateSceneGame(Scene* scene)
 	TEMPLATE(AddComponent, TextMesh)(object, &text);
 	AddObject(&scene->objectManager, object);
 	meshRenderer->textureNumber = 0;
-	parent = object;
-	
-	CreateVector2(&sca, 1, 1);
-	CreateVector2(&vect, 0, -1);
-	object = (Object*)malloc(sizeof(Object));
-	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
-	AddObject(&scene->objectManager, object);
-	object->parent = parent;
-	meshRenderer->textureNumber = 0;
-	
 	
 	for(int i = 0; i < 5; i++)
 	{
@@ -173,16 +162,16 @@ void CreateSceneGame(Scene* scene)
 	
 	
 	//Pause menu
-	CreateVector2(&sca, 12, 19);
+	CreateVector2(&sca, 12, 12);
 	CreateVector2(&vect, 0, 0);
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 	AddObject(&scene->objectManager, object);
 	meshRenderer->textureNumber = 10;
-	pl->pauseMenu = object;
 	object->enabled = 0;
 	object->parent = cam;
+	pause->PauseBody = object;
 	parent = object;
 	
 	CreateVector2(&sca, 22, 3);
@@ -199,7 +188,7 @@ void CreateSceneGame(Scene* scene)
 	{
 		CreateVector2(&sca, 10, 3);
 		object = (Object*)malloc(sizeof(Object));
-		CreateVector2(&vect, 0, -7 + i * 5);
+		CreateVector2(&vect, 0, -3 + i * 5);
 		ObjectConstructor(object, vect, sca);
 		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 		AddObject(&scene->objectManager, object);
@@ -211,16 +200,16 @@ void CreateSceneGame(Scene* scene)
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
-	TEMPLATE(AddComponent, Switcher)(object, &switcher);
 	AddObject(&scene->objectManager, object);
 	meshRenderer->textureNumber = 5;
 	object->parent = parent;
+	pause->switcher = object;
 	
 	for(int i = 0; i < 2; i++)
 	{
-		CreateVector2(&sca, 10, 3);
+		CreateVector2(&sca, 22, 3);
 		object = (Object*)malloc(sizeof(Object));
-		CreateVector2(&vect, 0, -7 + i * 5);
+		CreateVector2(&vect, 0, -3 + i * 5);
 		ObjectConstructor(object, vect, sca);
 		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 		AddObject(&scene->objectManager, object);

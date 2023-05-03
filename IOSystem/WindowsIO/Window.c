@@ -82,7 +82,7 @@ char drawImage(Renderer* renderer)
 		renderer->buffer.buffer[index + 2] = temp;
 		index+=4;
 	}
-	usleep(16000);
+	usleep(10000);
 	HBITMAP map = CreateBitmap(renderer->buffer.width, renderer->buffer.height,
 	1, 8 * 4, renderer->buffer.buffer);
 

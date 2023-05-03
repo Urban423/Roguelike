@@ -1,5 +1,6 @@
 #pragma once
 #include "Object.h"
 
-char test_UpdateObject(Object* this);
+char test_ObjectConstructor();
+char test_UpdateObject();
 

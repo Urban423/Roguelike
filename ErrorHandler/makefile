@@ -1,4 +1,4 @@
-Target = ErrorHendler
+Target = ErrorHandler
 CC = gcc
 
 MathDir = ../Math/

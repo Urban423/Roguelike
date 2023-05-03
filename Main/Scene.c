@@ -39,9 +39,6 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[13], "./Assets/Continue.bmp");
 	
 	
-	printf("%d: %d\n", '0', '9');
-	printf("%d: %d\n", 'A', 'Z');
-	printf("%d: %d\n", 'a', 'z');
 	const char* alphabetDir = "./Assets\\alphabet\\A.bmp";
 	int size = 0;
 	while(1)

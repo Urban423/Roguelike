@@ -9,7 +9,7 @@ includeTime
 #define T Player
 
 template(T, functiontable) template(T, table) = {
-	Player_constructor,
+	template(T, constructor),
 	template(T, Start),
 	template(T, Update),
 	template(T, OnTriggerStay)
@@ -23,19 +23,11 @@ void template(T, constructor)(T *this)
 
 void template(T, Start)(T *this)
 {
-	this->pause = 0;
 	this->walkSpeed = 8.3f;
 }
 
 void template(T, Update)(T *this)
 {
-	if(GetKeyDown(27))
-	{
-		//printf("escape");
-		this->pause = !this->pause;
-		Time.timescale = !this->pause;
-		this->pauseMenu->enabled = this->pause;
-	}
 	float speed = this->walkSpeed * Time.deltaTime;
 	if(GetKey(87))
 	{

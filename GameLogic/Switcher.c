@@ -19,17 +19,31 @@ void template(T, constructor)(T *this)
 {
     Component_constructor((Component*)this);
     this->inherited_class.virtual_table = (component_functiontable*)&template(T, table);
-	this->size = 3;
-	this->flag = 0;
 }
 
 void template(T, Start)(T *this)
 {
 	this->pos = 2;
+	this->flag = 0;
 }
 
 void template(T, Update)(T *this)
 {
+	if(this->flag == 1)
+	{
+		for(int i = 0; i < 256; i++)
+		{
+			if(GetKeyDown(i))
+			{
+				this->statistic->enabled = 0;
+				this->flag = 0;
+			}
+		}
+		return;
+	}
+	
+	
+	
 	if(GetKeyDown(87))
 	{
 		this->pos  += 1;
@@ -54,26 +68,12 @@ void template(T, Update)(T *this)
 		}
 		else if(this->pos == 1)
 		{
-			if(this->flag == 0)
-			{
-				this->inherited_class.enabled = 0;
-				this->statistic->enabled = 1; //statistic
-			}
-			else
-			{
-				this->inherited_class.enabled = 0;
-			}
+			this->statistic->enabled = 1; //statistic
+			this->flag = 1;
 		}
 		else if(this->pos == 0)
 		{
-			if(this->flag == 0)
-			{
-				QuitMessage();
-			}
-			else
-			{
-				LoadScene(2); //MainMenu
-			}
+			QuitMessage();
 		}
 	}
 	const int y_offset = -7;
