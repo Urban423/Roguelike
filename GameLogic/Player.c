@@ -37,7 +37,6 @@ void template(T, Update)(T *this)
 		this->pauseMenu->enabled = this->pause;
 	}
 	float speed = this->walkSpeed * Time.deltaTime;
-	this->walkSpeed = 1;
 	if(GetKey(87))
 	{
 		this->inherited_class.object->transform.position.y += speed;

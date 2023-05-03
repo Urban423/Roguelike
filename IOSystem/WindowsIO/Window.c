@@ -1,6 +1,7 @@
 #ifdef WIN32
 #include "Window.h"
 #include <stdio.h>
+#include <unistd.h>
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
@@ -81,7 +82,7 @@ char drawImage(Renderer* renderer)
 		renderer->buffer.buffer[index + 2] = temp;
 		index+=4;
 	}
-	Sleep(33);
+	usleep(16000);
 	HBITMAP map = CreateBitmap(renderer->buffer.width, renderer->buffer.height,
 	1, 8 * 4, renderer->buffer.buffer);
 

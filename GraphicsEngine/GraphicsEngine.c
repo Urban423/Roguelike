@@ -487,6 +487,67 @@ void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Tex
 	free(copy_of_verticles);
 }
 
+int CharToTextureIndex(char letter)
+{
+	if(letter > 96 && letter < 122)
+	{
+		return letter - 97;
+	}
+	if(letter > 64 && letter < 91)
+	{
+		return letter - 65;
+	}
+	if(letter > 47 && letter < 58)
+	{
+		return letter - 48 + 26;
+	}
+	return -1;
+}
+
+void BufferDrawText(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size)
+{
+	float x_offset = 0;
+	float y_offset = 0;
+	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
+	
+	for(unsigned int i = 0; i < mesh->verticles_size; i++)
+	{
+		copy_of_verticles[i] = MultipleMatrixVector2(world_pos, mesh->verticles[i]);
+	}
+	
+
+	for(int text_letter = 0; text_letter < text_size; text_letter++)
+	{
+		int index = CharToTextureIndex(text[text_letter]);
+		if(text[text_letter] == '\n')
+		{
+			x_offset = 0;
+			y_offset += 35;
+			continue;
+		}
+		if(index == -1)
+		{
+			x_offset += 30;
+			continue;
+		}
+		for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
+		{
+			DrawTriangleByTexture(buffer, 
+					copy_of_verticles[mesh->faces[i]].x - 15 + x_offset ,  copy_of_verticles[mesh->faces[i]].y - 15 + y_offset,
+					copy_of_verticles[mesh->faces[i + 1]].x - 15 + x_offset, copy_of_verticles[mesh->faces[i + 1]].y - 15 + y_offset,
+					copy_of_verticles[mesh->faces[i + 2]].x- 15 + x_offset, copy_of_verticles[mesh->faces[i + 2]].y- 15 + y_offset,
+					&texture[index], 
+					mesh->UV_map[mesh->faces[i]],
+					mesh->UV_map[mesh->faces[i + 1]],
+					mesh->UV_map[mesh->faces[i + 2]]);
+		}
+		x_offset += 30;
+	}
+		
+	
+	free(copy_of_verticles);
+}
+
 void SetImage(Buffer* buffer, Texture* texture)
 {
 	int pixel_index = 0;

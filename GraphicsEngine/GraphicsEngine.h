@@ -30,6 +30,7 @@ Vector2 uv3);
 void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height);
 void BufferClear(Buffer* buffer, char r, char g, char b);
 void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture);
+void BufferDrawText(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size);
 
 
 void BufferDrawObject1(Buffer* buffer, Transfrom transform, VertexMesh* mesh, char r, char g, char b, Matrix3x3 camera);

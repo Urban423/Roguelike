@@ -29,7 +29,7 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[3], "./Assets/Roguelike.bmp");
 	ReadBMPFile(&scene->textures[4], "./Assets/WhiteBlock.bmp");
 	ReadBMPFile(&scene->textures[5], "./Assets/BlueBlock.bmp");
-	ReadBMPFile(&scene->textures[6], "./Assets/Exit.bmp");
+	ReadBMPFile(&scene->textures[6], "./Assets\\Exit.bmp");
 	ReadBMPFile(&scene->textures[7], "./Assets/Statistic.bmp");
 	ReadBMPFile(&scene->textures[8], "./Assets/NewGame.bmp");
 	ReadBMPFile(&scene->textures[9], "./Assets/Statistic.bmp");
@@ -38,7 +38,11 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[12], "./Assets/Quit.bmp");
 	ReadBMPFile(&scene->textures[13], "./Assets/Continue.bmp");
 	
-	const char* alphabetDir = "./Asstets/alphabet/A.bmp";
+	
+	printf("%d: %d\n", '0', '9');
+	printf("%d: %d\n", 'A', 'Z');
+	printf("%d: %d\n", 'a', 'z');
+	const char* alphabetDir = "./Assets\\alphabet\\A.bmp";
 	int size = 0;
 	while(1)
 	{
@@ -48,6 +52,7 @@ void onCreate(Scene* scene)
 		}
 		size++;
 	}
+	
 	int index = 0;
 	char* alDir = (char*)malloc(size  + 1);
 	for(int i = 0; i < size; i++)
@@ -57,13 +62,13 @@ void onCreate(Scene* scene)
 	alDir[size] = 0;
 	for(int i = 0; i < 26; i++)
 	{
-		alDir[19] = 65 + i;
+		alDir[18] = 65 + i;
 		ReadBMPFile(&scene->alphabet[index], alDir);
 		index++;
 	}
 	for(int i = 0; i < 10; i++)
 	{
-		alDir[19] = 48 + i;
+		alDir[18] = 48 + i;
 		ReadBMPFile(&scene->alphabet[index], alDir);
 		index++;
 	}
@@ -159,7 +164,7 @@ void onUpdate(Scene* scene)
 char render(Scene* scene)
 {
 	BufferClear(&scene->renderer.buffer, 255, 0, 0);
-	
+
 	TextMesh* text = NULL;
 	MeshRenderer* mesh = NULL;
 	Object* obj;
@@ -189,12 +194,16 @@ char render(Scene* scene)
 		temp = MultipleMatrixMatrix(temp, scene->view_proj);
 		
 		TEMPLATE(GetComponent, MeshRenderer)(obj, &mesh);
-		if(mesh == NULL || mesh->inherited_class.enabled == 0) 
+		if((mesh == NULL || mesh->inherited_class.enabled == 0) == 0) 
 		{ 
-			continue;
+			BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[mesh->textureNumber]);
 		}
 		
-		BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[mesh->textureNumber]);
+		TEMPLATE(GetComponent, TextMesh)(obj, &text);
+		if((text == NULL || text->inherited_class.enabled == 0) == 0) 
+		{ 
+			BufferDrawText(&scene->renderer.buffer, temp, &scene->meshes[0], (Texture*)&scene->alphabet, text->text, text->size);
+		}
 	}
 	
 	//SetImage(&scene->renderer.buffer, &scene->textures[0]);

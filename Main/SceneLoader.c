@@ -17,7 +17,7 @@ void CreateSceneMenu(Scene* scene)
 	Vector2 sca;
 	CreateVector2(&sca, 2, 2);
 	
-	
+	TextMesh* textMesh;
 	MeshRenderer* meshRenderer;
 	Switcher* switcher;
 	
@@ -77,7 +77,7 @@ void CreateSceneMenu(Scene* scene)
 	parent = object;
 	
 	CreateVector2(&sca, 22, 3);
-	CreateVector2(&vect, 0, 3);
+	CreateVector2(&vect, 0, 9);
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
@@ -85,15 +85,19 @@ void CreateSceneMenu(Scene* scene)
 	meshRenderer->textureNumber = 9;
 	object->parent = parent;
 	
-	CreateVector2(&sca, 22, 3);
-	CreateVector2(&vect, 0, -3);
+	CreateVector2(&sca, 3, 3);
+	CreateVector2(&vect, -13, 7);
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	TEMPLATE(AddComponent, TextMesh)(object, &textMesh);
 	AddObject(&scene->objectManager, object);
-	meshRenderer->textureNumber = 9;
+	SetText(textMesh, "Danya: 109\nTima: 0\nLeo: 30000\nIvanich: 132", 45);
 	object->parent = parent;
 }
+
+
+
+
 
 void CreateSceneGame(Scene* scene)
 {
