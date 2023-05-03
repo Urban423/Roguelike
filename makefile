@@ -7,6 +7,7 @@ GraphicsEngineDir = ./GraphicsEngine/
 FileReaderDir = ./FileReader/
 IODir = ./IOSystem/
 MainDir = ./Main/
+TestingDir = ./testing/
 
 ${Target}: clean
 	${MAKE} -C ${MathDir}
@@ -14,6 +15,9 @@ ${Target}: clean
 	${MAKE} -C ${GraphicsEngineDir}
 	${MAKE} -C ${FileReaderDir}
 	${MAKE} -C ${IODir}
+	
+	${MAKE} -C ${TestingDir}
+	
 	${MAKE} -C ${MainDir}
 	
 clean:
