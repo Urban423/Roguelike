@@ -93,3 +93,32 @@ char testBufferDrawObject(){
 	return 0;
 
 }
+
+int testGraphicsEngine()
+{
+	if(testBufferConstructor())
+	{
+		printf("testing BufferConstructor: ERROR\n");
+		return 1;
+	}
+	else{	
+		printf("testing BufferConstructor: SUCCSESSFULL\n");
+	}
+	if(testBufferClear())
+	{
+		printf("testing BufferClear: ERROR\n");
+		return 1;
+	}
+	else{	
+		printf("testing BufferClear: SUCCSESSFULL\n");
+	}
+	if(testBufferDrawObject())
+	{
+		printf("testing BufferDrawObject: ERROR\n");
+		return 1;
+	}
+	else{	
+		printf("testing BufferDrawObject: SUCCSESSFULL\n");
+	}
+	return 0;
+}

@@ -8,8 +8,6 @@ testDir = ..
 
 CFLAGS += -I${MathDir}/
 CFLAGS += -I${testDir}/
-LDFLAGS += -L${testDir} -lGL
-LDFLAGS += -L${MathDir} -lmath
 
 
 
@@ -21,7 +19,7 @@ OBJ_DEL = ${subst /,\, ${OBJ}}
 ${Target}: clean builder
 
 builder: ${OBJ}
-	${CC} -o ${Target} $^ ${LDFLAGS}
+	ar rcs -o lib${Target}.a $^
 
 ${bin}%.o: %.c
 	${CC} ${CFLAGS} -c $^ -o $@

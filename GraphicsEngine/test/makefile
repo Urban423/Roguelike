@@ -8,10 +8,6 @@ testDir = ..
 
 CFLAGS += -I${MathDir}/
 CFLAGS += -I${testDir}/
-LDFLAGS += -L${testDir} -lGE
-LDFLAGS += -L${MathDir} -lmath
-
-
 
 SCR = ${wildcard *.c}
 OBJ = ${patsubst %.c,${bin}%.o, ${SCR}}
@@ -21,13 +17,10 @@ OBJ_DEL = ${subst /,\, ${OBJ}}
 ${Target}: clean builder
 
 builder: ${OBJ}
-	${CC} -o ${Target} $^ ${LDFLAGS}
+	ar rcs -o lib${Target}.a $^
 
 ${bin}%.o: %.c
 	${CC} ${CFLAGS} -c $^ -o $@
-
-test:
-	${Target}
 	
 clean:
 	del ${OBJ_DEL}

@@ -11,3 +11,4 @@ char testBufferClear();
 char testBufferDrawObject();
 
 
+int testGraphicsEngine();

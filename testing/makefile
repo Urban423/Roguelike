@@ -1,22 +1,59 @@
-Target = maintest
+Target = RoguelikeTest
+CC = gcc
 
-GameLogicDir = ../GameLogic/test/
-GraphicsEngineDir = ../GraphicsEngine/test/
-IOSystemDir = ../IOSystem/test/
-GameLogicDir = ../GameLogic/test/
-FileReaderDir = ../FileReader/test/
-ErrorHadlerDir = ../ErrorHandler/test/
+build = build
+buildDir = ./${build}/
+obj = bin
+objDir = ./${obj}/
 
-${Target}:
-	${MAKE} -C ${GameLogicDir}
-	${MAKE} -C ${GraphicsEngineDir}
-	${MAKE} -C ${IOSystemDir}
-	${MAKE} -C ${FileReaderDir}
-	${MAKE} -C ${ErrorHadlerDir}
+testGameLogicDir = ../GameLogic/test/
+testGraphicsEngineDir = ../GraphicsEngine/test/
+testIOSystemDir = ../IOSystem/test/
+testFileReaderDir = ../FileReader/test/
+testErrorHadlerDir = ../ErrorHandler/test/
+
+MathDir = ../Math/
+IOSystem = ../IOSystem/
+WindowIO = ${IOSystem}WindowsIO/
+LinuxIO = ${IOSystem}LinuxIO/
+ConsoleIO = ${IOSystem}ConsoleIO/
+GraphicsEngineDir = ../GraphicsEngine/
+FRDir = ../FileReader/
+GLDir = ../GameLogic/
+
+CFLAGS += -I${IOSystem}
+CFLAGS += -I${WindowIO}
+CFLAGS += -I${LinuxIO}
+CFLAGS += -I${GLDir} 
+CFLAGS += -I${FRDir} 
+CFLAGS += -I${MathDir} 
+CFLAGS += -I${GraphicsEngineDir}
+ 
+CFLAGS += -I${testGameLogicDir}
+CFLAGS += -I${testGraphicsEngineDir}
+CFLAGS += -I${testIOSystemDir}
+CFLAGS += -I${testFileReaderDir} 
+CFLAGS += -I${testErrorHadlerDir} 
+ 
+
+LDFLAGS += -L${testGameLogicDir} -ltest_GameLogic
+LDFLAGS += -L${IOSystem} -lLinuxIO
+LDFLAGS += -L${LinuxIO} -lIOSystem
+LDFLAGS += -L${WindowIO} -lWIO
+LDFLAGS += -L${GLDir} -lGL
+LDFLAGS += -L${FRDir} -lFileReader
+LDFLAGS += -L${GraphicsEngineDir} -lGE
+LDFLAGS += -L${MathDir} -lmath
+
+MAIN_C = ${wildcard *.c}
+MAIN_O = ${patsubst %.c, ${objDir}%.o, ${MAIN_C}}
+DEL_MAIN_O = ${subst /,\, ${MAIN_O}}
+
+${Target}: ${MAIN_O} 
+	${CC} -o ${Target} ${MAIN_O} ${LDFLAGS} -lgdi32 
+
+${objDir}%.o: %.c
+	${CC} ${CFLAGS} -c $< -o $@
 	
-	
-	${MAKE} test -C ${GameLogicDir}
-	${MAKE} test -C ${GraphicsEngineDir}
-	${MAKE} test -C ${IOSystemDir}
-	${MAKE} test -C ${FileReaderDir}
-	${MAKE} test -C ${ErrorHadlerDir}
+clean:
+	del ${DEL_MAIN_O}
