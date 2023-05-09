@@ -4,8 +4,7 @@
 #include <time.h>
 
 int main()
-{ 
-	srand(time(NULL));
-	GenerateLevel(100, 28, 13);
+{
+	GenerateLevel(66, 22, time(NULL));
 	return 0;
 }

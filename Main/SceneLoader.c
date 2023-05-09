@@ -108,6 +108,7 @@ void CreateSceneGame(Scene* scene)
 	Object* object;
 	Object* parent;
 	Object* cam;
+	Object* exit;
 	
 	
 	Vector2 vect;
@@ -132,6 +133,19 @@ void CreateSceneGame(Scene* scene)
 	box->isTrigger = 1;
 	scene->camera_tf = &object->transform;
 	
+	
+	CreateVector2(&sca, 2, 2);
+	CreateVector2(&vect, 12, 12);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	TEMPLATE(AddComponent, BoxCollider)(object, &box);
+	AddObject(&scene->objectManager, object);
+	box->isTrigger = 1;
+	exit = object;
+	meshRenderer->textureNumber = 5;
+	
+	
 	CreateVector2(&sca, 2, 2);
 	CreateVector2(&vect, 12, 12);
 	object = (Object*)malloc(sizeof(Object));
@@ -148,12 +162,24 @@ void CreateSceneGame(Scene* scene)
 	
 	int b_index = 0;
 	int block_size = 4;
-	Buffer b = GenerateLevel(22, 22, time(NULL));
+	Buffer b = GenerateLevel(33, 33, time(NULL));
 	for(int y = 0; y < b.height; y++)
 	{
 		for(int x = 0; x < b.width; x++)
 		{
-			if(b.buffer[b_index] == '#')
+			if(b.buffer[b_index] == 'e')
+			{
+				exit->transform.position = newVector2(block_size * x, block_size * y);
+				b_index++;
+				continue;
+			}
+			else if(b.buffer[b_index] == 'p')
+			{
+				cam->transform.position = newVector2(block_size * x, block_size * y);
+				b_index++;
+				continue;
+			}
+			else if(b.buffer[b_index] == '#')
 			{
 				b_index++;
 				continue;

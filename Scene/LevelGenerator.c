@@ -268,6 +268,25 @@ void createRooms(Leaf* this)
 	}
 }
 
+int selectSpawn(Buffer* buffer)
+{
+		int index = 0;
+	for(int y = 0; y < buffer->height; y++)
+	{
+		for(int x = 0; x < buffer->width; x++)
+		{
+			if(buffer->buffer[index] != ' ')
+			{
+				return index;
+			}
+			index++;
+		}
+	}
+	return index;
+}
+
+
+
 void createLeafs(Leaf* this)
 {
 	const unsigned int MAX_LEAF_SIZE = 20;
@@ -312,21 +331,31 @@ void drawLeafs(Buffer* buffer, Leaf* this)
 	}
 }
 
-int selectSpawn(Buffer* buffer)
+Buffer new_Buffer(unsigned int width, unsigned int height)
 {
-		int index = 0;
+	Buffer buffer;
+	buffer.height = height;
+	buffer.width = width;
+	buffer.buffer = (char*)malloc(width * height);
+	for(int i = 0; i < height * width; i++)
+	{
+		buffer.buffer[i] = ' ';
+	}
+	return buffer;
+}
+
+void DrawBuffer(Buffer* buffer)
+{
+	int index = 0;
 	for(int y = 0; y < buffer->height; y++)
 	{
 		for(int x = 0; x < buffer->width; x++)
 		{
-			if(buffer->buffer[index] != ' ')
-			{
-				return index;
-			}
+			printf("%c ", buffer->buffer[index]);
 			index++;
 		}
+		printf("\n");
 	}
-	return index;
 }
 
 int find_path(char* real_map, int lenght, int height) {
@@ -431,34 +460,6 @@ int find_path(char* real_map, int lenght, int height) {
     return index_end;
 }
 
-
-Buffer new_Buffer(unsigned int width, unsigned int height)
-{
-	Buffer buffer;
-	buffer.height = height;
-	buffer.width = width;
-	buffer.buffer = (char*)malloc(width * height);
-	for(int i = 0; i < height * width; i++)
-	{
-		buffer.buffer[i] = ' ';
-	}
-	return buffer;
-}
-
-void DrawBuffer(Buffer* buffer)
-{
-	int index = 0;
-	for(int y = 0; y < buffer->height; y++)
-	{
-		for(int x = 0; x < buffer->width; x++)
-		{
-			printf("%c ", buffer->buffer[index]);
-			index++;
-		}
-		printf("\n");
-	}
-}
-
 Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 {
 	srand(seed);
@@ -470,12 +471,10 @@ Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 	Buffer buffer = new_Buffer(width, height);
 	
 	drawLeafs(&buffer, root);
-	
 	int index = selectSpawn(&buffer);
 	buffer.buffer[index] = 'p';
 	index = find_path(buffer.buffer, buffer.width, buffer.height);
 	buffer.buffer[index] = 'e';
-	
 	DrawBuffer(&buffer);
 	return buffer;
 }
