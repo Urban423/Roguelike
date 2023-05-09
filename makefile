@@ -2,6 +2,7 @@ CC = gcc
 Target = Roguelike
 
 MathDir = ./Math/
+SceneDir = ./Scene/
 LogicDir = ./GameLogic/
 GraphicsEngineDir = ./GraphicsEngine/
 FileReaderDir = ./FileReader/
@@ -15,6 +16,7 @@ ${Target}: clean
 	${MAKE} -C ${GraphicsEngineDir}
 	${MAKE} -C ${FileReaderDir}
 	${MAKE} -C ${IODir}
+	${MAKE} -C ${SceneDir}
 	
 	${MAKE} -C ${TestingDir}
 	
@@ -24,6 +26,7 @@ clean:
 	${MAKE} clean -C ${LogicDir}
 	${MAKE} clean -C ${MainDir}
 	${MAKE} clean -C ${FileReaderDir}
+	${MAKE} clean -C ${SceneDir}
 	
 	${MAKE} clean -C ${GraphicsEngineDir}
 	${MAKE} clean -C ${MathDir}

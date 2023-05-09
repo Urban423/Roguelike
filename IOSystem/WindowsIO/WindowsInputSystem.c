@@ -26,8 +26,10 @@ void updateWindowsKeyBoard(KeyBoardState* this)
     {       
 		this->old_key_board_state[i] = this->key_board_state[i];       
     }
+	
 	GetKeyState(0);
 	GetKeyboardState(this->key_board_state);
+	
 	for(int i = 0; i < 256; i++)
 	{
 		if((this->key_board_state[i] & 0x8000) == 0x8000)

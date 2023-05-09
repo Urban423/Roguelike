@@ -14,6 +14,7 @@ ConsoleIO = ${IOSystem}ConsoleIO/
 GraphicsEngineDir = ../GraphicsEngine/
 FRDir = ../FileReader/
 GLDir = ../GameLogic/
+SceneDir = ../Scene/
 
 CFLAGS += -I${IOSystem}
 CFLAGS += -I${WindowIO}
@@ -22,7 +23,9 @@ CFLAGS += -I${GLDir}
 CFLAGS += -I${FRDir} 
 CFLAGS += -I${MathDir} 
 CFLAGS += -I${GraphicsEngineDir}
+CFLAGS += -I${SceneDir}
  
+LDFLAGS += -L${SceneDir} -lScene
 LDFLAGS += -L${IOSystem} -lLinuxIO
 LDFLAGS += -L${LinuxIO} -lIOSystem
 LDFLAGS += -L${WindowIO} -lWIO

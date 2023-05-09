@@ -23,6 +23,15 @@ void CreateSceneMenu(Scene* scene)
 	MeshRenderer* meshRenderer;
 	Switcher* switcher;
 	
+	CreateVector2(&sca, 88, 44);
+	object = (Object*)malloc(sizeof(Object));
+	CreateVector2(&vect, 0, 0);
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 10;
+	
+	
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
 	AddObject(&scene->objectManager, object);

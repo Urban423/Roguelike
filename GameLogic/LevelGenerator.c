@@ -448,11 +448,11 @@ Buffer new_Buffer(unsigned int width, unsigned int height)
 void DrawBuffer(Buffer* buffer)
 {
 	int index = 0;
-	for(int y = 0; y < buffer->height; y++)
+	for(int y = buffer->height - 1; y > -1; y--)
 	{
 		for(int x = 0; x < buffer->width; x++)
 		{
-			printf("%c ", buffer->buffer[index]);
+			printf("%c ", buffer->buffer[y * buffer->width + x]);
 			index++;
 		}
 		printf("\n");

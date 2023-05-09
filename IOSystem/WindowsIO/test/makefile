@@ -1,17 +1,13 @@
-Target = test_IOSystem
+Target = test_WindowsIOSystem
 CC = gcc
 
 bin = ./bin/
 
-WindowsDir = ../WindowsIO/
-LinuxDir = ../LinuxIO/
-MathDir = ../../Math
-testDir = ..
+MathDir = ../../../Math
+testDir = ../
 
 CFLAGS += -I${MathDir}/
 CFLAGS += -I${testDir}/
-CFLAGS += -I${WindowsDir}/
-CFLAGS += -I${LinuxDir}/
 
 SCR = ${wildcard *.c}
 OBJ = ${patsubst %.c,${bin}%.o, ${SCR}}

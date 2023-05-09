@@ -12,7 +12,6 @@ typedef struct Scene
 	KeyBoardState keyBoard;
 	Renderer renderer;
 	char is_running;
-	float time;
 	
 	Matrix3x3 world_cam;
 	Matrix3x3 view_proj;

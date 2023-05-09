@@ -3,6 +3,7 @@
 #include "testSaveLoadSystem.h"
 #include "testGraphicsEngine.h"
 #include "testIOSystem.h"
+#include "testScene.h"
 
 int main()
 {
@@ -23,6 +24,10 @@ int main()
 		return 1;
 	}
 	if(testIOSystem())
+	{
+		return 1;
+	}
+	if(testScene())
 	{
 		return 1;
 	}

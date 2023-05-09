@@ -32,13 +32,10 @@ void template(T, Update)(T *this)
 	//this->inherited_class.object->transform.rotation += 1;
 	if(this->flag == 1)
 	{
-		for(int i = 0; i < 256; i++)
+		if(GetKeyDown(13))
 		{
-			if(GetKeyDown(i))
-			{
-				this->statistic->enabled = 0;
-				this->flag = 0;
-			}
+			this->statistic->enabled = 0;
+			this->flag = 0;
 		}
 		return;
 	}
@@ -70,6 +67,7 @@ void template(T, Update)(T *this)
 		else if(this->pos == 1)
 		{
 			this->statistic->enabled = 1; //statistic
+			this->statistic->index_of_figure = 1; 
 			this->flag = 1;
 		}
 		else if(this->pos == 0)

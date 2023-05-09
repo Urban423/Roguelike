@@ -37,6 +37,7 @@ void CalculatePhysic(ObjectManager* manager)
 	{
 		return;
 	}
+	int st = min(manager->size - 1, 3);
 	
 	char staticpos1 = 0;
 	char staticpos2 = 0;
@@ -46,7 +47,7 @@ void CalculatePhysic(ObjectManager* manager)
 	Rigidbody* r2;
 	ObjectList* firstlist = manager->list;
 	ObjectList* secondlist = NULL;
-	for(int i = 0; i < size - 1; i++)
+	for(int i = 0; i < st; i++)
 	{
 		TEMPLATE(GetComponent, BoxCollider)(firstlist->object, &b1);
 		TEMPLATE(GetComponent, Rigidbody)(firstlist->object, &r1);

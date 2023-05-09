@@ -1,27 +1,36 @@
-Target = Roguelike
+Target = Scene
 CC = gcc
 
-build = build
-buildDir = ./${build}/
 obj = bin
 objDir = ./${obj}/
 
+SRC = ${wildcard *.c}
+OBJ = ${patsubst %.c, ${objDir}%.o, ${SRC}}
+
+OBJ_DEL = ${subst /,\, ${OBJ}}
+
 MathDir = ../Math/
+IOSystem = ../IOSystem/
+WindowIO = ${IOSystem}WindowsIO/
+LinuxIO = ${IOSystem}LinuxIO/
+ConsoleIO = ${IOSystem}ConsoleIO/
+GraphicsEngineDir = ../GraphicsEngine/
+FRDir = ../FileReader/
+GLDir = ../GameLogic/
 
+CFLAGS += -I${IOSystem}
+CFLAGS += -I${WindowIO}
+CFLAGS += -I${LinuxIO}
+CFLAGS += -I${GLDir} 
+CFLAGS += -I${FRDir} 
 CFLAGS += -I${MathDir} 
- 
-LDFLAGS += -L${MathDir} -lmath
+CFLAGS += -I${GraphicsEngineDir}
 
-MAIN_C = ${wildcard *.c}
-MAIN_O = ${patsubst %.c, ${objDir}%.o, ${MAIN_C}}
-DEL_MAIN_O = ${subst /,\, ${MAIN_O}}
-
-${Target}: ${MAIN_O} 
-	${CC} -o ${Target} ${MAIN_O} ${LDFLAGS} -lgdi32 
-	${Target}
+${Target}: ${OBJ}
+	ar rcs lib${Target}.a $^
 
 ${objDir}%.o: %.c
-	${CC} ${CFLAGS} -c $< -o $@
-	
+	${CC} ${CFLAGS}  -c $< -o $@
+
 clean:
-	del ${DEL_MAIN_O}
+	del ${OBJ_DEL}

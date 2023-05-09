@@ -19,7 +19,6 @@ void onCreate(Scene* scene)
 	createKeyBoard(&(scene->keyBoard));
 	setKeyBoard(scene->keyBoard.key_board_state, scene->keyBoard.old_key_board_state);
 	scene->is_running = 1;
-	scene->time = 0;
 	CreateVertexBox(&scene->meshes[0]);
 	scene->meshes_size = 5;
 	scene->textures_size = 5;
@@ -92,7 +91,6 @@ void UpdateCamera(Scene* scene, Transfrom* tf)
 void onUpdate(Scene* scene)
 {
 	UpdateTime(&Time);
-	scene->time += 1.1f;
 	updateKeyBoard(&scene->keyBoard);
 	
 	Object* obj;
