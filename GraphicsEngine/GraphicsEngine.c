@@ -296,18 +296,15 @@ Vector2 uv3)
 	stw2_row = w2_row;
 	
 	int st_y = y1;
-	if(st_y < 0)
-	{
-		w0_row += -st_y * B12;
-        w1_row += -st_y * B20;
-        w2_row += -st_y * B01;
-		wx1 += -st_y * dx13;
-		wx2 += -st_y * dx12;
-		st_y = 0;
-	}
 	
-	for(int y = st_y; y < y2; y++)
+	for(int y = y1; y < y2; y++)
 	{
+		if(y < 0)
+		{
+			wx1 += dx13;
+			wx2 += dx12;
+			continue;
+		}
 		if(y > buffer->height - 1)
 		{
 			break;
@@ -409,9 +406,6 @@ Vector2 uv3)
 	{
 		if(y < 0)
 		{
-			w0_row += B12;
-			w1_row += B20;
-			w2_row += B01;
 			wx1 += _dx13;
 			wx2 += dx23;
 			continue;
@@ -523,7 +517,7 @@ void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Tex
 	
 	for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
 	{
-		DrawTriangleByTexture(buffer, 
+		DrawTriangle(buffer, 
 				copy_of_verticles[mesh->faces[i]].x - 15,  copy_of_verticles[mesh->faces[i]].y - 15,
 				copy_of_verticles[mesh->faces[i + 1]].x - 15, copy_of_verticles[mesh->faces[i + 1]].y - 15,
 				copy_of_verticles[mesh->faces[i + 2]].x - 15, copy_of_verticles[mesh->faces[i + 2]].y- 15,
