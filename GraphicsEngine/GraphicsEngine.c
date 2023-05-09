@@ -5,30 +5,8 @@
 #include <unistd.h>
 #include "Color.h"
 
-int min_int(int a, int b)
-{
-	if(a < b)
-	{
-		return a;
-	}
-	return b;
-}
-
-int max_int(int a, int b)
-{
-	if(a > b)
-	{
-		return a;
-	}
-	return b;
-}
-
-void swap_Vector2(Vector2* a, Vector2* b)
-{
-	Vector2 temp = *a;
-	*a = *b;
-	*b = temp;
-}
+int min_int(int a, int b) { if(a < b) { return a; } return b; }
+int max_int(int a, int b) { if(a > b) { return a; } return b; }
 
 void swap_float(float* a, float* b)
 {
@@ -49,6 +27,29 @@ void swap_int(int* a, int* b)
 	int temp = *a;
 	*a = *b;
 	*b = temp;
+}
+
+
+void getBarycentricCoordinates(float* resx, float* resy, float* resz, Vector2 p, Vector2 v0, Vector2 v1, Vector2 v2) {
+    Vector2 a = {v1.x - v0.x, v2.x - v0.x};
+    Vector2 b = {v1.y - v0.y, v2.y - v0.y};
+    Vector2 c = {p.x - v0.x,  p.y - v0.y};
+
+    float det = a.x * b.y - a.y * b.x;
+    *resy = (c.x * b.y - c.y * a.y) / det;
+    *resz = (a.x * c.y - b.x * c.x) / det;
+    *resx = 1.0f - *resy - *resz;
+}
+
+
+char lerp(char a, char b, float percent)
+{
+	return (1 - percent) * b + percent * a;
+}
+
+int Orientation(Vector2* a, Vector2* b, Vector2* c)
+{
+	return (b->x - a->x)*(c->y - a->y) - (c->x - a->x)*(b->y - a->y);
 }
 
 void DrawLine(Buffer* buffer,
@@ -116,209 +117,6 @@ char r, char g, char b)
 			error += dx;
 		}
 	}
-}
-
-void DrawTriangle(Buffer* buffer, 
-int x1, int y1, 
-int x2, int y2, 
-int x3, int y3,
-Color color1,
-Color color2,
-Color color3)
-{
-	if(y1 > y2)
-	{
-		swap_int(&x1, &x2);
-		swap_int(&y1, &y2);
-		swap_Color(&color1, &color2);
-	}
-	if(y1 > y3)
-	{
-		swap_int(&x1, &x3);
-		swap_int(&y1, &y3);
-		swap_Color(&color1, &color3);
-	}
-	if(y2 > y3)
-	{
-		swap_int(&x2, &x3);
-		swap_int(&y2, &y3);
-		swap_Color(&color2, &color3);
-	}
-	if(y3 < 0)
-	{
-		return;
-	}
-	if(y1 > (int)buffer->height - 1)
-	{
-		return;
-	}
-	
-	int delta_color12 = abs(y1 - y2);
-	int delta_color13 = abs(y3 - y1);
-	int delta_color23 = abs(y3 - y2);
-	
-	char changed = 0;
-	float dx13 = 0;
-	float dx12 = 0;
-	float dx23 = 0;
-	if (y3 != y1) 
-	{
-		dx13 = (float)(x3 - x1);
-		dx13 /= y3 - y1;
-    }
-	if (y2 != y1)
-	{
-		dx12 = (float)(x2 - x1);
-		dx12 /= (y2 - y1);
-	}
-	if (y3 != y2)
-	{
-		dx23 = (float)(x3 - x2);
-		dx23 /= (y3 - y2);
-    }
-	if(x2 > x3)
-	{
-		changed = 1;
-	}
-	
-	float wx1 = (float)x1;
-    float wx2 = wx1;
-	float _dx13 = dx13;
-	
-	if (dx13 > dx12)
-    {
-		swap_float(&dx13, &dx12);
-    }
-	
-	for (int i = y1; i < y2; i++)
-	{
-		if(i < 0)
-		{
-			wx1 += dx13;
-			wx2 += dx12;
-			continue;
-		}
-		if(i > (int)buffer->height - 1)
-		{
-			break;
-		}
-		int st = (int)wx1;
-		if(st < 0)
-		{
-			st = 0;
-		}
-		
-		unsigned int index = buffer->width * i + st;
-		index *= 4;
-		float interPolation1 = (float)(i - y1) / delta_color12;
-		float interPolation2 = (float)(i - y1) / delta_color13;
-		float interPolation3 = 0;
-		int delta_x = abs((int)wx2 - (int)wx1) + 1;
-		Color c1 = addColor(MultipleColor(color3, interPolation2), MultipleColor(color1, 1 - interPolation2));
-		Color c2 = addColor(MultipleColor(color2, interPolation1), MultipleColor(color1, 1 - interPolation1));
-		if(changed == 1)
-		{
-			Color temp = c1;
-			c1 = c2;
-			c2 = temp;
-		}
-		for (int j = st; j <= (int)wx2; j++)
-		{
-			if(j > (int)buffer->width - 1)
-			{
-				break;
-			}
-			interPolation3 = (float)(j - (int)wx1) / delta_x;
-			Color c3 = addColor(MultipleColor(c1, interPolation3), MultipleColor(c2, 1 - interPolation3));
-			buffer->buffer[index] = c3.r * 255;
-			buffer->buffer[index + 1] = c3.g * 255;
-			buffer->buffer[index + 2] = c3.b * 255;
-			index += 4;
-		}
-		wx1 += dx13;
-		wx2 += dx12;
-    }
-	
-	if (y1 == y2)
-	{
-		if(x2 > x1 && changed == 0)
-		{
-			swap_Color(&color2, &color1);
-		}
-		wx1 = (float)x1;
-		wx2 = (float)x2;
-    }
-	if (_dx13 < dx23)
-	{
-		swap_float(&_dx13, &dx23);
-	}
-	if (wx1 > wx2)
-	{
-		swap_float(&wx1, &wx2);
-	}
-	for (int i = y2; i < y3; i++)
-	{
-		if(i < 0)
-		{
-			wx1 += _dx13;
-			wx2 += dx23;
-			continue;
-		}
-		if(i > (int)buffer->height - 1)
-		{
-			break;
-		}
-		int st = (int)wx1;
-		if(st < 0)
-		{
-			st = 0;
-		}
-		unsigned int index = buffer->width * i + st;
-		index *= 4;
-		float interPolation1 = (float)(i - y1) / delta_color13;
-		float interPolation2 = (float)(i - y2) / delta_color23;
-		float interPolation3 = 0;
-		int delta_x = abs((int)wx2 - (int)wx1);
-		Color c1 = addColor(MultipleColor(color3, interPolation1), MultipleColor(color1, 1 - interPolation1));
-		Color c2 = addColor(MultipleColor(color3, interPolation2), MultipleColor(color2, 1 - interPolation2));
-		if(changed == 1)
-		{
-			Color temp = c1;
-			c1 = c2;
-			c2 = temp;
-		}
-		for (int j = st; j <= (int)wx2; j++)
-		{
-			if(j > (int)buffer->width - 1)
-			{
-				break;
-			}
-			interPolation3 = (float)(j - (int)wx1) / delta_x;
-			Color c3 = addColor(MultipleColor(c1, interPolation3), MultipleColor(c2, 1 - interPolation3));
-			buffer->buffer[index] = c3.r * 255;
-			buffer->buffer[index + 1] = c3.g * 255;
-			buffer->buffer[index + 2] = c3.b * 255;
-			index += 4;
-		}
-		wx1 += _dx13;
-		wx2 += dx23;
-    }
-}
-
-void getBarycentricCoordinates(float* resx, float* resy, float* resz, Vector2 p, Vector2 v0, Vector2 v1, Vector2 v2) {
-    Vector2 a = {v1.x - v0.x, v2.x - v0.x};
-    Vector2 b = {v1.y - v0.y, v2.y - v0.y};
-    Vector2 c = {p.x - v0.x,  p.y - v0.y};
-
-    float det = a.x * b.y - a.y * b.x;
-    *resy = (c.x * b.y - c.y * a.y) / det;
-    *resz = (a.x * c.y - b.x * c.x) / det;
-    *resx = 1.0f - *resy - *resz;
-}
-
-char lerp(char a, char b, float percent)
-{
-	return (1 - percent) * b + percent * a;
 }
 
 void DrawTriangleByTexture(Buffer* buffer, 
@@ -396,6 +194,305 @@ Vector2 uv3)
     }
 }
 
+void DrawTriangle(Buffer* buffer, 
+int x1, int y1, 
+int x2, int y2, 
+int x3, int y3,
+Texture* texture, 
+Vector2 uv1,
+Vector2 uv2,
+Vector2 uv3)
+{
+	if(y1 > y2)
+	{
+		swap_int(&x1, &x2);
+		swap_int(&y1, &y2);
+		swap_Vector2(&uv1, &uv2);
+	}
+	if(y1 > y3)
+	{
+		swap_int(&x1, &x3);
+		swap_int(&y1, &y3);
+		swap_Vector2(&uv1, &uv3);
+	}
+	if(y2 > y3)
+	{
+		swap_int(&x2, &x3);
+		swap_int(&y2, &y3);
+		swap_Vector2(&uv2, &uv3);
+	}
+	if(y3 < 0)
+	{
+		return;
+	}
+	if(y1 > (int)buffer->height - 1)
+	{
+		return;
+	}
+	
+	int min_y = max_int(0, y1);
+	int min_x = max_int(0, min_int(x1, min_int(x2, x3)));
+	
+	char changed = 0;
+	float dx13 = 0;
+	float dx12 = 0;
+	float dx23 = 0;
+	if (y3 != y1) 
+	{
+		dx13 = (float)(x3 - x1);
+		dx13 /= y3 - y1;
+    }
+	if (y2 != y1)
+	{
+		dx12 = (float)(x2 - x1);
+		dx12 /= (y2 - y1);
+	}
+	if (y3 != y2)
+	{
+		dx23 = (float)(x3 - x2);
+		dx23 /= (y3 - y2);
+    }
+	if(x2 > x3)
+	{
+		changed = 1;
+	}
+	
+	float wx1 = (float)x1;
+    float wx2 = wx1;
+	float _dx13 = dx13;
+	
+	if (dx13 > dx12)
+    {
+		swap_float(&dx13, &dx12);
+    }
+	
+	int tex_x = 0;
+	int tex_y = 0;
+	int index_of_texture = 0;
+	int max_texture_x = texture->width - 1;
+	int max_texture_y = texture->height - 1;
+	
+	Vector2 v0 = {x1, y1};
+	Vector2 v1 = {x2, y2};
+	Vector2 v2 = {x3, y3};
+	
+	int det = Orientation(&v0, &v1, &v2);
+	float A01 = (float)(v0.y - v1.y) / det;
+    float A12 = (float)(v1.y - v2.y) / det;
+    float A20 = (float)(v2.y - v0.y) / det;
+	
+	float B01 = (float)(v1.x - v0.x) / det;
+	float B12 = (float)(v2.x - v1.x) / det;
+	float B20 = (float)(v0.x - v2.x) / det;
+	
+	
+	unsigned int index = 0;
+	float w0_row, w1_row, w2_row;
+	float stw0_row, stw1_row, stw2_row;
+	Vector2 p = {min_x, min_y};
+	getBarycentricCoordinates(&w0_row, &w1_row, &w2_row, p, v0, v1, v2);
+	stw0_row = w0_row;
+	stw1_row = w1_row;
+	stw2_row = w2_row;
+	
+	int st_y = y1;
+	if(st_y < 0)
+	{
+		w0_row += -st_y * B12;
+        w1_row += -st_y * B20;
+        w2_row += -st_y * B01;
+		wx1 += -st_y * dx13;
+		wx2 += -st_y * dx12;
+		st_y = 0;
+	}
+	
+	for(int y = st_y; y < y2; y++)
+	{
+		if(y > buffer->height - 1)
+		{
+			break;
+		}
+		float w0 = w0_row;
+        float w1 = w1_row;
+        float w2 = w2_row;
+		int st = (int)wx1;
+		if(st < 0)
+		{
+			st = 0;
+		}
+		w0 += abs(min_x - st) * A12;
+		w1 += abs(min_x - st) * A20;
+		w2 += abs(min_x - st) * A01;
+		
+		//calculate new row's of buffer index
+		index = (buffer->width * y + st) * 4;
+		
+		for(int x = st; x < (int)wx2; x++)
+		{
+			if(x > buffer->width - 1)
+			{
+				break;
+			}
+			float u = w0 * uv1.x + w1 * uv2.x + w2 * uv3.x;
+			float v = w0 * uv1.y + w1 * uv2.y + w2 * uv3.y;
+			
+			tex_x = (int)(u * texture->width);
+			if(tex_x > max_texture_x)
+			{
+				tex_x = max_texture_x;
+			}
+			if(tex_x < 0)
+			{
+				tex_x = 0;
+			}
+			tex_y = (int)(v * texture->height);
+			if(tex_y > max_texture_y)
+			{
+				tex_y = max_texture_y;
+			}
+			if(tex_y < 0)
+			{
+				tex_y = 0;
+			}
+			
+			//calculate index of texture by tex_x and tex_y
+			index_of_texture = (tex_y * texture->width + tex_x) * 4;
+			
+			if(texture->pixels[index_of_texture + 3] != 0)
+			{
+				//Draw Pixel in Buffer
+				buffer->buffer[index]     = texture->pixels[index_of_texture];
+				buffer->buffer[index + 1] = texture->pixels[index_of_texture + 1];
+				buffer->buffer[index + 2] = texture->pixels[index_of_texture + 2];
+			}
+			
+			//calculate new column's barecentric coordinates
+			w0 += A12;
+            w1 += A20;
+            w2 += A01;
+			
+			//step for the next pixel in buffer
+			index += 4;
+		}
+		
+		//calculate new row's barecentric coordinates
+		w0_row += B12;
+        w1_row += B20;
+        w2_row += B01;
+		
+		//calculate new row's x coordinates
+		wx1 += dx13;
+		wx2 += dx12;
+    }
+	
+	if (y1 == y2)
+	{
+		wx1 = (float)x1;
+		wx2 = (float)x2;
+    }
+	if (_dx13 < dx23)
+	{
+		swap_float(&_dx13, &dx23);
+	}
+	if(wx1 > wx2)
+	{
+		swap_float(&wx1, &wx2);
+	}
+	w0_row = stw0_row;
+	w1_row = stw1_row;
+	w2_row = stw2_row;
+	
+	
+	//printf("y: %d %d\n", (int)y2, (int)y3);
+	//printf("x: %d %d\n", (int)wx1, (int)wx2);
+	for(int y = y2; y < y3; y++)
+	{
+		if(y < 0)
+		{
+			w0_row += B12;
+			w1_row += B20;
+			w2_row += B01;
+			wx1 += _dx13;
+			wx2 += dx23;
+			continue;
+		}
+		if(y > buffer->height - 1)
+		{
+			break;
+		}
+		float w0 = w0_row;
+        float w1 = w1_row;
+        float w2 = w2_row;
+		int st = (int)wx1;
+		if(wx1 < 0)
+		{
+			st = 0;
+		}
+		w0 += abs(min_x - st) * A12;
+		w1 += abs(min_x - st) * A20;
+		w2 += abs(min_x - st) * A01;
+		
+		//calculate new row's of buffer index
+		index = (buffer->width * y + st) * 4;
+		
+		for(int x = st; x < (int)wx2; x++)
+		{
+			if(x > buffer->width - 1)
+			{
+				break;
+			}
+			float u = w0 * uv1.x + w1 * uv2.x + w2 * uv3.x;
+			float v = w0 * uv1.y + w1 * uv2.y + w2 * uv3.y;
+			
+			tex_x = (int)(u * texture->width);
+			if(tex_x > max_texture_x)
+			{
+				tex_x = max_texture_x;
+			}
+			if(tex_x < 0)
+			{
+				tex_x = 0;
+			}
+			tex_y = (int)(v * texture->height);
+			if(tex_y > max_texture_y)
+			{
+				tex_y = max_texture_y;
+			}
+			if(tex_y < 0)
+			{
+				tex_y = 0;
+			}
+			
+			//calculate index of texture by tex_x and tex_y
+			index_of_texture = (tex_y * texture->width + tex_x) * 4;
+			
+			if(texture->pixels[index_of_texture + 3] != 0)
+			{
+				//Draw Pixel in Buffer
+				buffer->buffer[index]     = texture->pixels[index_of_texture];
+				buffer->buffer[index + 1] = texture->pixels[index_of_texture + 1];
+				buffer->buffer[index + 2] = texture->pixels[index_of_texture + 2];
+			}
+			
+			//calculate new column's barecentric coordinates
+			w0 += A12;
+            w1 += A20;
+            w2 += A01;
+			
+			//step for the next pixel in buffer
+			index += 4;
+		}
+		
+		//calculate new row's barecentric coordinates
+		w0_row += B12;
+        w1_row += B20;
+        w2_row += B01;
+		
+		//calculate new row's x coordinates
+		wx1 += _dx13;
+		wx2 += dx23;
+    }
+}
 
 void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height) {
 	buffer->width = width;
@@ -415,53 +512,6 @@ void BufferClear(Buffer* buffer, char r, char g, char b)
     }
 }
 
-void BufferDrawObject1(Buffer* buffer, Transfrom transform, VertexMesh* mesh, char r, char g, char b, Matrix3x3 camera) 
-{	
-	Color colors[4];
-	colors[0] = newColor(0, 1, 0, 1);
-	colors[1] = newColor(1, 0, 0, 1);
-	colors[2] = newColor(0, 0, 1, 1);
-	colors[3] = newColor(1, 1, 1, 1);
-	
-	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
-	
-	Matrix3x3 mat;
-	Matrix3x3 temp;
-	setIdentity(&mat);
-	
-	setIdentity(&temp);
-	SetScale(&temp, transform.scale);
-	mat = MultipleMatrixMatrix(mat, temp);
-	
-	setIdentity(&temp);
-	SetRotation(&temp, transform.rotation);
-	mat = MultipleMatrixMatrix(mat, temp);
-	
-	setIdentity(&temp);
-	transform.position.y *= -1;
-	setTranslation(&temp, transform.position);
-	mat = MultipleMatrixMatrix(mat, temp);
-	
-	for(unsigned int i = 0; i < mesh->verticles_size; i++)
-	{
-		copy_of_verticles[i] = MultipleMatrixVector2(mat, mesh->verticles[i]);
-	}
-	
-	for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
-	{
-		DrawTriangle(buffer, 
-				copy_of_verticles[mesh->faces[i]].x,  copy_of_verticles[mesh->faces[i]].y,
-				copy_of_verticles[mesh->faces[i + 1]].x, copy_of_verticles[mesh->faces[i + 1]].y,
-				copy_of_verticles[mesh->faces[i + 2]].x, copy_of_verticles[mesh->faces[i + 2]].y,
-				colors[mesh->faces[i]],
-				colors[mesh->faces[i + 1]],
-				colors[mesh->faces[i + 2]]);
-	}
-		
-	
-	free(copy_of_verticles);
-}
-
 void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture)
 {
 	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
@@ -476,7 +526,7 @@ void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Tex
 		DrawTriangleByTexture(buffer, 
 				copy_of_verticles[mesh->faces[i]].x - 15,  copy_of_verticles[mesh->faces[i]].y - 15,
 				copy_of_verticles[mesh->faces[i + 1]].x - 15, copy_of_verticles[mesh->faces[i + 1]].y - 15,
-				copy_of_verticles[mesh->faces[i + 2]].x- 15, copy_of_verticles[mesh->faces[i + 2]].y- 15,
+				copy_of_verticles[mesh->faces[i + 2]].x - 15, copy_of_verticles[mesh->faces[i + 2]].y- 15,
 				texture, 
 				mesh->UV_map[mesh->faces[i]],
 				mesh->UV_map[mesh->faces[i + 1]],
@@ -532,7 +582,7 @@ void BufferDrawText(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Textu
 		}
 		for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
 		{
-			DrawTriangleByTexture(buffer, 
+			DrawTriangle(buffer, 
 					copy_of_verticles[mesh->faces[i]].x - 15 + x_offset ,  copy_of_verticles[mesh->faces[i]].y - 15 + y_offset,
 					copy_of_verticles[mesh->faces[i + 1]].x - 15 + x_offset, copy_of_verticles[mesh->faces[i + 1]].y - 15 + y_offset,
 					copy_of_verticles[mesh->faces[i + 2]].x- 15 + x_offset, copy_of_verticles[mesh->faces[i + 2]].y- 15 + y_offset,

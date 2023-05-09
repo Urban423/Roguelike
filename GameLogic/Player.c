@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 includeTime
+includeInput
 
 #undef T
 #define T Player
@@ -29,26 +30,24 @@ void template(T, Start)(T *this)
 void template(T, Update)(T *this)
 {
 	float speed = this->walkSpeed * Time.deltaTime;
-	if(GetKey(87))
+	Vector2 moveDirection = {0, 0};
+	if(GetKey(KeyCode.W))
 	{
-		this->inherited_class.object->transform.position.y += speed;
-		//printf("w");
+		moveDirection.y = 1;
 	}
-	if(GetKey(83))
+	if(GetKey(KeyCode.S))
 	{
-		this->inherited_class.object->transform.position.y -= speed;
-		//printf("s");
+		moveDirection.y = -1;
 	}
-	if(GetKey(68))
+	if(GetKey(KeyCode.D))
 	{
-		this->inherited_class.object->transform.position.x += speed;
-		//printf("d");
+		moveDirection.x = 1;
 	}
-	if(GetKey(65))
+	if(GetKey(KeyCode.A))
 	{
-		this->inherited_class.object->transform.position.x -= speed;
-		//printf("a");
+		moveDirection.x = -1;
 	}
+	this->inherited_class.object->transform.position = add(this->inherited_class.object->transform.position, multiple(moveDirection, speed));
 	//this->inherited_class.object->transform.rotation = this->t * 14;
 }
 

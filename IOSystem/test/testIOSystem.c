@@ -1,58 +1,53 @@
-#include <stdio.h>
+#include "testIOSystem.h"
 #include "testIOLoader.h"
+#include <stdio.h>
 
-int main()
+int testIOSystem()
 {
 	if(test_createWindow())
 	{
 		printf("testing createOut: ERROR\n");
+		return 1;
 	}
-	else{	
-		printf("testing createOut: SUCCSESSFULL\n");
-	}
+	printf("testing createOut: SUCCESSFULL\n");
 	
 	if(test_updateWindow())
 	{
 		printf("testing updateOut: ERROR\n");
+		return 1;
 	}
-	else{	
-		printf("testing updateOut: SUCCSESSFULL\n");
-	}
+	printf("testing updateOut: SUCCESSFULL\n");
 	
 	
 	if(test_createKeyBoard())
 	{
 		printf("testing createInput: ERROR\n");
-	}
-	else{	
-		printf("testing createInput: SUCCSESSFULL\n");
-	}
+		return 1;
+	}	
+	printf("testing createInput: SUCCSESSFULL\n");
 	
 	if(test_updateKeyBoard())
 	{
 		printf("testing updateInput: ERROR\n");
-	}
-	else{	
-		printf("testing updateInput: SUCCSESSFULL\n");
-	}
+		return 1;
+	}	
+	printf("testing updateInput: SUCCESSFULL\n");
 	
 	
 	if(testShowError())
 	{
 		printf("testing ShowError: ERROR\n");
+		return 1;
 	}
-	else{	
-		printf("testing ShowError: SUCCSESSFULL\n");
-	}
+	printf("testing ShowError: SUCCESSFULL\n");
 	
 	
 	if(testShowMenu())
 	{
 		printf("testing ShowMenu: ERROR\n");
-	}
-	else{	
-		printf("testing ShowMenu: SUCCSESSFULL\n");
-	}
+		return 1;
+	}	
+	printf("testing ShowMenu: SUCCESSFULL\n");
 	
-	return 0;
+	return 0;	
 }

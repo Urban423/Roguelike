@@ -2,8 +2,8 @@
 #include"statistic.h"
 
 char testSaveStatistic(){
-	clean("test.txt");
 	const char* text = "12345";
+	clean("test.txt");
 	SaveStatistic((char*)text,"test.txt");
 	FILE*file1;
 	FILE*file2;

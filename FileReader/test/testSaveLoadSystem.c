@@ -1,20 +1,19 @@
-#include <stdio.h>
+#include "testSaveLoadSystem.h"
 #include "teststatistic.h"
-int main()
+
+int testSaveLoadSystem()
 {
 	if(testSaveStatistic())
 	{
 		printf("testing SaveStatistic: ERROR\n");
+		return 1;
 	}
-	else{
-		printf("testing SaveStatistic: SUCCSESSFULL\n");
-	}
+	printf("testing SaveStatistic: SUCCSESSFULL\n");
 	if(testGetStatistic())
 	{
 		printf("testing testGetStatistic: ERROR\n");
+		return 1;
 	}
-	else{
-		printf("testing testGetStatistic: SUCCSESSFULL\n");
-	}
+	printf("testing testGetStatistic: SUCCSESSFULL\n");
 	return 0;
 }

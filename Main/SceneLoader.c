@@ -1,8 +1,10 @@
 #include "SceneLoader.h"
 #include <ObjectHelper.h>
+#include "LevelGenerator.h"
 #include <malloc.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <time.h>
 
 void CreateSceneMenu(Scene* scene)
 {
@@ -124,16 +126,14 @@ void CreateSceneGame(Scene* scene)
 	object = (Object*)malloc(sizeof(Object));
 	CreateVector2(&vect, 0, 0);
 	ObjectConstructor(object, vect, sca);
-	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 	TEMPLATE(AddComponent, BoxCollider)(object, &box);
 	TEMPLATE(AddComponent, Pause)(object, &pause);
 	AddObject(&scene->objectManager, object);
 	box->isTrigger = 1;
-	meshRenderer->textureNumber = 1;
 	scene->camera_tf = &object->transform;
-	cam = object;
 	
 	CreateVector2(&sca, 2, 2);
+	CreateVector2(&vect, 12, 12);
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
@@ -143,23 +143,34 @@ void CreateSceneGame(Scene* scene)
 	TEMPLATE(AddComponent, TextMesh)(object, &text);
 	AddObject(&scene->objectManager, object);
 	meshRenderer->textureNumber = 0;
+	cam = object;
+	scene->camera_tf = &object->transform;
 	
-	for(int i = 0; i < 5; i++)
+	int b_index = 0;
+	int block_size = 4;
+	Buffer b = GenerateLevel(22, 22, time(NULL));
+	for(int y = 0; y < b.height; y++)
 	{
-		CreateVector2(&sca, 2, 2);
-		object = (Object*)malloc(sizeof(Object));
-		CreateVector2(&vect, 1 + i * 2, -1);
-		ObjectConstructor(object, vect, sca);
-		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
-		TEMPLATE(AddComponent, BoxCollider)(object, &box);
-		TEMPLATE(AddComponent, Rigidbody)(object, &rigidbody);
-		rigidbody->isKinematic = 1;
-		AddObject(&scene->objectManager, object);
-		meshRenderer->inherited_class.enabled = 1;
-		meshRenderer->textureNumber = 2;
+		for(int x = 0; x < b.width; x++)
+		{
+			if(b.buffer[b_index] == '#')
+			{
+				b_index++;
+				continue;
+			}
+			b_index++;
+			CreateVector2(&sca, block_size, block_size);
+			object = (Object*)malloc(sizeof(Object));
+			CreateVector2(&vect, block_size * x, block_size * y);
+			ObjectConstructor(object, vect, sca);
+			TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+			TEMPLATE(AddComponent, BoxCollider)(object, &box);
+			AddObject(&scene->objectManager, object);
+			box->size.x = 2;
+			box->size.y = 2;
+			meshRenderer->textureNumber = 2;
+		}
 	}
-	
-	
 	
 	//Pause menu
 	CreateVector2(&sca, 12, 12);

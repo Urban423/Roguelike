@@ -1,0 +1,4 @@
+Roguelike
+New Game
+Statistic
+Exit

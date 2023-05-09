@@ -9,7 +9,7 @@
 #endif
 
 char createWindow(Renderer* renderer);
-char updateWindow(Renderer* renderer);
+char updateWindow(Renderer* renderer, unsigned long time_of_begin);
 
 char createKeyBoard(KeyBoardState* keyBoard);
 char updateKeyBoard(KeyBoardState* keyBoard);

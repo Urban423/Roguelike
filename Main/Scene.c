@@ -80,7 +80,6 @@ void UpdateCamera(Scene* scene, Transfrom* tf)
 {
 	Matrix3x3 m_view, temp;
 	setIdentity(&m_view);
-	SetRotation(&m_view, tf->rotation);
 
 
 	setIdentity(&temp);
@@ -160,7 +159,7 @@ void onUpdate(Scene* scene)
 
 char render(Scene* scene)
 {
-	BufferClear(&scene->renderer.buffer, 255, 0, 0);
+	BufferClear(&scene->renderer.buffer, 0, 0, 0);
 
 	TextMesh* text = NULL;
 	MeshRenderer* mesh = NULL;
@@ -205,7 +204,7 @@ char render(Scene* scene)
 	
 	//SetImage(&scene->renderer.buffer, &scene->textures[0]);
 	
-	if(updateWindow(&scene->renderer))
+	if(updateWindow(&scene->renderer, Time.old_delta))
 	{
 		return 1;
 	}

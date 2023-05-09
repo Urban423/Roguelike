@@ -12,12 +12,6 @@ CFLAGS += -I${MathDir}/
 CFLAGS += -I${testDir}/
 CFLAGS += -I${WindowsDir}/
 CFLAGS += -I${LinuxDir}/
-LDFLAGS += -L${testDir} -lIOSystem
-LDFLAGS += -L${MathDir} -lmath
-LDFLAGS += -L${WindowsDir} -lWIO
-LDFLAGS += -L${LinuxDir} -lLinuxIO
-
-
 
 SCR = ${wildcard *.c}
 OBJ = ${patsubst %.c,${bin}%.o, ${SCR}}
@@ -27,13 +21,10 @@ OBJ_DEL = ${subst /,\, ${OBJ}}
 ${Target}: clean builder
 
 builder: ${OBJ}
-	${CC} -o ${Target} $^ ${LDFLAGS}
+	ar rcs -o lib${Target}.a $^
 
 ${bin}%.o: %.c
 	${CC} ${CFLAGS} -c $^ -o $@
-
-test:
-	${Target}
 	
 clean:
 	del ${OBJ_DEL}

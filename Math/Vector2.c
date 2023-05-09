@@ -6,6 +6,14 @@ void CreateVector2(Vector2* vector, float x, float y)
 	vector->y = y;
 }
 
+
+void swap_Vector2(Vector2* a, Vector2* b)
+{
+	Vector2 temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
 Vector2 newVector2(float x, float y)
 {
 	Vector2 res = {x, y};

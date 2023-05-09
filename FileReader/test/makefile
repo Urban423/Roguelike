@@ -21,13 +21,10 @@ OBJ_DEL = ${subst /,\, ${OBJ}}
 ${Target}: clean builder
 
 builder: ${OBJ}
-	${CC} -o ${Target} $^ ${LDFLAGS}  -lgdi32 
+	ar rcs -o lib${Target}.a $^
 
 ${bin}%.o: %.c
 	${CC} ${CFLAGS} -c $^ -o $@
-
-test:
-	${Target}
 	
 clean:
 	del ${OBJ_DEL}

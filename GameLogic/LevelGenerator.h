@@ -1,3 +1,4 @@
 #pragma once
+#include "Vector2.h"
 
-void GenerateLevel();
+Buffer GenerateLevel(unsigned int width, unsigned int height, int seed);

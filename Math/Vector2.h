@@ -13,6 +13,7 @@ Vector2 newVector2(float x, float y);
 void CreateVector2(Vector2* vector, float x, float y);
 Vector2 add(Vector2 a, Vector2 b);
 Vector2 multiple(Vector2 vector, float number);
+void swap_Vector2(Vector2* a, Vector2* b);
 
 typedef struct Transfrom
 {

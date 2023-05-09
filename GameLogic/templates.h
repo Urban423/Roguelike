@@ -7,5 +7,6 @@
 #define template(X,Y) CAT(X,Y)
 #define STRINGCLASS(X) printf(#X "\n");
 #define includeTime extern TimeSystem Time;
+#define includeInput extern KeyCodes KeyCode;
 
 #endif 

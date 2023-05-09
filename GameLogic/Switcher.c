@@ -29,6 +29,7 @@ void template(T, Start)(T *this)
 
 void template(T, Update)(T *this)
 {
+	//this->inherited_class.object->transform.rotation += 1;
 	if(this->flag == 1)
 	{
 		for(int i = 0; i < 256; i++)
