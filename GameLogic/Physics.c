@@ -66,6 +66,11 @@ void CalculatePhysic(ObjectManager* manager)
 				b1,
 				b2);
 				
+				if(collision.x == 0 && collision.y == 0)
+				{
+					secondlist = secondlist->next;
+					continue;
+				}
 				//printf("%d:%d\n", staticpos1, staticpos2);
 				if(staticpos1 == 0 && staticpos2 == 0)
 				{
@@ -76,7 +81,7 @@ void CalculatePhysic(ObjectManager* manager)
 				{
 					if(b2->isTrigger == 1)
 					{
-						TriggerStayObject(secondlist->object, firstlist->object);
+						//TriggerStayObject(secondlist->object, firstlist->object);
 					}else{
 						firstlist->object->transform.position = add(collision, firstlist->object->transform.position);	
 					}

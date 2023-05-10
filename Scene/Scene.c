@@ -36,6 +36,9 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[11], "./Assets/Pause.bmp");
 	ReadBMPFile(&scene->textures[12], "./Assets/Quit.bmp");
 	ReadBMPFile(&scene->textures[13], "./Assets/Continue.bmp");
+	ReadBMPFile(&scene->textures[14], "./Assets/YouWin.bmp");
+	ReadBMPFile(&scene->textures[15], "./Assets/YourScore.bmp");
+	ReadBMPFile(&scene->textures[16], "./Assets/WriteYourName.bmp");
 	
 	
 	const char* alphabetDir = "./Assets\\alphabet\\A.bmp";

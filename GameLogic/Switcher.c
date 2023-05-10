@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 includeTime
+includeInput
 
 #undef T
 #define T Switcher
@@ -32,7 +33,7 @@ void template(T, Update)(T *this)
 	//this->inherited_class.object->transform.rotation += 1;
 	if(this->flag == 1)
 	{
-		if(GetKeyDown(13))
+		if(GetKeyDown(KeyCode.Enter))
 		{
 			this->statistic->enabled = 0;
 			this->flag = 0;
@@ -41,24 +42,23 @@ void template(T, Update)(T *this)
 	}
 	
 	
-	
-	if(GetKeyDown(87))
+	if(GetKeyDown(KeyCode.W))
 	{
-		this->pos  += 1;
+		this->pos += 1;
 		if(this->pos > 2)
 		{
 			this->pos = 0;
 		}
 	}
-	if(GetKeyDown(83))
+	if(GetKeyDown(KeyCode.S))
 	{
-		this->pos  -= 1;
+		this->pos -= 1;
 		if(this->pos < 0)
 		{
 			this->pos = 2;
 		}
 	}
-	if(GetKeyDown(13))
+	if(GetKeyDown(KeyCode.Enter))
 	{
 		if(this->pos == 2)
 		{

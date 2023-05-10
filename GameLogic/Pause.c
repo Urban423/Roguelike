@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <math.h>
 includeTime
+includeInput
 
 #undef T
 #define T Pause
@@ -30,7 +31,7 @@ void template(T, Start)(T *this)
 
 void template(T, Update)(T *this)
 {
-	if(GetKeyDown(27))
+	if(GetKeyDown(KeyCode.Escape))
 	{
 		//printf("escape");
 		this->pause = !this->pause;
@@ -43,7 +44,7 @@ void template(T, Update)(T *this)
 		return;
 	}
 	
-	if(GetKeyDown(87))
+	if(GetKeyDown(KeyCode.W))
 	{
 		this->pos  += 1;
 		if(this->pos > 1)
@@ -51,7 +52,7 @@ void template(T, Update)(T *this)
 			this->pos = 0;
 		}
 	}
-	if(GetKeyDown(83))
+	if(GetKeyDown(KeyCode.S))
 	{
 		this->pos  -= 1;
 		if(this->pos < 0)
@@ -60,7 +61,7 @@ void template(T, Update)(T *this)
 		}
 	}
 	
-	if(GetKeyDown(13))
+	if(GetKeyDown(KeyCode.Enter))
 	{
 		if(this->pos == 1)
 		{

@@ -5,6 +5,7 @@
 #include "Rigidbody.h"
 #include "TextMesh.h"
 #include "MeshRenderer.h"
+#include "ExitTrigger.h"
 #include "Switcher.h"
 #include "Pause.h"
 
@@ -34,4 +35,8 @@
 
 #undef T 
 #define T Pause 
+#include "Object.h" 
+
+#undef T 
+#define T ExitTrigger 
 #include "Object.h" 

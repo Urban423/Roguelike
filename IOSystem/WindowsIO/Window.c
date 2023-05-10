@@ -54,6 +54,7 @@ char createWindowsWindow(Renderer* renderer)
 	memset(&wcl, 0, sizeof(WNDCLASSA));
     wcl.cbClsExtra = 0;
     wcl.cbWndExtra = 0;
+	wcl.hCursor = LoadCursor (NULL, IDC_ARROW);
 	wcl.lpszClassName = "Roguelike";
 	wcl.lpfnWndProc = &WndProc;
 	

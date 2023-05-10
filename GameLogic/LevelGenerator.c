@@ -427,7 +427,7 @@ int find_path(char* real_map, int lenght, int height) {
             }
         }
     }
-   
+	free(map);
     return index_end;
 }
 

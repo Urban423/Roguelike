@@ -125,7 +125,9 @@ void CreateSceneGame(Scene* scene)
 	Vector2 sca;
 	CreateVector2(&sca, 2, 2);
 	
+	TextMesh* textMesh;
 	Pause* pause;
+	ExitTrigger* exitTrigger;
 	MeshRenderer* meshRenderer;
 	Player* pl;
 	BoxCollider* box;
@@ -149,8 +151,11 @@ void CreateSceneGame(Scene* scene)
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 	TEMPLATE(AddComponent, BoxCollider)(object, &box);
+	TEMPLATE(AddComponent, ExitTrigger)(object, &exitTrigger);
 	AddObject(&scene->objectManager, object);
 	box->isTrigger = 1;
+	box->size.x = 1;
+	box->size.y = 1;
 	exit = object;
 	meshRenderer->textureNumber = 5;
 	
@@ -262,4 +267,69 @@ void CreateSceneGame(Scene* scene)
 		meshRenderer->textureNumber = i + 12;
 		object->parent = parent;
 	}
+	
+	
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	AddObject(&scene->objectManager, object);
+	
+	
+	
+	//Win text
+	CreateVector2(&sca, 30, 30);
+	CreateVector2(&vect, 0, 0);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	exitTrigger->win_menu = object;
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 10;
+	object->enabled = 0;
+	object->parent = cam;
+	parent = object;
+	
+	CreateVector2(&sca, 44, 6);
+	CreateVector2(&vect, 0, 7);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 14;
+	object->parent = parent;
+	
+	CreateVector2(&sca, 22, 3);
+	CreateVector2(&vect, -9, 3);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 15;
+	object->parent = parent;
+	
+	CreateVector2(&sca, 3, 3);
+	CreateVector2(&vect, -5, 3.3f);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, TextMesh)(object, &textMesh);
+	AddObject(&scene->objectManager, object);
+	SetText(textMesh, "123", 3);
+	object->parent = parent;
+	
+	CreateVector2(&sca, 22, 3);
+	CreateVector2(&vect, -7.2f, 1);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 16;
+	object->parent = parent;
+	
+	CreateVector2(&sca, 3, 3);
+	CreateVector2(&vect, -1, 1.3f);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, TextMesh)(object, &textMesh);
+	AddObject(&scene->objectManager, object);
+	SetText(textMesh, "", 0);
+	object->parent = parent;
 }

@@ -41,6 +41,19 @@ void SetText(T* this, char* text, unsigned int size)
 	}
 }
 
+void AddSymbol(T* this, char symbol)
+{
+	char* new_one = (char*)malloc(this->size + 1);
+	for(int i = 0; i < this->size; i++)
+	{
+		new_one[i] = this->text[i];
+	}
+	new_one[this->size] = symbol;
+	free(this->text);
+	this->text = new_one;
+	this->size++;
+}
+
 void template(T, Update)(T *this)
 {
 	
