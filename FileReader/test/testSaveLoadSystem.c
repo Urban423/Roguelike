@@ -11,9 +11,9 @@ int testSaveLoadSystem()
 	printf("testing SaveStatistic: SUCCSESSFULL\n");
 	if(testGetStatistic())
 	{
-		printf("testing testGetStatistic: ERROR\n");
+		printf("testing GetStatistic: ERROR\n");
 		return 1;
 	}
-	printf("testing testGetStatistic: SUCCSESSFULL\n");
+	printf("testing GetStatistic: SUCCSESSFULL\n");
 	return 0;
 }

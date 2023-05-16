@@ -9,6 +9,9 @@ typedef struct Renderer
 {
 	Buffer buffer;
 	HWND hwnd;
+	HBITMAP map;
+	char* pointer;
+	void* void_pointer;
 }Renderer;
 
 char createWindowsWindow(Renderer* renderer);

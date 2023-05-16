@@ -4,7 +4,8 @@
 
 typedef struct Texture
 {
-	char* pixels;
+	int* pixels;
+	unsigned char* alpha;
 	unsigned int width;
 	unsigned int height;
 }Texture;

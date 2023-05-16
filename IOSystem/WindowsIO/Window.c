@@ -67,32 +67,25 @@ char createWindowsWindow(Renderer* renderer)
 	
 	ShowWindow(renderer->hwnd, SW_SHOWNORMAL);
 	
+	renderer->map = CreateBitmap(
+	renderer->buffer.width,
+	renderer->buffer.height,
+	1, 8 * 4, renderer->buffer.buffer);
+	
 	return 0;
 }
 
 char drawImage(Renderer* renderer)
 {
 	HDC hdc = GetDC(renderer->hwnd);
-	
-	char temp = 0;
-	int index = 0;
-	for(int i = 0; i < renderer->buffer.height * renderer->buffer.width; i++)
-	{
-		temp = renderer->buffer.buffer[index];
-		renderer->buffer.buffer[index] = renderer->buffer.buffer[index + 2];
-		renderer->buffer.buffer[index + 2] = temp;
-		index+=4;
-	}
-	//usleep(16000);
-	HBITMAP map = CreateBitmap(renderer->buffer.width, renderer->buffer.height,
-	1, 8 * 4, renderer->buffer.buffer);
+	//HBITMAP map = CreateBitmap(renderer->buffer.width, renderer->buffer.height, 1, 8 * 4, renderer->buffer.buffer);
 
-
+	SetBitmapBits(renderer->map, renderer->buffer.height * 4 * renderer->buffer.width, renderer->buffer.buffer);
 	HDC src = CreateCompatibleDC(hdc);
-	SelectObject(src, map);
+	SelectObject(src, renderer->map);
 	BitBlt(hdc, 0, 0, renderer->buffer.width, renderer->buffer.height, src, 0, 0, SRCCOPY);
 	DeleteDC(src);
-	DeleteObject(map);
+	//DeleteObject(map);
 	ReleaseDC(renderer->hwnd, hdc);
 }
 

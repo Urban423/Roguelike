@@ -268,7 +268,9 @@ Vector2 uv3)
 	
 	int tex_x = 0;
 	int tex_y = 0;
-	int index_of_texture = 0;
+	int* pointer_buffer;
+	unsigned int index_of_alpha_texture = 0;
+	unsigned int index_of_texture = 0;
 	int max_texture_x = texture->width - 1;
 	int max_texture_y = texture->height - 1;
 	
@@ -286,7 +288,6 @@ Vector2 uv3)
 	float B20 = (float)(v0.x - v2.x) / det;
 	
 	
-	unsigned int index = 0;
 	float w0_row, w1_row, w2_row;
 	float stw0_row, stw1_row, stw2_row;
 	Vector2 p = {min_x, min_y};
@@ -296,15 +297,15 @@ Vector2 uv3)
 	stw2_row = w2_row;
 	
 	int st_y = y1;
-	
-	for(int y = y1; y < y2; y++)
+	if(st_y < 0)
 	{
-		if(y < 0)
-		{
-			wx1 += dx13;
-			wx2 += dx12;
-			continue;
-		}
+		wx1 += -st_y * dx13;
+		wx2 += -st_y * dx12;
+		st_y = 0;
+	}
+	
+	for(int y = st_y; y < y2; y++)
+	{
 		if(y > buffer->height - 1)
 		{
 			break;
@@ -322,7 +323,7 @@ Vector2 uv3)
 		w2 += abs(min_x - st) * A01;
 		
 		//calculate new row's of buffer index
-		index = (buffer->width * y + st) * 4;
+		pointer_buffer = buffer->buffer + buffer->width * y + st;
 		
 		for(int x = st; x < (int)wx2; x++)
 		{
@@ -353,14 +354,12 @@ Vector2 uv3)
 			}
 			
 			//calculate index of texture by tex_x and tex_y
-			index_of_texture = (tex_y * texture->width + tex_x) * 4;
+			index_of_texture = tex_y * texture->width + tex_x;
 			
-			if(texture->pixels[index_of_texture + 3] != 0)
+			if(texture->alpha[index_of_texture] != 0)
 			{
 				//Draw Pixel in Buffer
-				buffer->buffer[index]     = texture->pixels[index_of_texture];
-				buffer->buffer[index + 1] = texture->pixels[index_of_texture + 1];
-				buffer->buffer[index + 2] = texture->pixels[index_of_texture + 2];
+				*pointer_buffer = texture->pixels[index_of_texture];
 			}
 			
 			//calculate new column's barecentric coordinates
@@ -369,7 +368,7 @@ Vector2 uv3)
             w2 += A01;
 			
 			//step for the next pixel in buffer
-			index += 4;
+			pointer_buffer++;
 		}
 		
 		//calculate new row's barecentric coordinates
@@ -399,17 +398,15 @@ Vector2 uv3)
 	w1_row = stw1_row;
 	w2_row = stw2_row;
 	
-	
-	//printf("y: %d %d\n", (int)y2, (int)y3);
-	//printf("x: %d %d\n", (int)wx1, (int)wx2);
-	for(int y = y2; y < y3; y++)
+	st_y = y2;
+	if(st_y < 0)
 	{
-		if(y < 0)
-		{
-			wx1 += _dx13;
-			wx2 += dx23;
-			continue;
-		}
+		wx1 += -st_y * _dx13;
+		wx2 += -st_y * dx23;
+		st_y = 0;
+	}
+	for(int y = st_y; y < y3; y++)
+	{
 		if(y > buffer->height - 1)
 		{
 			break;
@@ -427,7 +424,7 @@ Vector2 uv3)
 		w2 += abs(min_x - st) * A01;
 		
 		//calculate new row's of buffer index
-		index = (buffer->width * y + st) * 4;
+		pointer_buffer = buffer->buffer + buffer->width * y + st;
 		
 		for(int x = st; x < (int)wx2; x++)
 		{
@@ -458,14 +455,13 @@ Vector2 uv3)
 			}
 			
 			//calculate index of texture by tex_x and tex_y
-			index_of_texture = (tex_y * texture->width + tex_x) * 4;
+			index_of_alpha_texture = tex_y * texture->width + tex_x;
+			index_of_texture = index_of_alpha_texture;
 			
-			if(texture->pixels[index_of_texture + 3] != 0)
+			if(texture->alpha[index_of_alpha_texture] != 0)
 			{
 				//Draw Pixel in Buffer
-				buffer->buffer[index]     = texture->pixels[index_of_texture];
-				buffer->buffer[index + 1] = texture->pixels[index_of_texture + 1];
-				buffer->buffer[index + 2] = texture->pixels[index_of_texture + 2];
+				*pointer_buffer = texture->pixels[index_of_texture];
 			}
 			
 			//calculate new column's barecentric coordinates
@@ -474,7 +470,7 @@ Vector2 uv3)
             w2 += A01;
 			
 			//step for the next pixel in buffer
-			index += 4;
+			pointer_buffer++;
 		}
 		
 		//calculate new row's barecentric coordinates
@@ -486,23 +482,24 @@ Vector2 uv3)
 		wx1 += _dx13;
 		wx2 += dx23;
     }
+	
 }
 
 void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height) {
 	buffer->width = width;
     buffer->height = height;
-    buffer->buffer = (char*) malloc((width * height * 4) * sizeof(char));
+    buffer->buffer = (int*)malloc(width * height * sizeof(int));
 }
 
 void BufferClear(Buffer* buffer, char r, char g, char b)
 {
-	unsigned int size = buffer->width * buffer->height * 4;
-    for (unsigned int index = 0; index < size; index += 4)
+	int* pointer = buffer->buffer;
+	unsigned int size = buffer->width * buffer->height;
+	int aim = (int)b + ((int)g << 8) + ((int)r << 16) + (255 << 24);
+    for (unsigned int index = 0; index < size; index++)
 	{
-        buffer->buffer[index + 0] = r;
-        buffer->buffer[index + 1] = g;
-        buffer->buffer[index + 2] = b;
-        buffer->buffer[index + 3] = 255;
+        *pointer = aim;
+		pointer++;
     }
 }
 
@@ -585,7 +582,7 @@ void BufferDrawText(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Textu
 					mesh->UV_map[mesh->faces[i + 1]],
 					mesh->UV_map[mesh->faces[i + 2]]);
 		}
-		x_offset += 30;
+		x_offset += 20;
 	}
 		
 	
@@ -594,17 +591,27 @@ void BufferDrawText(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Textu
 
 void SetImage(Buffer* buffer, Texture* texture)
 {
-	int pixel_index = 0;
+	unsigned int max_y = buffer->height - 1;
+	unsigned int max_x = buffer->width - 1;
+	int* pointer = 0;
+	int* texture_pixel_pointer = texture->pixels;
 	for(int y = 0; y < texture->height; y++)
 	{
-		int index = y * buffer->width * 4;
+		if(y > max_y)
+		{
+			break;
+		}
+		pointer = &buffer->buffer[y * buffer->width];
 		for(int x = 0; x < texture->width; x++)
 		{
-			buffer->buffer[index] = texture->pixels[pixel_index];
-			buffer->buffer[index + 1] = texture->pixels[pixel_index + 1];
-			buffer->buffer[index + 2] = texture->pixels[pixel_index + 2];
-			pixel_index += 4;
-			index += 4;
+			if(x > max_x)
+			{
+				texture_pixel_pointer += texture->width - buffer->width;
+				break;
+			}
+			*pointer = *texture_pixel_pointer;
+			texture_pixel_pointer++;
+			pointer++;
 		}
 	}
 }

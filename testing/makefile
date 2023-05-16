@@ -69,7 +69,7 @@ ${Target}: ${MAIN_O}
 	${MAKE} -C ${testSceneDir}
 	
 	${CC} -D test -o ${Target} ${MAIN_O} ${LDFLAGS} -lgdi32 
-	${Target}
+	${Target}.exe
 
 ${objDir}%.o: %.c
 	${CC} ${CFLAGS} -c $< -o $@

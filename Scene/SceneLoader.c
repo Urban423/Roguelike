@@ -23,7 +23,7 @@ void CreateSceneMenu(Scene* scene)
 	MeshRenderer* meshRenderer;
 	Switcher* switcher;
 	
-	CreateVector2(&sca, 88, 44);
+	CreateVector2(&sca, 88, 66);
 	object = (Object*)malloc(sizeof(Object));
 	CreateVector2(&vect, 0, 0);
 	ObjectConstructor(object, vect, sca);
@@ -177,6 +177,55 @@ void CreateSceneGame(Scene* scene)
 	int b_index = 0;
 	int block_size = 4;
 	Buffer b = GenerateLevel(33, 33, time(NULL));
+	
+	for(int y = -1; y < b.height + 1; y++)
+	{
+		CreateVector2(&sca, block_size, block_size);
+		object = (Object*)malloc(sizeof(Object));
+		CreateVector2(&vect, b.width * block_size, block_size * y);
+		ObjectConstructor(object, vect, sca);
+		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+		TEMPLATE(AddComponent, BoxCollider)(object, &box);
+		AddObject(&scene->objectManager, object);
+		box->size.x = 2;
+		box->size.y = 2;
+		meshRenderer->textureNumber = 2;
+		
+		CreateVector2(&sca, block_size, block_size);
+		object = (Object*)malloc(sizeof(Object));
+		CreateVector2(&vect, -block_size, block_size * y);
+		ObjectConstructor(object, vect, sca);
+		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+		TEMPLATE(AddComponent, BoxCollider)(object, &box);
+		AddObject(&scene->objectManager, object);
+		box->size.x = 2;
+		box->size.y = 2;
+		meshRenderer->textureNumber = 2;
+	}
+	for(int x = 0; x < b.width; x++)
+	{
+		CreateVector2(&sca, block_size, block_size);
+		object = (Object*)malloc(sizeof(Object));
+		CreateVector2(&vect, x * block_size, block_size * b.height);
+		ObjectConstructor(object, vect, sca);
+		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+		TEMPLATE(AddComponent, BoxCollider)(object, &box);
+		AddObject(&scene->objectManager, object);
+		box->size.x = 2;
+		box->size.y = 2;
+		meshRenderer->textureNumber = 2;
+		
+		CreateVector2(&sca, block_size, block_size);
+		object = (Object*)malloc(sizeof(Object));
+		CreateVector2(&vect, x * block_size, -block_size);
+		ObjectConstructor(object, vect, sca);
+		TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+		TEMPLATE(AddComponent, BoxCollider)(object, &box);
+		AddObject(&scene->objectManager, object);
+		box->size.x = 2;
+		box->size.y = 2;
+		meshRenderer->textureNumber = 2;
+	}
 	for(int y = 0; y < b.height; y++)
 	{
 		for(int x = 0; x < b.width; x++)

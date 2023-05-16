@@ -110,7 +110,7 @@ char test_createKeyBoard()
 	freopen("input.txt", "r", stdin);
 	CreateInput(&keys);
 	fclose(stdout);
-	freopen("CON", "r", stdin);
+	freopen("CON", "w", stdout);
 	
 	for(int i = 0;i < 256; i++)
 	{
@@ -128,7 +128,7 @@ char test_updateKeyBoard()
 	freopen("input.txt", "r", stdin);
 	UpdateInput(&keys);
 	fclose(stdout);
-	freopen("CON", "r", stdin);
+	freopen("CON", "w", stdout);
 	
 	for(int i = 0;i < 256; i++)
 	{

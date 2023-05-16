@@ -26,7 +26,7 @@ typedef struct Buffer
 {
 	unsigned int width;
 	unsigned int height;
-	char* buffer;
+	int* buffer;
 }Buffer;
 
 

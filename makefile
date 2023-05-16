@@ -18,7 +18,7 @@ ${Target}: clean
 	${MAKE} -C ${IODir}
 	${MAKE} -C ${SceneDir}
 	
-	${MAKE} -C ${TestingDir}
+	
 	
 	${MAKE} -C ${MainDir}
 	

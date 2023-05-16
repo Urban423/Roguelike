@@ -9,7 +9,7 @@
 #define MAX(i, j) (((i) > (j)) ? (i) : (j))
 #define abs(x)  ( ( (x) < 0) ? -(x) : (x) )
 
-const unsigned int MIN_LEAF_SIZE = 6;
+const unsigned int MIN_LEAF_SIZE = 3;
 	
 typedef struct Rectangle
 {
@@ -329,7 +329,7 @@ int selectSpawn(Buffer* buffer)
 	return index;
 }
 
-int find_path(char* real_map, int lenght, int height) {
+int find_path(int* real_map, int lenght, int height) {
     int index_begin=-1;
     for (int i = 0; i < height; i++) 
 	{
@@ -437,7 +437,7 @@ Buffer new_Buffer(unsigned int width, unsigned int height)
 	Buffer buffer;
 	buffer.height = height;
 	buffer.width = width;
-	buffer.buffer = (char*)malloc(width * height);
+	buffer.buffer = (int*)malloc(width * height * sizeof(int));
 	for(int i = 0; i < height * width; i++)
 	{
 		buffer.buffer[i] = ' ';
@@ -477,5 +477,6 @@ Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 	buffer.buffer[index] = 'e';
 	
 	DrawBuffer(&buffer);
+	
 	return buffer;
 }

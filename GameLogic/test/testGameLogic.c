@@ -5,6 +5,7 @@ int testGameLogic()
 	if(test_ObjectConstructor())
 	{
 		printf("testing ObjectConstructor: ERROR\n");
+		return 1;
 	}
 	else{	
 		printf("testing ObjectConstructor: SUCCSESSFULL\n");
@@ -13,6 +14,7 @@ int testGameLogic()
 	if(test_UpdateObject())
 	{
 		printf("testing UpdateObject: ERROR\n");
+		return 1;
 	}
 	else{	
 		printf("testing UpdateObject: SUCCSESSFULL\n");
@@ -21,6 +23,7 @@ int testGameLogic()
 	if(testCalculatePhysic())
 	{
 		printf("testing UpdatePhysic: ERROR\n");
+		return 1;
 	}
 	else{	
 		printf("testing UpdatePhysic: SUCCSESSFULL\n");
@@ -29,6 +32,7 @@ int testGameLogic()
 	if(testGenerateLevel())
 	{
 		printf("testing GenerateLevel: ERROR\n");
+		return 1;
 	}
 	else{	
 		printf("testing GenerateLevel: SUCCSESSFULL\n");
@@ -37,6 +41,7 @@ int testGameLogic()
 	if(testCreateTime())
 	{
 		printf("testing CreateTime: ERROR\n");
+		return 1;
 	}
 	else{	
 		printf("testing CreateTime: SUCCSESSFULL\n");
@@ -45,6 +50,7 @@ int testGameLogic()
 	if(testUpdateTime())
 	{
 		printf("testing UpdateTime: ERROR\n");
+		return 1;
 	}
 	else{	
 		printf("testing UpdateTime: SUCCSESSFULL\n");
@@ -53,6 +59,7 @@ int testGameLogic()
 	if(testSetKeyBoard())
 	{
 		printf("testing SetInput: ERROR\n");
+		return 1;
 	}
 	else{	
 		printf("testing SetInput: SUCCSESSFULL\n");

@@ -19,8 +19,6 @@ char ReadBMPFile(Texture* texture, const char* filename)
     fread(&bfOffBits, sizeof(int), 1, f);
 	
 	
-	//printf("%d %d %d %d %d\n", bfType, bfSize, bfReserved1, bfReserved2, bfOffBits);
-	
 	int    biSize;
 	int    biWidth;
 	int    biHeight;
@@ -45,33 +43,45 @@ char ReadBMPFile(Texture* texture, const char* filename)
     fread(&biClrUsed, sizeof(int), 1, f);
     fread(&biClrImportant, sizeof(int), 1, f);
 	
+	//move to main data
+	fseek(f, bfOffBits, SEEK_SET);
 	
-	//printf("%d %d %d %d %d %d %d %d\n", biSize, biWidth, biHeight, biPlanes, biBitCount, biCompression, biSizeImage, biXPelsPerMeter, biYPelsPerMeter, biClrUsed, biClrImportant);
-
+	//set texture's data
 	texture->width = biWidth;
 	texture->height = biHeight;
-    texture->pixels = (char*)malloc(biWidth * biHeight * 4);
-
-	fseek(f, bfOffBits, SEEK_SET);
-
-	char temp;
-	int index = 0;
+    texture->pixels = (int*)malloc(biWidth * biHeight * sizeof(int));
+    texture->alpha = (unsigned char*)malloc(biWidth * biHeight);
+	
+	//helping values
+	unsigned char* alpha_ptr = texture->alpha;
+	char temp = 0;
+	unsigned int index = 0;
+	
     for(int y = 0; y < biHeight; y++) 
 	{
-		index = (biHeight - y - 1) * biWidth * 4;
+		// left_bottom_corner index -> left_to_corner index
+		index = (biHeight - y - 1) * biWidth;
+		alpha_ptr = &texture->alpha[index];
+		
         for(int x = 0; x < biWidth; x++) 
 		{
-			fread(&texture->pixels[index], biBitCount / 8, 1, f);
-			temp = texture->pixels[index];
-			texture->pixels[index] = texture->pixels[index + 2];
-			texture->pixels[index + 2] = temp;
-			if(biBitCount < 32)
+			if(biBitCount == 32)
 			{
-				texture->pixels[index + 3] = 255;
+				fread(&texture->pixels[index], 3, 1, f);
+				fread(alpha_ptr, 1, 1, f);
 			}
-			//printf("%d\n", texture->pixels[index + 3]); 
-			index+=4;
+			else
+			{
+				fread(&texture->pixels[index], biBitCount / 8, 1, f);
+				*alpha_ptr = 255;
+			}
+			
+			//change indexes
+			index++;
+			alpha_ptr++;
         }
+		
+		//skip offset
 		fseek(f,  (biWidth* (biBitCount / 8)) % 4, SEEK_CUR);
     }
     return 0;
