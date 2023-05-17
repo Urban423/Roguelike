@@ -1,5 +1,11 @@
 #include "Color.h"
 
+int toInt(Color color)
+{
+	int res = (int)color.b + ((int)color.g << 8) + ((int)color.r << 16) + ((int)color.a << 24);
+	return res;
+}
+
 Color newColor(float r, float g, float b, float a)
 {
 	Color ret;

@@ -4,6 +4,7 @@
 #include <math.h>
 #include <malloc.h>
 #include <stddef.h>
+includeTime
 
 #undef T
 #define T TextMesh
@@ -56,7 +57,7 @@ void AddSymbol(T* this, char symbol)
 
 void template(T, Update)(T *this)
 {
-	
+	this->inherited_class.object->transform.rotation += 0.1f;
 }
 
 void template(T, OnTriggerStay)(T* this, Object* object)

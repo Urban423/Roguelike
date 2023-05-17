@@ -75,7 +75,7 @@ void onCreate(Scene* scene)
 	memset(&scene->objectManager, 0, sizeof(ObjectManager));
 	CreateSceneMenu(scene);
 	CreateTime(&Time);
-	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 10, 90);
+	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 10, 40);
 }
 
 void UpdateCamera(Scene* scene, Transfrom* tf)

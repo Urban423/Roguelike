@@ -52,6 +52,11 @@ int Orientation(Vector2* a, Vector2* b, Vector2* c)
 	return (b->x - a->x)*(c->y - a->y) - (c->x - a->x)*(b->y - a->y);
 }
 
+void sortThreePointsByY(Vector2* a, Vector2* b, Vector2* c)
+{
+	
+}
+
 void DrawLine(Buffer* buffer,
 int x1, int y1, 
 int x2, int y2,
@@ -128,70 +133,220 @@ Vector2 uv1,
 Vector2 uv2,
 Vector2 uv3)
 {
-	float perc = (float)1 / 255;
-	
-	float x_size = 1;
-	float xOffset = 0;
-	float y_size = 1;
-	float yOffset = 0.0f;
-	
-	uv1.x = uv1.x * x_size + xOffset;
-	uv2.x = uv2.x * x_size + xOffset;
-	uv3.x = uv3.x * x_size + xOffset;
-	uv1.y = uv1.y * y_size + yOffset;
-	uv2.y = uv2.y * y_size + yOffset;
-	uv3.y = uv3.y * y_size + yOffset;
-	
-	int min_y = max_int(0, min_int(y1, min_int(y2, y3)));
-	int max_y = min_int(buffer->height - 1, max_int(y1, max_int(y2, y3)));
-	int min_x = max_int(0, min_int(x1, min_int(x2, x3)));
-	int max_x = min_int(buffer->width - 1,  max_int(x1, max_int(x2, x3)));
-	
-	Vector2 a = {x1, y1};
-	Vector2 b = {x2, y2};
-	Vector2 c = {x3, y3};
-	
-	int index;
-	for (int i = min_y; i <= max_y; i++)
+	if(y1 > y2)
 	{
-		index = i * buffer->width + min_x;
-		index *= 4;
-		for (int j = min_x; j <= max_x; j++)
-		{
-			float w1, w2, w3;
-			Vector2 p = {j, i};
-			getBarycentricCoordinates(&w1, &w2, &w3, p, a, b, c);
-            if (w1 >= 0 && w2 >= 0 && w3 >= 0) 
-			{
-                float u = w1 * uv1.x + w2 * uv2.x + w3 * uv3.x;
-                float v = w1 * uv1.y + w2 * uv2.y + w3 * uv3.y;
-				
-				if(u > 1)
-				{
-					u = u - (int)u;
-				}
-				if(v > 1)
-				{
-					v = v - (int)v;
-				}
-					
-				int tex_x = min_int((int)(u * texture->width), texture->width - 1);
-				int tex_y = min_int((int)(v * texture->height), texture->height - 1);
-					
-				int tex_index = (tex_y * texture->width + tex_x) * 4;
-				
-				if(texture->pixels[tex_index + 3] != 0)
-				{
-					
-					float percent = (float)((unsigned char)texture->pixels[tex_index + 3]) * perc;
-					buffer->buffer[index] = lerp(buffer->buffer[index], texture->pixels[tex_index], 0);
-					buffer->buffer[index + 1] = lerp(buffer->buffer[index + 1], texture->pixels[tex_index + 1], 0);
-					buffer->buffer[index + 2] = lerp(buffer->buffer[index + 2], texture->pixels[tex_index + 2], 0);
-				}
-            }
-			index += 4;
-		}
+		swap_int(&x1, &x2);
+		swap_int(&y1, &y2);
+		swap_Vector2(&uv1, &uv2);
+	}
+	if(y1 > y3)
+	{
+		swap_int(&x1, &x3);
+		swap_int(&y1, &y3);
+		swap_Vector2(&uv1, &uv3);
+	}
+	if(y2 > y3)
+	{
+		swap_int(&x2, &x3);
+		swap_int(&y2, &y3);
+		swap_Vector2(&uv2, &uv3);
+	}
+	if(y3 < 0)
+	{
+		return;
+	}
+	if(y1 > (int)buffer->height - 1)
+	{
+		return;
+	}
+	
+	
+	int color1 = toInt(newColor(255, 0, 0, 0));
+	int color2 = toInt(newColor(0, 255, 0, 0));
+	int color3 = toInt(newColor(0, 0, 255, 0));
+	
+	int delta_color12 = abs(y2 - y1);
+	int delta_color13 = abs(y3 - y1);
+	int delta_color23 = abs(y3 - y2);
+	
+	int deltaColor12 = color2 - color1;
+	if(delta_color12 == 0)
+	{
+		deltaColor12 = 0;
+	}else{
+		deltaColor12 /= delta_color12;
+	}
+	
+	
+	int deltaColor13 = color3 - color1;
+	if(delta_color13 == 0)
+	{
+		deltaColor13 = 0;
+	}else{
+		deltaColor13 /= delta_color13;
+	}
+	
+	int INTdeltaColorLeftSt = color1;
+	int INTdeltaColorRightSt = color1;
+	
+	
+	int min_y = max_int(0, y1);
+	int min_x = max_int(0, min_int(x1, min_int(x2, x3)));
+	
+	char changed = 0;
+	float dx13 = 0;
+	float dx12 = 0;
+	float dx23 = 0;
+	if (y3 != y1) 
+	{
+		dx13 = (float)(x3 - x1);
+		dx13 /= y3 - y1;
     }
+	if (y2 != y1)
+	{
+		dx12 = (float)(x2 - x1);
+		dx12 /= (y2 - y1);
+	}
+	if (y3 != y2)
+	{
+		dx23 = (float)(x3 - x2);
+		dx23 /= (y3 - y2);
+    }
+	if(x2 > x3)
+	{
+		changed = 1;
+	}
+	
+	float wx1 = (float)x1;
+    float wx2 = wx1;
+	float _dx13 = dx13;
+	
+	if (dx13 > dx12)
+    {
+		swap_float(&dx13, &dx12);
+    }
+	
+	int tex_x = 0;
+	int tex_y = 0;
+	int* pointer_buffer;
+	unsigned int index_of_texture = 0;
+	int max_texture_x = texture->width - 1;
+	int max_texture_y = texture->height - 1;
+	
+	int st;
+	int st_y = y1;
+	if(st_y < 0)
+	{
+		wx1 += -st_y * dx13;
+		wx2 += -st_y * dx12;
+		st_y = 0;
+	}
+	
+	
+	for(int y = st_y; y < y2; y++)
+	{
+		if(y > buffer->height - 1)
+		{
+			break;
+		}
+		st = (int)wx1;
+		if(st < 0)
+		{
+			st = 0;
+		}
+		
+		int pixel_color = INTdeltaColorLeftSt;
+		int delta_x = (int)wx2 - (int)wx1;
+		int delta_color = INTdeltaColorRightSt - INTdeltaColorLeftSt;
+		if(delta_x == 0)
+		{
+			delta_color = 0;
+		}else{
+			delta_color /= delta_x;
+		}
+		
+		//calculate new row's of buffer index
+		pointer_buffer = buffer->buffer + buffer->width * y + st;
+		
+		for(int x = st; x < (int)wx2; x++)
+		{
+			if(x > buffer->width - 1)
+			{
+				break;
+			}
+			
+			//Draw Pixel in Buffer
+			*pointer_buffer = pixel_color;
+
+			pixel_color += delta_color;
+			
+			//step for the next pixel in buffer
+			pointer_buffer++;
+		}
+		
+		INTdeltaColorRightSt += deltaColor13;
+		INTdeltaColorLeftSt += deltaColor12;
+		
+		//calculate new row's x coordinates
+		wx1 += dx13;
+		wx2 += dx12;
+    }
+	
+	if (y1 == y2)
+	{
+		wx1 = (float)x1;
+		wx2 = (float)x2;
+    }
+	if (_dx13 < dx23)
+	{
+		swap_float(&_dx13, &dx23);
+	}
+	if(wx1 > wx2)
+	{
+		swap_float(&wx1, &wx2);
+	}
+	
+	st_y = y2;
+	if(st_y < 0)
+	{
+		wx1 += -st_y * _dx13;
+		wx2 += -st_y * dx23;
+		st_y = 0;
+	}
+	
+	for(int y = st_y; y < y3; y++)
+	{
+		if(y > buffer->height - 1)
+		{
+			break;
+		}
+		st = (int)wx1;
+		if(wx1 < 0)
+		{
+			st = 0;
+		}
+		
+		//calculate new row's of buffer index
+		pointer_buffer = buffer->buffer + buffer->width * y + st;
+		
+		for(int x = st; x < (int)wx2; x++)
+		{
+			if(x > buffer->width - 1)
+			{
+				break;
+			}
+			
+			*pointer_buffer = 666;
+			
+			//step for the next pixel in buffer
+			pointer_buffer++;
+		}
+		
+		//calculate new row's x coordinates
+		wx1 += _dx13;
+		wx2 += dx23;
+    }
+	
 }
 
 void DrawTriangle(Buffer* buffer, 
@@ -287,7 +442,12 @@ Vector2 uv3)
 	float B12 = (float)(v2.x - v1.x) / det;
 	float B20 = (float)(v0.x - v2.x) / det;
 	
+	long double delta_u = uv1.x * A12 * uv2.x * A20 * uv3.x * A01;
+	long double delta_v = uv1.y * A12 * uv2.y * A20 * uv3.y * A01;
 	
+	int st;
+	float u, v;
+	float w0, w1, w2;
 	float w0_row, w1_row, w2_row;
 	float stw0_row, stw1_row, stw2_row;
 	Vector2 p = {min_x, min_y};
@@ -304,16 +464,17 @@ Vector2 uv3)
 		st_y = 0;
 	}
 	
+	
 	for(int y = st_y; y < y2; y++)
 	{
 		if(y > buffer->height - 1)
 		{
 			break;
 		}
-		float w0 = w0_row;
-        float w1 = w1_row;
-        float w2 = w2_row;
-		int st = (int)wx1;
+		w0 = w0_row;
+        w1 = w1_row;
+        w2 = w2_row;
+		st = (int)wx1;
 		if(st < 0)
 		{
 			st = 0;
@@ -331,8 +492,8 @@ Vector2 uv3)
 			{
 				break;
 			}
-			float u = w0 * uv1.x + w1 * uv2.x + w2 * uv3.x;
-			float v = w0 * uv1.y + w1 * uv2.y + w2 * uv3.y;
+			u = w0 * uv1.x + w1 * uv2.x + w2 * uv3.x;
+			v = w0 * uv1.y + w1 * uv2.y + w2 * uv3.y;
 			
 			tex_x = (int)(u * texture->width);
 			if(tex_x > max_texture_x)
@@ -362,10 +523,14 @@ Vector2 uv3)
 				*pointer_buffer = texture->pixels[index_of_texture];
 			}
 			
+			//u += delta_u;
+			//v += delta_v;
+			
 			//calculate new column's barecentric coordinates
 			w0 += A12;
             w1 += A20;
             w2 += A01;
+			
 			
 			//step for the next pixel in buffer
 			pointer_buffer++;
@@ -405,16 +570,17 @@ Vector2 uv3)
 		wx2 += -st_y * dx23;
 		st_y = 0;
 	}
+	
 	for(int y = st_y; y < y3; y++)
 	{
 		if(y > buffer->height - 1)
 		{
 			break;
 		}
-		float w0 = w0_row;
-        float w1 = w1_row;
-        float w2 = w2_row;
-		int st = (int)wx1;
+		w0 = w0_row;
+        w1 = w1_row;
+        w2 = w2_row;
+		st = (int)wx1;
 		if(wx1 < 0)
 		{
 			st = 0;
@@ -432,8 +598,8 @@ Vector2 uv3)
 			{
 				break;
 			}
-			float u = w0 * uv1.x + w1 * uv2.x + w2 * uv3.x;
-			float v = w0 * uv1.y + w1 * uv2.y + w2 * uv3.y;
+			u = w0 * uv1.x + w1 * uv2.x + w2 * uv3.x;
+			v = w0 * uv1.y + w1 * uv2.y + w2 * uv3.y;
 			
 			tex_x = (int)(u * texture->width);
 			if(tex_x > max_texture_x)
@@ -514,7 +680,7 @@ void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Tex
 	
 	for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
 	{
-		DrawTriangle(buffer, 
+		DrawTriangleByTexture(buffer, 
 				copy_of_verticles[mesh->faces[i]].x - 15,  copy_of_verticles[mesh->faces[i]].y - 15,
 				copy_of_verticles[mesh->faces[i + 1]].x - 15, copy_of_verticles[mesh->faces[i + 1]].y - 15,
 				copy_of_verticles[mesh->faces[i + 2]].x - 15, copy_of_verticles[mesh->faces[i + 2]].y- 15,
@@ -573,14 +739,7 @@ void BufferDrawText(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Textu
 		}
 		for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
 		{
-			DrawTriangle(buffer, 
-					copy_of_verticles[mesh->faces[i]].x - 15 + x_offset ,  copy_of_verticles[mesh->faces[i]].y - 15 + y_offset,
-					copy_of_verticles[mesh->faces[i + 1]].x - 15 + x_offset, copy_of_verticles[mesh->faces[i + 1]].y - 15 + y_offset,
-					copy_of_verticles[mesh->faces[i + 2]].x- 15 + x_offset, copy_of_verticles[mesh->faces[i + 2]].y- 15 + y_offset,
-					&texture[index], 
-					mesh->UV_map[mesh->faces[i]],
-					mesh->UV_map[mesh->faces[i + 1]],
-					mesh->UV_map[mesh->faces[i + 2]]);
+			
 		}
 		x_offset += 20;
 	}
