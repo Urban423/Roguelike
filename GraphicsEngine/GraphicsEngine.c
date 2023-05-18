@@ -160,36 +160,6 @@ Vector2 uv3)
 		return;
 	}
 	
-	
-	int color1 = toInt(newColor(255, 0, 0, 0));
-	int color2 = toInt(newColor(0, 255, 0, 0));
-	int color3 = toInt(newColor(0, 0, 255, 0));
-	
-	int delta_color12 = abs(y2 - y1);
-	int delta_color13 = abs(y3 - y1);
-	int delta_color23 = abs(y3 - y2);
-	
-	int deltaColor12 = color2 - color1;
-	if(delta_color12 == 0)
-	{
-		deltaColor12 = 0;
-	}else{
-		deltaColor12 /= delta_color12;
-	}
-	
-	
-	int deltaColor13 = color3 - color1;
-	if(delta_color13 == 0)
-	{
-		deltaColor13 = 0;
-	}else{
-		deltaColor13 /= delta_color13;
-	}
-	
-	int INTdeltaColorLeftSt = color1;
-	int INTdeltaColorRightSt = color1;
-	
-	
 	int min_y = max_int(0, y1);
 	int min_x = max_int(0, min_int(x1, min_int(x2, x3)));
 	
@@ -241,62 +211,115 @@ Vector2 uv3)
 		wx2 += -st_y * dx12;
 		st_y = 0;
 	}
-	
-	
-	for(int y = st_y; y < y2; y++)
+	int end_y = y2;
+	if(end_y > buffer->height - 1)
 	{
-		if(y > buffer->height - 1)
-		{
-			break;
-		}
+		end_y = buffer->height;
+	}
+	
+	
+	int y_from_left = y2;
+	int y_from_right = y3;
+	if(x2 > x3)
+	{
+		swap_int(&y_from_left, &y_from_right);
+		swap_Vector2(&uv2, &uv3);
+	}
+	
+	double u_left = uv1.x;
+	double v_left = uv1.y;
+	double u_right = u_left;
+	double v_right = v_left;
+	double delta_u_left  = (uv2.x - u_left) / (y_from_left - y1);
+	double delta_v_left  = (uv2.y - v_left) / (y_from_left - y1);
+	
+	double delta_u_right = (uv3.x - u_left) / (y_from_right - y1);
+	double delta_v_right = (uv3.y - v_left) / (y_from_right - y1);
+	
+	double u;
+	double v;
+	double delta_u;
+	double delta_v;
+	
+	for(int y = st_y; y < end_y; y++)
+	{
 		st = (int)wx1;
 		if(st < 0)
 		{
 			st = 0;
 		}
-		
-		int pixel_color = INTdeltaColorLeftSt;
-		int delta_x = (int)wx2 - (int)wx1;
-		int delta_color = INTdeltaColorRightSt - INTdeltaColorLeftSt;
-		if(delta_x == 0)
+		int end_x = (int)wx2;
+		if(end_x > buffer->width - 1)
 		{
-			delta_color = 0;
-		}else{
-			delta_color /= delta_x;
+			end_x = buffer->width;
 		}
 		
 		//calculate new row's of buffer index
 		pointer_buffer = buffer->buffer + buffer->width * y + st;
 		
-		for(int x = st; x < (int)wx2; x++)
+		u = u_left;
+		v = v_left;
+		delta_u = (u_right - u_left) / (wx2 - wx1);
+		delta_v = (v_right - v_left) / (wx2 - wx1);
+		
+		for(int x = st; x < end_x; x++)
 		{
-			if(x > buffer->width - 1)
-			{
-				break;
-			}
+			tex_x = (int)(u * texture->width);
+			tex_y = (int)(v * texture->height);
 			
-			//Draw Pixel in Buffer
-			*pointer_buffer = pixel_color;
+			index_of_texture = tex_y * texture->width + tex_x;
+			
+			*pointer_buffer = texture->pixels[index_of_texture];
 
-			pixel_color += delta_color;
-			
+			u += delta_u;
+			v += delta_v;
 			//step for the next pixel in buffer
 			pointer_buffer++;
 		}
+		u_left += delta_u_left;
+		v_left += delta_v_left;
 		
-		INTdeltaColorRightSt += deltaColor13;
-		INTdeltaColorLeftSt += deltaColor12;
+		u_right += delta_u_right;
+		v_right += delta_v_right;
 		
 		//calculate new row's x coordinates
 		wx1 += dx13;
 		wx2 += dx12;
     }
 	
+	
+	if(x1 > x2)
+	{
+		swap_Vector2(&uv1, &uv2);
+	}
 	if (y1 == y2)
 	{
+		u_left = uv1.x;
+		v_left = uv1.y;
+		u_right = uv2.x;
+		v_right = uv2.y;
 		wx1 = (float)x1;
 		wx2 = (float)x2;
+	
+		delta_u_left  = (uv3.x - u_left) / (y3 - y2);
+		delta_v_left  = (uv3.y - v_left) / (y3 - y2);
+		delta_u_right  = (uv3.x - u_right) / (y3 - y2);
+		delta_v_right  = (uv3.y - v_right) / (y3 - y2);
     }
+	else
+	{
+		if(x2 > x3)
+		{
+			delta_u_right  = (uv3.x - u_right) / (y3 - y2);
+			delta_v_right  = (uv3.y - v_right) / (y3 - y2);
+		}
+		else
+		{
+			delta_u_left  = (uv3.x - u_left) / (y3 - y2);
+			delta_v_left  = (uv3.y - v_left) / (y3 - y2);
+		}
+	}
+	
 	if (_dx13 < dx23)
 	{
 		swap_float(&_dx13, &dx23);
@@ -313,40 +336,59 @@ Vector2 uv3)
 		wx2 += -st_y * dx23;
 		st_y = 0;
 	}
-	
-	for(int y = st_y; y < y3; y++)
+	end_y = y3;
+	if(end_y > buffer->height - 1)
 	{
-		if(y > buffer->height - 1)
-		{
-			break;
-		}
+		end_y = buffer->height;
+	}
+	
+	for(int y = st_y; y < end_y; y++)
+	{
 		st = (int)wx1;
 		if(wx1 < 0)
 		{
 			st = 0;
 		}
+		int end_x = (int)wx2;
+		if(end_x > buffer->width - 1)
+		{
+			end_x = buffer->width;
+		}
 		
 		//calculate new row's of buffer index
 		pointer_buffer = buffer->buffer + buffer->width * y + st;
 		
-		for(int x = st; x < (int)wx2; x++)
+		u = u_left;
+		v = v_left;
+		delta_u = (u_right - u_left) / (wx2 - wx1);
+		delta_v = (v_right - v_left) / (wx2 - wx1);
+		
+		for(int x = st; x < end_x; x++)
 		{
-			if(x > buffer->width - 1)
-			{
-				break;
-			}
+			tex_x = (int)(u * texture->width);
+			tex_y = (int)(v * texture->height);
 			
-			*pointer_buffer = 666;
+			index_of_texture = tex_y * texture->width + tex_x;
+			
+			*pointer_buffer = texture->pixels[index_of_texture];
+			
+			u += delta_u;
+			v += delta_v;
 			
 			//step for the next pixel in buffer
 			pointer_buffer++;
 		}
 		
+		u_left += delta_u_left;
+		v_left += delta_v_left;
+		
+		u_right += delta_u_right;
+		v_right += delta_v_right;
+		
 		//calculate new row's x coordinates
 		wx1 += _dx13;
 		wx2 += dx23;
     }
-	
 }
 
 void DrawTriangle(Buffer* buffer, 

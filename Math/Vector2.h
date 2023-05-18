@@ -24,8 +24,8 @@ typedef struct Transfrom
 
 typedef struct Buffer
 {
-	unsigned int width;
-	unsigned int height;
+	int width;
+	int height;
 	int* buffer;
 }Buffer;
 

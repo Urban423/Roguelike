@@ -57,7 +57,7 @@ void AddSymbol(T* this, char symbol)
 
 void template(T, Update)(T *this)
 {
-	this->inherited_class.object->transform.rotation += 0.1f;
+	this->inherited_class.object->transform.rotation += 0.3f;
 }
 
 void template(T, OnTriggerStay)(T* this, Object* object)
