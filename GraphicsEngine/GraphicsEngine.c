@@ -182,10 +182,10 @@ Vector2 uv3)
 		dx23 = (float)(x3 - x2);
 		dx23 /= (y3 - y2);
     }
-	if(x2 > x3)
-	{
-		changed = 1;
-	}
+	
+	
+	
+	//draw bottom triangle part
 	
 	float wx1 = (float)x1;
     float wx2 = wx1;
@@ -203,25 +203,12 @@ Vector2 uv3)
 	int max_texture_x = texture->width - 1;
 	int max_texture_y = texture->height - 1;
 	
-	int st;
-	int st_y = y1;
-	if(st_y < 0)
-	{
-		wx1 += -st_y * dx13;
-		wx2 += -st_y * dx12;
-		st_y = 0;
-	}
-	int end_y = y2;
-	if(end_y > buffer->height - 1)
-	{
-		end_y = buffer->height;
-	}
-	
 	
 	int y_from_left = y2;
 	int y_from_right = y3;
 	if(x2 > x3)
 	{
+		changed = 1;
 		swap_int(&y_from_left, &y_from_right);
 		swap_Vector2(&uv2, &uv3);
 	}
@@ -241,11 +228,41 @@ Vector2 uv3)
 	double delta_u;
 	double delta_v;
 	
+	
+	//calculate y start y end
+	int st;
+	int st_y = y1;
+	if(st_y < 0)
+	{
+		u_left += -st_y * delta_u_left;
+		v_left += -st_y * delta_v_left;
+		u_right += -st_y * delta_u_right;
+		v_right += -st_y * delta_v_right;
+		
+		wx1 += -st_y * dx13;
+		wx2 += -st_y * dx12;
+		st_y = 0;
+	}
+	int end_y = y2;
+	if(end_y > buffer->height - 1)
+	{
+		end_y = buffer->height;
+	}
+	
 	for(int y = st_y; y < end_y; y++)
 	{
+		u = u_left;
+		v = v_left;
+		delta_u = (u_right - u_left) / (wx2 - wx1);
+		delta_v = (v_right - v_left) / (wx2 - wx1);
+		
+		
+		//calculate start row's x and end row's x
 		st = (int)wx1;
 		if(st < 0)
 		{
+			u += -st * delta_u;
+			v += -st * delta_v;
 			st = 0;
 		}
 		int end_x = (int)wx2;
@@ -257,11 +274,6 @@ Vector2 uv3)
 		//calculate new row's of buffer index
 		pointer_buffer = buffer->buffer + buffer->width * y + st;
 		
-		u = u_left;
-		v = v_left;
-		delta_u = (u_right - u_left) / (wx2 - wx1);
-		delta_v = (v_right - v_left) / (wx2 - wx1);
-		
 		for(int x = st; x < end_x; x++)
 		{
 			tex_x = (int)(u * texture->width);
@@ -269,7 +281,9 @@ Vector2 uv3)
 			
 			index_of_texture = tex_y * texture->width + tex_x;
 			
+			if(texture->alpha[index_of_texture] != 0){
 			*pointer_buffer = texture->pixels[index_of_texture];
+			}
 
 			u += delta_u;
 			v += delta_v;
@@ -288,12 +302,21 @@ Vector2 uv3)
     }
 	
 	
-	if(x1 > x2)
+	
+	//draw top triangle part
+	
+	if(changed == 1)
 	{
-		swap_Vector2(&uv1, &uv2);
+		swap_Vector2(&uv2, &uv3);
 	}
 	if (y1 == y2)
 	{
+		if(x1 > x2)
+		{
+			swap_int(&x1, &x2);
+			swap_int(&y1, &y2);
+			swap_Vector2(&uv1, &uv2);
+		}
 		u_left = uv1.x;
 		v_left = uv1.y;
 		u_right = uv2.x;
@@ -332,6 +355,11 @@ Vector2 uv3)
 	st_y = y2;
 	if(st_y < 0)
 	{
+		u_left += -st_y * delta_u_left;
+		v_left += -st_y * delta_v_left;
+		u_right += -st_y * delta_u_right;
+		v_right += -st_y * delta_v_right;
+		
 		wx1 += -st_y * _dx13;
 		wx2 += -st_y * dx23;
 		st_y = 0;
@@ -344,9 +372,18 @@ Vector2 uv3)
 	
 	for(int y = st_y; y < end_y; y++)
 	{
+		u = u_left;
+		v = v_left;
+		delta_u = (u_right - u_left) / (wx2 - wx1);
+		delta_v = (v_right - v_left) / (wx2 - wx1);
+		
+		
+		//calculate start row's x and end row's x
 		st = (int)wx1;
-		if(wx1 < 0)
+		if(st < 0)
 		{
+			u += -st * delta_u;
+			v += -st * delta_v;
 			st = 0;
 		}
 		int end_x = (int)wx2;
@@ -358,11 +395,6 @@ Vector2 uv3)
 		//calculate new row's of buffer index
 		pointer_buffer = buffer->buffer + buffer->width * y + st;
 		
-		u = u_left;
-		v = v_left;
-		delta_u = (u_right - u_left) / (wx2 - wx1);
-		delta_v = (v_right - v_left) / (wx2 - wx1);
-		
 		for(int x = st; x < end_x; x++)
 		{
 			tex_x = (int)(u * texture->width);
@@ -370,7 +402,9 @@ Vector2 uv3)
 			
 			index_of_texture = tex_y * texture->width + tex_x;
 			
+			if(texture->alpha[index_of_texture] != 0){
 			*pointer_buffer = texture->pixels[index_of_texture];
+			}
 			
 			u += delta_u;
 			v += delta_v;
@@ -711,13 +745,19 @@ void BufferClear(Buffer* buffer, char r, char g, char b)
     }
 }
 
-void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture)
+void BufferDrawObject(Buffer* buffer, 
+Matrix3x3* world_pos, 
+Matrix3x3* cam_view,
+Matrix3x3* cam_proj, 
+VertexMesh* mesh, Texture* texture)
 {
+	Matrix3x3 temp = MultipleMatrixMatrix(*world_pos, *cam_view);
+	temp = MultipleMatrixMatrix(temp, *cam_proj);
 	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
 	
 	for(unsigned int i = 0; i < mesh->verticles_size; i++)
 	{
-		copy_of_verticles[i] = MultipleMatrixVector2(world_pos, mesh->verticles[i]);
+		copy_of_verticles[i] = MultipleMatrixVector2(temp, mesh->verticles[i]);
 	}
 	
 	for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
@@ -753,37 +793,55 @@ int CharToTextureIndex(char letter)
 	return -1;
 }
 
-void BufferDrawText(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size)
+void BufferDrawText(Buffer* buffer, 
+Matrix3x3* world_pos,
+Matrix3x3* cam_view,
+Matrix3x3* cam_proj,
+VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size)
 {
+	Matrix3x3 temp = MultipleMatrixMatrix(*world_pos, *cam_view);
+	temp = MultipleMatrixMatrix(temp, *cam_proj);
+
+	float x_offset_add = cam_proj->m_mat[0][0] * 1.1f;
+	float y_offset_add = cam_proj->m_mat[1][1]* 1.45f;
+	
 	float x_offset = 0;
 	float y_offset = 0;
 	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
 	
 	for(unsigned int i = 0; i < mesh->verticles_size; i++)
 	{
-		copy_of_verticles[i] = MultipleMatrixVector2(world_pos, mesh->verticles[i]);
+		copy_of_verticles[i] = MultipleMatrixVector2(temp, mesh->verticles[i]);
 	}
 	
 
 	for(int text_letter = 0; text_letter < text_size; text_letter++)
 	{
+		
 		int index = CharToTextureIndex(text[text_letter]);
 		if(text[text_letter] == '\n')
 		{
 			x_offset = 0;
-			y_offset += 35;
+			y_offset += y_offset_add;
 			continue;
 		}
 		if(index == -1)
 		{
-			x_offset += 30;
+			x_offset += x_offset_add;
 			continue;
 		}
 		for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
 		{
-			
+			DrawTriangleByTexture(buffer, 
+					copy_of_verticles[mesh->faces[i]].x - 15 + x_offset ,  copy_of_verticles[mesh->faces[i]].y - 15 + y_offset,
+					copy_of_verticles[mesh->faces[i + 1]].x - 15 + x_offset, copy_of_verticles[mesh->faces[i + 1]].y - 15 + y_offset,
+					copy_of_verticles[mesh->faces[i + 2]].x- 15 + x_offset, copy_of_verticles[mesh->faces[i + 2]].y- 15 + y_offset,
+					&texture[index], 
+					mesh->UV_map[mesh->faces[i]],
+					mesh->UV_map[mesh->faces[i + 1]],
+					mesh->UV_map[mesh->faces[i + 2]]);
 		}
-		x_offset += 20;
+		x_offset += x_offset_add;
 	}
 		
 	

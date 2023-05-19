@@ -166,7 +166,6 @@ char render(Scene* scene)
 	MeshRenderer* mesh = NULL;
 	Object* obj;
 	ObjectList* list = scene->objectManager.list;
-	Matrix3x3 temp;
 	char galka = 0;
 	
 	for(int i = 0; i < scene->objectManager.size; i++)
@@ -187,19 +186,25 @@ char render(Scene* scene)
 			continue;
 		}
 		ProcessWorldPos(obj);
-		temp = MultipleMatrixMatrix(obj->world_pos, scene->world_cam);
-		temp = MultipleMatrixMatrix(temp, scene->view_proj);
 		
 		TEMPLATE(GetComponent, MeshRenderer)(obj, &mesh);
 		if((mesh == NULL || mesh->inherited_class.enabled == 0) == 0) 
 		{ 
-			BufferDrawObject(&scene->renderer.buffer, temp, &scene->meshes[0], &scene->textures[mesh->textureNumber]);
+			BufferDrawObject(&scene->renderer.buffer, 
+			&obj->world_pos,
+			&scene->world_cam,
+			&scene->view_proj,
+			&scene->meshes[0], &scene->textures[mesh->textureNumber]);
 		}
 		
 		TEMPLATE(GetComponent, TextMesh)(obj, &text);
 		if((text == NULL || text->inherited_class.enabled == 0) == 0) 
 		{ 
-			BufferDrawText(&scene->renderer.buffer, temp, &scene->meshes[0], (Texture*)&scene->alphabet, text->text, text->size);
+			BufferDrawText(&scene->renderer.buffer,
+			&obj->world_pos,
+			&scene->world_cam,
+			&scene->view_proj,
+			&scene->meshes[0], (Texture*)&scene->alphabet, text->text, text->size);
 		}
 	}
 	

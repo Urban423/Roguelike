@@ -21,8 +21,8 @@ Vector2 uv3);
 
 void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height);
 void BufferClear(Buffer* buffer, char r, char g, char b);
-void BufferDrawObject(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture);
-void BufferDrawText(Buffer* buffer, Matrix3x3 world_pos, VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size);
+void BufferDrawObject(Buffer* buffer, Matrix3x3* world_pos, Matrix3x3* cam_view, Matrix3x3* cam_proj, VertexMesh* mesh, Texture* texture);
+void BufferDrawText(  Buffer* buffer, Matrix3x3* world_pos, Matrix3x3* cam_view, Matrix3x3* cam_proj, VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size);
 
 
 void SetImage(Buffer* buffer, Texture* texture);
