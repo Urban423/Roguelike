@@ -3,6 +3,7 @@
 #include "Input.h"
 #include <stdio.h>
 #include <math.h>
+#include <statistic.h>
 includeTime
 includeInput
 
@@ -37,6 +38,10 @@ void template(T, Update)(T *this)
 		{
 			this->statistic->enabled = 0;
 			this->flag = 0;
+		}
+		if(GetKeyDown(KeyCode.X))
+		{
+			clean("./Assets/statistic.txt");
 		}
 		return;
 	}

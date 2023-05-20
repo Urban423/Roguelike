@@ -34,23 +34,30 @@ char SaveStatistic(char* savedata, const char* filename) {
   fseek(file, 0, SEEK_SET);
   fwrite(&new_size, 4, 1, file);
 
-  fseek(file, 4 + old_size, SEEK_SET);
+  fseek(file, 0, SEEK_END);
   fwrite(savedata, 1, size_savedata, file);
 
   fclose(file);
   return 0;
 }
+
 char* GetStatistic(const char* filename) {
   FILE* file;
-  fopen_s(&file, filename, "r");
+  fopen_s(&file, filename, "rb");
   if (file==NULL) {
     return NULL;
   }
   int size;
-  fread(&size, 4, 1, file);
+  int res = fread(&size, 4, 1, file);
+  //fseek(file, 4, SEEK_SET);
   char* data = (char*)malloc(size+1);
+  for(int i = 0; i < size; i++)
+  {
+	  data[i] = getc(file);
+  }
   data[size] = 0;
-  fread(data, 1, size, file);
   fclose(file);
+  
+  printf("%d", data);
   return data;
 }

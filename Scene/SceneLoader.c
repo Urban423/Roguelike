@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <time.h>
+#include <statistic.h>
 
 void CreateSceneMenu(Scene* scene)
 {
@@ -102,7 +103,19 @@ void CreateSceneMenu(Scene* scene)
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, TextMesh)(object, &textMesh);
 	AddObject(&scene->objectManager, object);
-	SetText(textMesh, "Danya: 109\nTima: 0\nLeo: 30000\nIvanich: 132", 45);
+	//SaveStatistic("apple\nidol", "./Assets/statistic.txt");
+	char* st = GetStatistic("./Assets/statistic.txt");
+	printf("text:");
+	int size = 0;
+	while(1)
+	{
+		if(st[size + 1] == 0)
+		{
+			break;
+		}
+		size++;
+	}
+	SetText(textMesh, st, size);
 	object->parent = parent;
 }
 

@@ -2,7 +2,9 @@ Target = GL
 CC = gcc
 
 MathDir = ../Math/
+FileDir = ../FileReader/
 CFLAGS += -I${MathDir}
+CFLAGS += -I${FileDir}
 
 obj = bin
 PREF_OBJ = ./${obj}/

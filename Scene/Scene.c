@@ -9,6 +9,7 @@
 #include "SceneLoader.h"
 #include "GameMessages.h"
 #include <stdio.h>
+#include <statistic.h>
 includeTime
 
 void onCreate(Scene* scene)
@@ -72,6 +73,8 @@ void onCreate(Scene* scene)
 		index++;
 	}
 	
+	
+	SaveStatistic("Leo: 30000\n", "./Assets/statistic.txt");
 	memset(&scene->objectManager, 0, sizeof(ObjectManager));
 	CreateSceneMenu(scene);
 	CreateTime(&Time);
