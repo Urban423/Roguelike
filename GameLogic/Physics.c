@@ -52,12 +52,12 @@ void CalculatePhysic(ObjectManager* manager)
 		TEMPLATE(GetComponent, BoxCollider)(firstlist->object, &b1);
 		TEMPLATE(GetComponent, Rigidbody)(firstlist->object, &r1);
 		secondlist = firstlist->next;
-		staticpos1 = (r1 == NULL || (r1 != NULL && r1->isKinematic == 1)) ? 1 : 0;
+		staticpos1 = (r1 == NULL || (r1 != NULL && r1->isKinematic == 1)) && firstlist->object->enabled ? 1 : 0;
 		for(int j = i + 1; j < size; j++)
 		{
 			TEMPLATE(GetComponent, BoxCollider)(secondlist->object, &b2);
 			TEMPLATE(GetComponent, Rigidbody)(secondlist->object, &r2);
-			staticpos2 = (r2 == NULL || (r2 != NULL && r2->isKinematic == 1)) ? 1 : 0;
+			staticpos2 = (r2 == NULL || (r2 != NULL && r2->isKinematic == 1)) && secondlist->object->enabled ? 1 : 0;
 			if((staticpos1 != 0 || staticpos2 != 0) && (b1 != NULL && b2 != NULL))
 			{
 				Vector2 collision = BoxVsBox(
@@ -81,7 +81,7 @@ void CalculatePhysic(ObjectManager* manager)
 				{
 					if(b2->isTrigger == 1)
 					{
-						//TriggerStayObject(secondlist->object, firstlist->object);
+						TriggerStayObject(secondlist->object, firstlist->object);
 					}else{
 						firstlist->object->transform.position = add(collision, firstlist->object->transform.position);	
 					}

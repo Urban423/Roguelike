@@ -9,7 +9,7 @@
 #define MAX(i, j) (((i) > (j)) ? (i) : (j))
 #define abs(x)  ( ( (x) < 0) ? -(x) : (x) )
 
-const unsigned int MIN_LEAF_SIZE = 3;
+const unsigned int MIN_LEAF_SIZE = 4;
 	
 typedef struct Rectangle
 {
@@ -253,6 +253,8 @@ void createRooms(Leaf* this)
 		Vector2 roomPos;
 		// размер комнаты может находиться в промежутке от 3 x 3 тайла до размера листа - 2.
 		roomSize = newVector2(RandomRange(3, this->width - 2), RandomRange(3, this->height - 2));
+		if(roomSize.x < 3) { roomSize.x = 3; }
+		if(roomSize.y < 3) { roomSize.y = 3; }
 		
 		// располагаем комнату внутри листа, но не помещаем её прямо 
 		// рядом со стороной листа (иначе комнаты сольются)
@@ -350,6 +352,7 @@ int find_path(int* real_map, int lenght, int height) {
     int len_path = 1;
     int n = 1;
     int* map = (int*)malloc(lenght * height * 4);
+	if(map == 0){ return 0;}
     for (int i = 0; i < lenght * height; i++) {
         if (real_map[i] == ' ') {
             map[i] = -1;
@@ -459,6 +462,32 @@ void DrawBuffer(Buffer* buffer)
 	}
 }
 
+int generateStructInEveryLevel(Buffer* buffer, Leaf* this, char str, float chance)
+{
+	if (this->leftChild != 0 || this->rightChild != 0)
+	{
+		if (this->leftChild != 0)
+		{
+			generateStructInEveryLevel(buffer, this->leftChild, str, chance);
+		}
+		if (this->rightChild != 0)
+		{
+			generateStructInEveryLevel(buffer, this->rightChild, str, chance);
+		}
+	}
+	else{
+		int rand_x = this->room.x + RandomRange(1, this->room.width - 2);
+		int rand_y = this->room.y + RandomRange(1, this->room.height - 2);
+		//printf("%d %d: %d\n", 0, this->room.height, rand_y - this->room.y);
+		
+		if(RandomRange(0, 1) < chance)
+		{
+			buffer->buffer[rand_y * buffer->width + rand_x] = str;
+		}
+	}
+	return 0;
+}
+
 Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 {
 	srand(seed);
@@ -475,6 +504,9 @@ Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 	buffer.buffer[index] = 'p';
 	index = find_path(buffer.buffer, buffer.width, buffer.height);
 	buffer.buffer[index] = 'e';
+	
+	generateStructInEveryLevel(&buffer, root, 'c', 2);
+	generateStructInEveryLevel(&buffer, root, 'o', 0.3f);
 	
 	DrawBuffer(&buffer);
 	

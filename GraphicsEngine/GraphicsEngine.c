@@ -234,13 +234,16 @@ Vector2 uv3)
 	int st_y = y1;
 	if(st_y < 0)
 	{
-		u_left += -st_y * delta_u_left;
-		v_left += -st_y * delta_v_left;
-		u_right += -st_y * delta_u_right;
-		v_right += -st_y * delta_v_right;
-		
-		wx1 += -st_y * dx13;
-		wx2 += -st_y * dx12;
+		if(y2 > 0)
+		{
+			u_left += -st_y * delta_u_left;
+			v_left += -st_y * delta_v_left;
+			u_right += -st_y * delta_u_right;
+			v_right += -st_y * delta_v_right;
+			
+			wx1 += -st_y * dx13;
+			wx2 += -st_y * dx12;
+		}
 		st_y = 0;
 	}
 	int end_y = y2;
@@ -282,7 +285,7 @@ Vector2 uv3)
 			index_of_texture = tex_y * texture->width + tex_x;
 			
 			if(texture->alpha[index_of_texture] != 0){
-			*pointer_buffer = texture->pixels[index_of_texture];
+				*pointer_buffer = texture->pixels[index_of_texture];
 			}
 
 			u += delta_u;
@@ -331,13 +334,26 @@ Vector2 uv3)
     }
 	else
 	{
+		if(y2 <= 0)
+		{
+			int m = abs(y1-y2);
+			u_left += m * delta_u_left;
+			v_left += m * delta_v_left;
+			u_right += m * delta_u_right;
+			v_right += m * delta_v_right;
+			
+			wx1 += m * dx13;
+			wx2 += m * dx12;
+		}
 		if(x2 > x3)
 		{
+			wx2 = x2;
 			delta_u_right  = (uv3.x - u_right) / (y3 - y2);
 			delta_v_right  = (uv3.y - v_right) / (y3 - y2);
 		}
 		else
 		{
+			wx1 = x2;
 			delta_u_left  = (uv3.x - u_left) / (y3 - y2);
 			delta_v_left  = (uv3.y - v_left) / (y3 - y2);
 		}
@@ -355,13 +371,14 @@ Vector2 uv3)
 	st_y = y2;
 	if(st_y < 0)
 	{
-		u_left += -st_y * delta_u_left;
-		v_left += -st_y * delta_v_left;
-		u_right += -st_y * delta_u_right;
-		v_right += -st_y * delta_v_right;
+		st_y = -st_y;
+		u_left += st_y * delta_u_left;
+		v_left += st_y * delta_v_left;
+		u_right += st_y * delta_u_right;
+		v_right += st_y * delta_v_right;
 		
-		wx1 += -st_y * _dx13;
-		wx2 += -st_y * dx23;
+		wx1 += st_y * _dx13;
+		wx2 += st_y * dx23;
 		st_y = 0;
 	}
 	end_y = y3;
@@ -387,9 +404,9 @@ Vector2 uv3)
 			st = 0;
 		}
 		int end_x = (int)wx2;
-		if(end_x > buffer->width - 1)
+		if(end_x > (int)buffer->width - 1)
 		{
-			end_x = buffer->width;
+			end_x = (int)buffer->width;
 		}
 		
 		//calculate new row's of buffer index
@@ -402,8 +419,9 @@ Vector2 uv3)
 			
 			index_of_texture = tex_y * texture->width + tex_x;
 			
+			
 			if(texture->alpha[index_of_texture] != 0){
-			*pointer_buffer = texture->pixels[index_of_texture];
+				*pointer_buffer = texture->pixels[index_of_texture];
 			}
 			
 			u += delta_u;

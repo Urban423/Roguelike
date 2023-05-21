@@ -2,6 +2,8 @@
 #include "Component.h"
 #include "Object.h"
 #include "templates.h"
+#include "TextMesh.h"
+#include "Player.h"
 
 #undef T
 #define T WriteYourText
@@ -19,6 +21,8 @@ typedef struct
 typedef struct T
 {
     Component inherited_class;
+	TextMesh* text;
+	Player* player;
 }T;
 
 void template(T, constructor)(T* this);

@@ -2,6 +2,7 @@
 #include "ObjectHelper.h"
 #include "Input.h"
 #include "TextMesh.h"
+#include "statistic.h"
 #include <stdio.h>
 #include <math.h>
 includeTime
@@ -55,7 +56,20 @@ void template(T, Update)(T *this)
 {
 	if(GetKeyDown(KeyCode.Enter))
 	{
+		if(this->text->size != 0)
+		{
+			AddSymbol(this->text, ':');
+			AddSymbol(this->text, ' ');
+			for(int i = 0; i < this->player->text->size; i++)
+			{
+				AddSymbol(this->text, this->player->text->text[i]);
+			}
+			AddSymbol(this->text, '\n');
+			AddSymbol(this->text, 0);
+			SaveStatistic(this->text->text, "./Assets/statistic.txt");
+		}
 		LoadScene(2);
+		return;
 	}
 	
 	char c = Codes();
@@ -64,10 +78,7 @@ void template(T, Update)(T *this)
 		return;
 	}
 	
-	TextMesh* textMesh;
-
-	TEMPLATE(GetComponent, TextMesh)(this->inherited_class.object, textMesh);
-	
+	AddSymbol(this->text, c);
 }
 
 void template(T, OnTriggerStay)(T* this, Object* entered)

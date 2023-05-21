@@ -40,6 +40,8 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[14], "./Assets/YouWin.bmp");
 	ReadBMPFile(&scene->textures[15], "./Assets/YourScore.bmp");
 	ReadBMPFile(&scene->textures[16], "./Assets/WriteYourName.bmp");
+	ReadBMPFile(&scene->textures[17], "./Assets/Coin.bmp");
+	ReadBMPFile(&scene->textures[18], "./Assets/Pain.bmp");
 	
 	
 	const char* alphabetDir = "./Assets\\alphabet\\A.bmp";
@@ -74,7 +76,7 @@ void onCreate(Scene* scene)
 	}
 	
 	
-	SaveStatistic("Leo: 30000\n", "./Assets/statistic.txt");
+	//SaveStatistic("Leo: 30000\n", "./Assets/statistic.txt");
 	memset(&scene->objectManager, 0, sizeof(ObjectManager));
 	CreateSceneMenu(scene);
 	CreateTime(&Time);
@@ -113,7 +115,9 @@ void onUpdate(Scene* scene)
 			{
 				galka = 0;
 			}
-			continue;
+			else{
+				continue;
+			}
 		}
 		if(obj->enabled == 0)
 		{
@@ -181,7 +185,9 @@ char render(Scene* scene)
 			{
 				galka = 0;
 			}
-			continue;
+			else{
+				continue;
+			}
 		}
 		if(obj->enabled == 0)
 		{

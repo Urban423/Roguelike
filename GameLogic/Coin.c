@@ -1,4 +1,4 @@
-#include "ExitTrigger.h"
+#include "Coin.h"
 #include "ObjectHelper.h"
 #include "Input.h"
 #include <stdio.h>
@@ -7,7 +7,7 @@ includeTime
 includeInput
 
 #undef T
-#define T ExitTrigger
+#define T Coin
 
 template(T, functiontable) template(T, table) = {
 	template(T, constructor),
@@ -24,7 +24,6 @@ void template(T, constructor)(T *this)
 
 void template(T, Start)(T *this)
 {
-	
 }
 
 void template(T, Update)(T *this)
@@ -38,8 +37,7 @@ void template(T, OnTriggerStay)(T* this, Object* entered)
 	TEMPLATE(GetComponent, Player)(entered, &player);
 	if(player != NULL)
 	{
-		SetText(this->textMesh, this->player->text->text, this->player->text->size);
-		Time.timescale = 0;
-		this->win_menu->enabled = 1;
+		addScore(player, 1);
+		this->inherited_class.object->enabled = 0;
 	}
 }

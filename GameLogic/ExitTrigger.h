@@ -2,6 +2,8 @@
 #include "Component.h"
 #include "Object.h"
 #include "templates.h"
+#include "TextMesh.h"
+#include "Player.h"
 
 #undef T
 #define T ExitTrigger
@@ -20,6 +22,8 @@ typedef struct T
 {
     Component inherited_class;
 	Object* win_menu;
+	TextMesh* textMesh;
+	Player* player;
 }T;
 
 void template(T, constructor)(T* this);

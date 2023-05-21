@@ -12,6 +12,8 @@ char clean(const char* filename) {
   fclose(file);
   return 0;
 }
+
+
 char SaveStatistic(char* savedata, const char* filename) {
   FILE* file;
   fopen_s(&file, filename, "r+");
@@ -30,7 +32,7 @@ char SaveStatistic(char* savedata, const char* filename) {
     size_savedata++;
   }
 
-  int new_size = old_size + size_savedata;
+  int new_size = old_size + size_savedata + 1;
   fseek(file, 0, SEEK_SET);
   fwrite(&new_size, 4, 1, file);
 
@@ -58,6 +60,6 @@ char* GetStatistic(const char* filename) {
   data[size] = 0;
   fclose(file);
   
-  printf("%d", data);
+  printf("%d", size);
   return data;
 }

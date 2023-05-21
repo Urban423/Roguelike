@@ -3,6 +3,7 @@
 #include "Input.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 #include <statistic.h>
 includeTime
 includeInput
@@ -41,6 +42,9 @@ void template(T, Update)(T *this)
 		}
 		if(GetKeyDown(KeyCode.X))
 		{
+			char* t = (char*)malloc(1);
+			*t = 0;
+			SetText(this->textMesh, t, 0);
 			clean("./Assets/statistic.txt");
 		}
 		return;

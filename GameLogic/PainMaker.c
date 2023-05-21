@@ -1,4 +1,4 @@
-#include "ExitTrigger.h"
+#include "PainMaker.h"
 #include "ObjectHelper.h"
 #include "Input.h"
 #include <stdio.h>
@@ -7,7 +7,7 @@ includeTime
 includeInput
 
 #undef T
-#define T ExitTrigger
+#define T PainMaker
 
 template(T, functiontable) template(T, table) = {
 	template(T, constructor),
@@ -24,12 +24,11 @@ void template(T, constructor)(T *this)
 
 void template(T, Start)(T *this)
 {
-	
 }
 
 void template(T, Update)(T *this)
 {
-	
+	this->inherited_class.object->transform.rotation += Time.deltaTime * 180;
 }
 
 void template(T, OnTriggerStay)(T* this, Object* entered)
@@ -38,8 +37,6 @@ void template(T, OnTriggerStay)(T* this, Object* entered)
 	TEMPLATE(GetComponent, Player)(entered, &player);
 	if(player != NULL)
 	{
-		SetText(this->textMesh, this->player->text->text, this->player->text->size);
-		Time.timescale = 0;
-		this->win_menu->enabled = 1;
+		LoadScene(2);
 	}
 }

@@ -2,10 +2,9 @@
 #include "Component.h"
 #include "Object.h"
 #include "templates.h"
-#include "TextMesh.h"
 
 #undef T
-#define T Switcher
+#define T PainMaker
 
 struct T;
 
@@ -15,15 +14,11 @@ typedef struct
 	void (*Start)(struct T*);
 	void (*Update)(struct T*);
 	void (*OnTriggerStay)(struct T*, Object*);
-}Switcher_functiontable;
+}template(T, functiontable);
 
 typedef struct T
 {
     Component inherited_class;
-	int pos;
-	int flag;
-	Object* statistic;
-	TextMesh* textMesh;
 }T;
 
 void template(T, constructor)(T* this);

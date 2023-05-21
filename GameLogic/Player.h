@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "Object.h"
+#include "TextMesh.h"
 #include "templates.h"
 
 #undef T
@@ -21,7 +22,11 @@ typedef struct T
     Component inherited_class;
 	float walkSpeed;
 	float RunSpeed;
+	int score;
+	TextMesh* text;
 }T;
+
+void addScore(Player* this, int add);
 
 void template(T, constructor)(T* this);
 void template(T, Start)(T* this);

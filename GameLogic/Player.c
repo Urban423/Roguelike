@@ -3,6 +3,7 @@
 #include "Input.h"
 #include <stdio.h>
 #include <math.h>
+#include <stdlib.h>
 includeTime
 includeInput
 
@@ -25,6 +26,7 @@ void template(T, constructor)(T *this)
 void template(T, Start)(T *this)
 {
 	this->walkSpeed = 8.3f;
+	this->score = 0;
 }
 
 void template(T, Update)(T *this)
@@ -49,6 +51,42 @@ void template(T, Update)(T *this)
 	}
 	this->inherited_class.object->transform.position = add(this->inherited_class.object->transform.position, multiple(moveDirection, speed));
 	//this->inherited_class.object->transform.rotation = this->t * 14;
+}
+
+void addScore(Player* this, int add)
+{
+	this->score += add;
+	if(this->score > 999)
+	{
+		this->score = 999;
+	}
+	
+	char* number_to_sting;
+	int size = 0;
+	int temp_score = this->score;
+	while(temp_score != 0)
+	{
+		temp_score /= 10;
+		size++;
+	}
+
+	number_to_sting = (char*)malloc(sizeof(char) * size);
+	
+	temp_score = this->score;
+	for(int i = 0; i< size; i++)
+	{
+		number_to_sting[i] = 48 + temp_score % 10;
+		temp_score /= 10;
+	}
+	
+	for(int i = 0, j = size - 1; i < j; i++, j--)
+	{
+		char temper = number_to_sting[i];
+		number_to_sting[i] = number_to_sting[j];
+		number_to_sting[j] = temper;
+	}
+	
+	SetText(this->text, number_to_sting, size);
 }
 
 void template(T, OnTriggerStay)(T* this, Object* entered)

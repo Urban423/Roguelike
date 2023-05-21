@@ -8,6 +8,9 @@
 #include "MeshRenderer.h"
 #include "Switcher.h"
 #include "Pause.h"
+#include "WriteYourText.h"
+#include "PainMaker.h"
+#include "Coin.h"
 
 #undef T  
 #define T Player  
@@ -39,4 +42,16 @@
 
 #undef T 
 #define T ExitTrigger
+#include "Object.c" 
+
+#undef T 
+#define T WriteYourText
+#include "Object.c" 
+
+#undef T 
+#define T Coin
+#include "Object.c" 
+
+#undef T 
+#define T PainMaker
 #include "Object.c" 
