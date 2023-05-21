@@ -103,6 +103,8 @@ void CreateSceneMenu(Scene* scene)
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, TextMesh)(object, &textMesh);
 	AddObject(&scene->objectManager, object);
+	//clean("./Assets/statistic.txt");
+	//SaveStatistic("EDIK: 9\n", "./Assets/statistic.txt");
 	char* st = GetStatistic("./Assets/statistic.txt");
 	int size = 0;
 	while(1)
@@ -137,6 +139,7 @@ void CreateSceneGame(Scene* scene)
 	Vector2 sca;
 	CreateVector2(&sca, 2, 2);
 	
+	Enemy* enemy;
 	WriteYourText* writeYourText;
 	TextMesh* textMesh;
 	Pause* pause;
@@ -288,6 +291,41 @@ void CreateSceneGame(Scene* scene)
 				b_index++;
 				continue;
 			}
+			else if(b.buffer[b_index] == 'd')
+			{
+				CreateVector2(&sca, block_size, block_size);
+				object = (Object*)malloc(sizeof(Object));
+				CreateVector2(&vect, block_size * x, block_size * y);
+				ObjectConstructor(object, vect, sca);
+				TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+				TEMPLATE(AddComponent, BoxCollider)(object, &box);
+				AddObject(&scene->objectManager, object);
+				box->size.x = block_size / 2;
+				box->size.y = block_size / 2;
+				box->isTrigger = 1;
+				meshRenderer->textureNumber = 4;
+				b_index++;
+				continue;
+			}
+			else if(b.buffer[b_index] == 'k')
+			{
+				//Enemy
+				CreateVector2(&sca, 1, 1);
+				CreateVector2(&vect, block_size * x, block_size * y);
+				object = (Object*)malloc(sizeof(Object));
+				ObjectConstructor(object, vect, sca);
+				TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+				TEMPLATE(AddComponent, BoxCollider)(object, &box);
+				TEMPLATE(AddComponent, Enemy)(object, &enemy);
+				AddObject(&scene->objectManager, object);
+				meshRenderer->textureNumber = 10;
+				box->isTrigger = 1;
+				box->size.x = 0.5f;
+				box->size.y = 0.5f;
+				enemy->player = &cam->transform;
+				b_index++;
+				continue;
+			}
 			else if(b.buffer[b_index] == 'p')
 			{
 				cam->transform.position = newVector2(block_size * x, block_size * y);
@@ -313,7 +351,6 @@ void CreateSceneGame(Scene* scene)
 		}
 	}
 	
-	
 	//Score UI
 	CreateVector2(&sca, 12, 3);
 	CreateVector2(&vect, -8.2f, 9.3f);
@@ -325,7 +362,6 @@ void CreateSceneGame(Scene* scene)
 	object->parent = cam;
 	pause->PauseBody = object;
 	parent = object;
-	object->enabled = 0;
 	
 	CreateVector2(&sca, 22, 3);
 	CreateVector2(&vect, -9, 9);
@@ -472,5 +508,32 @@ void CreateSceneGame(Scene* scene)
 	SetText(textMesh, "", 0);
 	writeYourText->player = pl;
 	writeYourText->text = textMesh;
+	object->parent = parent;
+	
+	
+	//Loze Menu
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	AddObject(&scene->objectManager, object);
+	
+	CreateVector2(&sca, 30, 30);
+	CreateVector2(&vect, 0, 0);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 10;
+	object->enabled = 0;
+	object->parent = cam;
+	pl->loseMenu = meshRenderer;
+	parent = object;
+	
+	CreateVector2(&sca, 44, 6);
+	CreateVector2(&vect, 0, 0);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 19;
 	object->parent = parent;
 }

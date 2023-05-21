@@ -37,6 +37,6 @@ void template(T, OnTriggerStay)(T* this, Object* entered)
 	TEMPLATE(GetComponent, Player)(entered, &player);
 	if(player != NULL)
 	{
-		LoadScene(2);
+		Kill(player);
 	}
 }

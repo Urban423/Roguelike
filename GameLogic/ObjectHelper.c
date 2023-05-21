@@ -11,6 +11,7 @@
 #include "WriteYourText.h"
 #include "PainMaker.h"
 #include "Coin.h"
+#include "Enemy.h"
 
 #undef T  
 #define T Player  
@@ -54,4 +55,8 @@
 
 #undef T 
 #define T PainMaker
+#include "Object.c" 
+
+#undef T 
+#define T Enemy
 #include "Object.c" 

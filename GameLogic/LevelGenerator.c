@@ -142,10 +142,6 @@ char split(Leaf* this)
 
 void createHall(Leaf* this, Rectangle l, Rectangle r)
 {
-	// теперь мы соединяем эти две комнаты коридорами.
-	// выглядит довольно сложно, но здесь мы просто выясняем, где какая точка находится, а затем отрисовываем прямую линию или пару линий, чтобы создать правильный угол для их соединения.
-	// при желании можно добавить логику, делающую коридоры более извилистыми, или реализующую другое сложное поведение.
-
 	this->halls.size = 0;
 	this->halls.list = 0;
 
@@ -243,7 +239,7 @@ void createRooms(Leaf* this)
 			Rectangle a = getRoom(this->leftChild);
 			Rectangle b = getRoom(this->rightChild);
 			//printf("%d %d\n", a.x, a.y);
-			createHall(this, a, b);
+			//createHall(this, a, b);
 		}
 	}
 	else
@@ -267,6 +263,27 @@ void createRooms(Leaf* this)
 		this->y + roomPos.y,
 		roomSize.x,
 		roomSize.y);
+	}
+}
+
+void createHalls(Leaf* this)
+{
+	if (this->leftChild != 0 || this->rightChild != 0)
+	{
+		if (this->leftChild != 0)
+		{
+			createHalls(this->leftChild);
+		}
+		if (this->rightChild != 0)
+		{
+			createHalls(this->rightChild);
+		}
+		if (this->leftChild != 0 && this->rightChild != 0)
+		{
+			Rectangle a = getRoom(this->leftChild);
+			Rectangle b = getRoom(this->rightChild);
+			createHall(this, a, b);
+		}
 	}
 }
 
@@ -314,21 +331,35 @@ void drawLeafs(Buffer* buffer, Leaf* this)
 	}
 }
 
-int selectSpawn(Buffer* buffer)
+int selectSpawn(Buffer* buffer, Leaf* this, char str, char clear, char new)
 {
-		int index = 0;
-	for(int y = 0; y < buffer->height; y++)
+	if (this->leftChild != 0)
 	{
-		for(int x = 0; x < buffer->width; x++)
+		selectSpawn(buffer, this->leftChild, str, clear, new);
+	}
+	else{
+		int rand_x = this->room.x + RandomRange(0, this->room.width - 1);
+		int rand_y = this->room.y + RandomRange(0, this->room.height - 1);
+		
+		buffer->buffer[rand_y * buffer->width + rand_x] = str;
+		int index = 0;
+		for(int y = -5; y < 5; y++)
 		{
-			if(buffer->buffer[index] != ' ')
+			index = (y + rand_y) * buffer->width + rand_x - 5;
+			for(int x = -5; x < 5;x++)
 			{
-				return index;
+				if(index > -1 && index <buffer->width * buffer->height)
+				{
+					if(buffer->buffer[index] == clear)
+					{
+						buffer->buffer[index] = new;
+					}
+				}
+				index++;
 			}
-			index++;
 		}
 	}
-	return index;
+	return 0;
 }
 
 int find_path(int* real_map, int lenght, int height) {
@@ -462,27 +493,86 @@ void DrawBuffer(Buffer* buffer)
 	}
 }
 
-int generateStructInEveryLevel(Buffer* buffer, Leaf* this, char str, float chance)
+int generateStructInEveryLevel(Buffer* buffer, Leaf* this, char str, float chance, int offset)
 {
 	if (this->leftChild != 0 || this->rightChild != 0)
 	{
 		if (this->leftChild != 0)
 		{
-			generateStructInEveryLevel(buffer, this->leftChild, str, chance);
+			generateStructInEveryLevel(buffer, this->leftChild, str, chance, offset);
 		}
 		if (this->rightChild != 0)
 		{
-			generateStructInEveryLevel(buffer, this->rightChild, str, chance);
+			generateStructInEveryLevel(buffer, this->rightChild, str, chance, offset);
 		}
 	}
 	else{
-		int rand_x = this->room.x + RandomRange(1, this->room.width - 2);
-		int rand_y = this->room.y + RandomRange(1, this->room.height - 2);
+		int rand_x = this->room.x + RandomRange(offset, this->room.width - 1 - offset);
+		int rand_y = this->room.y + RandomRange(offset, this->room.height - 1 - offset);
 		//printf("%d %d: %d\n", 0, this->room.height, rand_y - this->room.y);
 		
 		if(RandomRange(0, 1) < chance)
 		{
 			buffer->buffer[rand_y * buffer->width + rand_x] = str;
+		}
+	}
+	return 0;
+}
+
+Leaf* findRootWithElement(Buffer* buffer, Leaf* this, char Element)
+{
+	if (this->leftChild != 0 || this->rightChild != 0)
+	{
+		Leaf* res = NULL;
+		if (this->leftChild != 0)
+		{
+			res = findRootWithElement(buffer, this->leftChild, Element);
+		}
+		if (res == NULL && this->rightChild != 0)
+		{
+			res = findRootWithElement(buffer, this->rightChild, Element);
+		}
+		return res;
+	}
+	else{
+		for(int y = 0; y < this->room.height; y++)
+		{
+			for(int x = 0; x < this->room.width; x++)
+			{
+				if(buffer->buffer[(this->room.y + y) * buffer->width + this->room.x + x] == Element)
+				{
+					return this;
+				}
+			}
+		}
+	}
+	return NULL;
+}
+
+
+int generateDoorsInRoom(Buffer* buffer, Leaf* this, char str, char Ignore)
+{
+	int index = 0;
+	for(int y = -1; y < this->room.height + 1; y++)
+	{
+		index = (this->room.y + y) * buffer->width + this->room.x -1;
+		for(int x = -1; x < this->room.width + 1; x++)
+		{
+			if(index < 0 || index > buffer->height * buffer->width)
+			{
+				index++;
+				continue;
+			}
+			if(y > -1 && y < this->room.height && x > -1 && x < this->room.width)
+			{
+				index++;
+				continue;
+			}
+			if(buffer->buffer[index] != Ignore)
+			{
+				buffer->buffer[index] = str;
+			}
+			index++;
 		}
 	}
 	return 0;
@@ -497,16 +587,30 @@ Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 	createRooms(root);
 	
 	Buffer buffer = new_Buffer(width, height);
-	
+	createHalls(root);
 	drawLeafs(&buffer, root);
 	
-	int index = selectSpawn(&buffer);
-	buffer.buffer[index] = 'p';
-	index = find_path(buffer.buffer, buffer.width, buffer.height);
+	generateStructInEveryLevel(&buffer, root, ' ', 2, 1);
+	generateStructInEveryLevel(&buffer, root, ' ', 2, 1);
+	generateStructInEveryLevel(&buffer, root, 'c', 2, 0);
+	generateStructInEveryLevel(&buffer, root, 'o', 0.6f, 1);
+	generateStructInEveryLevel(&buffer, root, 'k', 0.2f, 0);
+	generateStructInEveryLevel(&buffer, root, 'o', 0.6f, 1);
+	generateStructInEveryLevel(&buffer, root, 'o', 0.6f, 1);
+	generateStructInEveryLevel(&buffer, root, 'o', 0.6f, 1);
+	
+	
+	selectSpawn(&buffer, root, 'p', 'k', 'c');
+	int index = find_path(buffer.buffer, buffer.width, buffer.height);
 	buffer.buffer[index] = 'e';
 	
-	generateStructInEveryLevel(&buffer, root, 'c', 2);
-	generateStructInEveryLevel(&buffer, root, 'o', 0.3f);
+	Leaf* withExit = findRootWithElement(&buffer, root, 'e');
+	if(withExit != NULL)
+	{
+	generateStructInEveryLevel(&buffer, withExit, 'q', 2, 0);
+		generateDoorsInRoom(&buffer, withExit, 'd', ' ');
+	}
+	
 	
 	DrawBuffer(&buffer);
 	

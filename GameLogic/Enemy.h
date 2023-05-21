@@ -1,12 +1,12 @@
 #pragma once
 #include "Component.h"
 #include "Object.h"
+#include "Vector2.h"
 #include "TextMesh.h"
-#include "MeshRenderer.h"
 #include "templates.h"
 
 #undef T
-#define T Player
+#define T Enemy
 
 struct T;
 
@@ -22,14 +22,8 @@ typedef struct T
 {
     Component inherited_class;
 	float walkSpeed;
-	float RunSpeed;
-	int score;
-	MeshRenderer* loseMenu;
-	TextMesh* text;
+	Transfrom* player;
 }T;
-
-void addScore(Player* this, int add);
-void Kill(Player* this);
 
 void template(T, constructor)(T* this);
 void template(T, Start)(T* this);

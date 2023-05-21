@@ -51,7 +51,7 @@ void template(T, Update)(T *this)
 	}
 	
 	
-	if(GetKeyDown(KeyCode.W))
+	if(GetKeyDownMoveUp())
 	{
 		this->pos += 1;
 		if(this->pos > 2)
@@ -59,7 +59,7 @@ void template(T, Update)(T *this)
 			this->pos = 0;
 		}
 	}
-	if(GetKeyDown(KeyCode.S))
+	if(GetKeyDownMoveDown())
 	{
 		this->pos -= 1;
 		if(this->pos < 0)

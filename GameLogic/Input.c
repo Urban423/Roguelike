@@ -8,6 +8,12 @@ void CreateKeyCode()
 	KeyCode.Enter = 13;
 	KeyCode.Escape = 27;
 	KeyCode.Space = 32;
+	
+	KeyCode.LeftArrow = 37;
+	KeyCode.UpArrrow = 38;
+	KeyCode.RightArrow = 39;
+	KeyCode.DownArrow = 40;
+	
 	KeyCode.Alpha0 = 48;
 	KeyCode.Alpha1 = 49;
 	KeyCode.Alpha2 = 50;
@@ -77,6 +83,78 @@ char GetKeyDown(char key_code)
 char GetKeyUp(char key_code)
 {
 	if(keyBoardState[key_code] != oldKeyBoardState[key_code] && oldKeyBoardState[key_code] == 2)
+	{
+		return 1;
+	}
+	return 0;
+}
+
+char GetKeyMoveUp()
+{
+	if(GetKey(KeyCode.W) || GetKey(KeyCode.UpArrrow))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+char GetKeyMoveDown()
+{
+	if(GetKey(KeyCode.S) || GetKey(KeyCode.DownArrow))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+char GetKeyMoveRight()
+{
+	if(GetKey(KeyCode.D) || GetKey(KeyCode.RightArrow))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+char GetKeyMoveLeft()
+{
+	if(GetKey(KeyCode.A) || GetKey(KeyCode.LeftArrow))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+char GetKeyDownMoveUp()
+{
+	if(GetKeyDown(KeyCode.W) || GetKeyDown(KeyCode.UpArrrow))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+char GetKeyDownMoveDown()
+{
+	if(GetKeyDown(KeyCode.S) || GetKeyDown(KeyCode.DownArrow))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+char GetKeyDownMoveRight()
+{
+	if(GetKeyDown(KeyCode.D) || GetKeyDown(KeyCode.RightArrow))
+	{
+		return 1;
+	}
+	return 0;
+}
+
+char GetKeyDownMoveLeft()
+{
+	if(GetKeyDown(KeyCode.A) || GetKeyDown(KeyCode.LeftArrow))
 	{
 		return 1;
 	}

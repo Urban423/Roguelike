@@ -3,6 +3,12 @@
 
 typedef struct KeyCodes
 {
+	
+	char LeftArrow;
+	char UpArrrow;
+	char RightArrow;
+	char DownArrow;
+	
 	char Alpha0;
 	char Alpha1;
 	char Alpha2;
@@ -13,6 +19,7 @@ typedef struct KeyCodes
 	char Alpha7;
 	char Alpha8;
 	char Alpha9;
+	
 	char A;
 	char B;
 	char C;
@@ -46,6 +53,17 @@ typedef struct KeyCodes
 }KeyCodes;
 
 char setKeyBoard(char* keyBoardStatePointer, char* oldKeyBoardStatePointer);
+
+
+char GetKeyMoveUp();
+char GetKeyMoveDown();
+char GetKeyMoveRight();
+char GetKeyMoveLeft();
+
+char GetKeyDownMoveUp();
+char GetKeyDownMoveDown();
+char GetKeyDownMoveRight();
+char GetKeyDownMoveLeft();
 
 char GetKey(char key_code);
 char GetKeyDown(char key_code);

@@ -14,6 +14,9 @@ void CreateVector2(Vector2* vector, float x, float y);
 Vector2 add(Vector2 a, Vector2 b);
 Vector2 multiple(Vector2 vector, float number);
 void swap_Vector2(Vector2* a, Vector2* b);
+Vector2 MoveTowards(Vector2 start, Vector2 target, float MaxDeltaLength);
+float length(Vector2 a);
+float lengthSquare(Vector2 a);
 
 typedef struct Transfrom
 {

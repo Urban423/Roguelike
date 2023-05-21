@@ -33,19 +33,19 @@ void template(T, Update)(T *this)
 {
 	float speed = this->walkSpeed * Time.deltaTime;
 	Vector2 moveDirection = {0, 0};
-	if(GetKey(KeyCode.W))
+	if(GetKeyMoveUp())
 	{
 		moveDirection.y = 1;
 	}
-	if(GetKey(KeyCode.S))
+	if(GetKeyMoveDown())
 	{
 		moveDirection.y = -1;
 	}
-	if(GetKey(KeyCode.D))
+	if(GetKeyMoveRight())
 	{
 		moveDirection.x = 1;
 	}
-	if(GetKey(KeyCode.A))
+	if(GetKeyMoveLeft())
 	{
 		moveDirection.x = -1;
 	}
@@ -87,6 +87,16 @@ void addScore(Player* this, int add)
 	}
 	
 	SetText(this->text, number_to_sting, size);
+}
+
+void Kill(Player* this)
+{
+	this->loseMenu->inherited_class.object->enabled = 1;
+	Time.timescale = 0;
+	if(GetKeyDown(KeyCode.Enter))
+	{
+		LoadScene(2);
+	}
 }
 
 void template(T, OnTriggerStay)(T* this, Object* entered)

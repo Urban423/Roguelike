@@ -33,6 +33,7 @@ char SaveStatistic(char* savedata, const char* filename) {
   }
 
   int new_size = old_size + size_savedata + 1;
+  printf("%d", new_size);
   fseek(file, 0, SEEK_SET);
   fwrite(&new_size, 4, 1, file);
 
@@ -52,6 +53,8 @@ char* GetStatistic(const char* filename) {
   int size;
   int res = fread(&size, 4, 1, file);
   //fseek(file, 4, SEEK_SET);
+  
+  printf("%d", size);
   char* data = (char*)malloc(size+1);
   for(int i = 0; i < size; i++)
   {
@@ -59,7 +62,5 @@ char* GetStatistic(const char* filename) {
   }
   data[size] = 0;
   fclose(file);
-  
-  printf("%d", size);
   return data;
 }
