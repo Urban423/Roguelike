@@ -14,8 +14,10 @@ typedef struct Renderer
 	void* void_pointer;
 }Renderer;
 
-char createWindowsWindow(Renderer* renderer);
+char createWindowsWindow(Renderer* renderer, int width, int height);
 char updateWindowsWindow(Renderer* renderer);
 char drawImage(Renderer* renderer);
+
+Vector2 getSize(Renderer* renderer);
 
 #endif

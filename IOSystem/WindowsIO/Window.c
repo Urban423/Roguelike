@@ -48,31 +48,58 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	return DefWindowProcA(hwnd, msg, wparam, lparam);
 }
 
-char createWindowsWindow(Renderer* renderer)
+char createWindowsWindow(Renderer* renderer, int width, int height)
 {
-	WNDCLASS wcl;
-	memset(&wcl, 0, sizeof(WNDCLASSA));
+	WNDCLASSEX wcl;
+	memset(&wcl, 0, sizeof(WNDCLASSEX));
+	wcl.cbSize = sizeof(WNDCLASSEX);
     wcl.cbClsExtra = 0;
     wcl.cbWndExtra = 0;
 	wcl.hCursor = LoadCursor (NULL, IDC_ARROW);
 	wcl.lpszClassName = "Roguelike";
 	wcl.lpfnWndProc = &WndProc;
+	//wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	//wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	//wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
+	wcl.hInstance = 0;
+	wcl.style = 0;
 	
-	RegisterClass(&wcl);
 	
-	renderer->hwnd = CreateWindow(
+	int max_width = GetSystemMetrics(SM_CXSCREEN);
+	int max_height= GetSystemMetrics(SM_CYSCREEN);
+	if(width > max_width)
+	{
+		width = max_width;
+	}
+	if(height > max_height)
+	{
+		height = max_height;
+	}
+	
+	RegisterClassEx(&wcl);
+	
+	renderer->hwnd = CreateWindowEx(WS_EX_APPWINDOW,
 	"Roguelike", "Roguelike", 
-	WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-	renderer->buffer.width, renderer->buffer.height, NULL, NULL, NULL, NULL);
+	WS_POPUP | WS_EX_TOPMOST,
+	CW_USEDEFAULT, CW_USEDEFAULT,
+	width, height, NULL, NULL, NULL, NULL);
 	
 	ShowWindow(renderer->hwnd, SW_SHOWNORMAL);
 	
 	renderer->map = CreateBitmap(
-	renderer->buffer.width,
-	renderer->buffer.height,
+	width, height,
 	1, 8 * 4, renderer->buffer.buffer);
 	
 	return 0;
+}
+
+Vector2 getSize(Renderer* renderer)
+{
+	RECT rect;
+    GetWindowRect(renderer->hwnd, &rect);
+	
+	Vector2 ret = {rect.right - rect.left, rect.bottom - rect.top};
+	return ret;
 }
 
 char drawImage(Renderer* renderer)

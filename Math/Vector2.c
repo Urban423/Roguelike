@@ -58,3 +58,25 @@ float lengthSquare(Vector2 a)
 {
 	return a.x * a.x + a.y * a.y;
 }
+
+
+void swap_float(float* a, float* b)
+{
+	float temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void swap_int(int* a, int* b)
+{
+	int temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+void swap_double(double* a, double* b)
+{
+	double temp = *a;
+	*a = *b;
+	*b = temp;
+}

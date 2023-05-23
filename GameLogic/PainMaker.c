@@ -28,7 +28,7 @@ void template(T, Start)(T *this)
 
 void template(T, Update)(T *this)
 {
-	this->inherited_class.object->transform.rotation += Time.deltaTime * 180;
+	this->inherited_class.object->transform.rotation += Time.deltaTime * 80;
 }
 
 void template(T, OnTriggerStay)(T* this, Object* entered)

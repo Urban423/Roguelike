@@ -607,7 +607,6 @@ Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 	Leaf* withExit = findRootWithElement(&buffer, root, 'e');
 	if(withExit != NULL)
 	{
-	generateStructInEveryLevel(&buffer, withExit, 'q', 2, 0);
 		generateDoorsInRoom(&buffer, withExit, 'd', ' ');
 	}
 	

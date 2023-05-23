@@ -8,7 +8,7 @@
 	#include "LinuxWindow.h"
 #endif
 
-char createWindow(Renderer* renderer);
+char createWindow(Renderer* renderer, int width, int height);
 char updateWindow(Renderer* renderer, unsigned long time_of_begin);
 
 char createKeyBoard(KeyBoardState* keyBoard);

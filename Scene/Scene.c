@@ -15,8 +15,10 @@ includeTime
 void onCreate(Scene* scene)
 {
 	CreateMessageList();
-	BufferConstructor(&scene->renderer.buffer, 1280, 960);
-	createWindow(&scene->renderer);
+	createWindow(&scene->renderer, 1080, 546);
+	Vector2 windowSize = getSize(&scene->renderer);
+	BufferConstructor(&scene->renderer.buffer, windowSize.x, windowSize.y);
+	
 	createKeyBoard(&(scene->keyBoard));
 	setKeyBoard(scene->keyBoard.key_board_state, scene->keyBoard.old_key_board_state);
 	scene->is_running = 1;
@@ -81,7 +83,7 @@ void onCreate(Scene* scene)
 	memset(&scene->objectManager, 0, sizeof(ObjectManager));
 	CreateSceneMenu(scene);
 	CreateTime(&Time);
-	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 10, 40);
+	setOrthoLH(&scene->view_proj, scene->renderer.buffer.width, scene->renderer.buffer.height, 57, 80);
 }
 
 void UpdateCamera(Scene* scene, Transfrom* tf)

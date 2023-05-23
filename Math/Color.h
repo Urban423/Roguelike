@@ -12,3 +12,4 @@ Color newColor(float r, float g, float b, float a);
 Color MultipleColor(Color a, float b);
 Color addColor(Color a, Color b);
 int toInt(Color color);
+void swap_Color(Color* a, Color* b);

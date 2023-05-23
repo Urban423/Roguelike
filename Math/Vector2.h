@@ -33,4 +33,10 @@ typedef struct Buffer
 }Buffer;
 
 
+
+
+void swap_float(float* a, float* b);
+void swap_int(int* a, int* b);
+void swap_double(double* a, double* b);
+
 #endif

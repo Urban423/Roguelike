@@ -33,3 +33,10 @@ Color addColor(Color a, Color b)
 	a.a += b.a;
 	return a;
 }
+
+void swap_Color(Color* a, Color* b)
+{
+	Color temp = *a;
+	*a = *b;
+	*b = temp;
+}

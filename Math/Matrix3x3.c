@@ -38,8 +38,8 @@ void SetRotation(Matrix3x3* this, float x)
 void setOrthoLH(Matrix3x3* this, float width, float height, float near_plane, float far_plane)
 {
 	setIdentity(this);
-	this->m_mat[0][0] = (float)width / (far_plane - near_plane);
-	this->m_mat[1][1] = (float)width / (far_plane - near_plane);
+	this->m_mat[0][0] = (float)height / (float)(far_plane - near_plane);
+	this->m_mat[1][1] = (float)height / (float)(far_plane - near_plane);
 	this->m_mat[2][0] = (float)width / 2 - 1;
 	this->m_mat[2][1] = (float)height / 2 - 1;
 }
