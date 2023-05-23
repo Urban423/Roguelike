@@ -29,6 +29,11 @@ char updateWindow(Renderer* renderer, unsigned long time_of_begin)
 	float delta = new_time - old_time;
 	old_time = new_time;
 	printf("%f\n", delta / 1000);
+	if(delta < 16000)
+	{
+		//usleep (16);
+	}
+	//Sleep(15);
 	#ifdef WIN32
 		return updateWindowsWindow(renderer);
 	#elif defined __linux__

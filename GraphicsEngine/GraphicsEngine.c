@@ -3,12 +3,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <windows.h>
 #include "Color.h"
 #include "Triangle.h"
-
-int min_int(int a, int b) { if(a < b) { return a; } return b; }
-int max_int(int a, int b) { if(a > b) { return a; } return b; }
-
 
 void BufferConstructor(Buffer* buffer, unsigned int width, unsigned int height) {
 	buffer->width = width;
@@ -34,6 +31,15 @@ Matrix3x3* cam_view,
 Matrix3x3* cam_proj, 
 VertexMesh* mesh, Texture* texture)
 {
+	long unsigned int er;
+	char counter = 0;
+	int number_of_triangles = mesh->faces_size / 3;
+	//HANDLE* l = (HANDLE*)malloc(sizeof(HANDLE) * number_of_triangles);
+	
+	int apple = 0;
+	TriangleInput input;
+	int p1, p2, p3;
+	char switcher = 1;
 	Matrix3x3 temp = MultipleMatrixMatrix(*world_pos, *cam_view);
 	temp = MultipleMatrixMatrix(temp, *cam_proj);
 	Vector2* copy_of_verticles = (Vector2*)malloc(sizeof(Vector2) * mesh->verticles_size);
@@ -45,18 +51,39 @@ VertexMesh* mesh, Texture* texture)
 	
 	for(unsigned int i = 0; i < mesh->faces_size; i += 3)	
 	{
-		int p1 = mesh->faces[i];
-		int p2 = mesh->faces[i + 1];
-		int p3 = mesh->faces[i + 2];
-		DrawTriangleByTexture(
-			buffer, 
-			copy_of_verticles[p1], copy_of_verticles[p2], copy_of_verticles[p3],
-			texture, 
-			mesh->UV_map[p1], mesh->UV_map[p2], mesh->UV_map[p3]);
-	}
+		switcher = !switcher;
+		p1 = mesh->faces[i];
+		p2 = mesh->faces[i + 1];
+		p3 = mesh->faces[i + 2];
 		
+		input.buffer = buffer;
+		input.x1 = copy_of_verticles[p1].x;
+		input.x2 = copy_of_verticles[p2].x;
+		input.x3 = copy_of_verticles[p3].x;
+		input.y1 = copy_of_verticles[p1].y;
+		input.y2 = copy_of_verticles[p2].y;
+		input.y3 = copy_of_verticles[p3].y;
+		input.texture = texture;
+		input.uv1 = mesh->UV_map[p1];
+		input.uv2 = mesh->UV_map[p2];
+		input.uv3 = mesh->UV_map[p3];
+		input.counter = &apple;
+		
+		(HANDLE)_beginthread(DrawTriangleByTexture, 0, (void*)&input);
+		//printf("%d\n", l[counter]);
+		//Sleep(1);
+		if(er == -1L)
+		{
+			continue;
+		}
+		counter++;
+	}
 	
 	free(copy_of_verticles);
+	
+	while(apple < counter);
+	//WaitForMultipleObjects(counter, l, 1, INFINITE);
+	//free(l);
 }
 
 int CharToTextureIndex(char letter)
@@ -120,15 +147,15 @@ VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size)
 			int p2 = mesh->faces[i + 1];
 			int p3 = mesh->faces[i + 2];
 			
-			Vector2 Point1 = {copy_of_verticles[p1].x + x_offset, copy_of_verticles[p1].y + y_offset};
-			Vector2 Point2 = {copy_of_verticles[p2].x + x_offset, copy_of_verticles[p2].y + y_offset};
-			Vector2 Point3 = {copy_of_verticles[p3].x + x_offset, copy_of_verticles[p3].y + y_offset};
-			
+			/*
 			DrawTriangleByTexture(
 				buffer, 
-				Point1,Point2, Point3,
+				copy_of_verticles[p1].x + x_offset, copy_of_verticles[p1].y + y_offset,
+				copy_of_verticles[p2].x + x_offset, copy_of_verticles[p2].y + y_offset,
+				copy_of_verticles[p3].x + x_offset, copy_of_verticles[p3].y + y_offset,
 				texture, 
 				mesh->UV_map[p1], mesh->UV_map[p2], mesh->UV_map[p3]);
+			*/
 		}
 		x_offset += x_offset_add;
 	}

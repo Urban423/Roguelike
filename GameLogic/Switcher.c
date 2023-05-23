@@ -87,7 +87,6 @@ void template(T, Update)(T *this)
 	const int y_offset = -7;
 	const int y_size = 5;
 	this->inherited_class.object->transform.position.y = y_offset + this->pos * y_size;
-	this->inherited_class.object->transform.rotation = 33;
 }
 
 void template(T, OnTriggerStay)(T* this, Object* entered)
