@@ -423,6 +423,10 @@ void CreateSceneGame(Scene* scene)
 	object->enabled = 0;
 	pl->keyObj = meshRenderer;
 	
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	AddObject(&scene->objectManager, object);
+	
 	
 	
 	
