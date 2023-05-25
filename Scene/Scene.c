@@ -15,7 +15,7 @@ includeTime
 void onCreate(Scene* scene)
 {
 	CreateMessageList();
-	createWindow(&scene->renderer, 10801, 5416);
+	createWindow(&scene->renderer, 1080, 540);
 	Vector2 windowSize = getSize(&scene->renderer);
 	BufferConstructor(&scene->renderer.buffer, windowSize.x, windowSize.y);
 	

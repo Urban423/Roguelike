@@ -94,7 +94,7 @@ void CreateSceneMenu(Scene* scene)
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 	AddObject(&scene->objectManager, object);
-	meshRenderer->textureNumber = 5;
+	meshRenderer->textureNumber = 7;
 	object->parent = parent;
 	
 	CreateVector2(&sca, 3, 3);
