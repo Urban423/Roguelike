@@ -94,7 +94,7 @@ void CreateSceneMenu(Scene* scene)
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 	AddObject(&scene->objectManager, object);
-	meshRenderer->textureNumber = 9;
+	meshRenderer->textureNumber = 5;
 	object->parent = parent;
 	
 	CreateVector2(&sca, 3, 3);
@@ -413,7 +413,34 @@ void CreateSceneGame(Scene* scene)
 	AddObject(&scene->objectManager, object);
 	
 	CreateVector2(&sca, 3, 3);
-	CreateVector2(&vect, -12.2f, 7);
+	CreateVector2(&vect, -12.2f, 6.5f);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 9;
+	object->parent = cam;
+	
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	AddObject(&scene->objectManager, object);
+	
+	CreateVector2(&sca, 3, 3);
+	CreateVector2(&vect, -9.1f, 6.5f);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 9;
+	object->parent = cam;
+	pl->Heart1 = meshRenderer;
+	
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	AddObject(&scene->objectManager, object);
+	
+	CreateVector2(&sca, 3, 3);
+	CreateVector2(&vect, -4, 6.5f);
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
 	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
@@ -426,9 +453,6 @@ void CreateSceneGame(Scene* scene)
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
 	AddObject(&scene->objectManager, object);
-	
-	
-	
 	
 	
 	//Pause menu

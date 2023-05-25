@@ -28,10 +28,21 @@ void template(T, Start)(T *this)
 	this->walkSpeed = 8.3f;
 	this->score = 0;
 	this->key = 0;
+	this->hearts_count = 2;
 }
 
 void template(T, Update)(T *this)
 {
+	if(this->hearts_count <= 0)
+	{
+		this->loseMenu->inherited_class.object->enabled = 1;
+		Time.timescale = 0;
+		if(GetKeyDown(KeyCode.Enter))
+		{
+			LoadScene(2);
+		}
+		return;
+	}
 	float speed = this->walkSpeed * Time.deltaTime;
 	Vector2 moveDirection = {0, 0};
 	if(GetKeyMoveUp())
@@ -97,14 +108,14 @@ void addScore(Player* this, int add)
 	SetText(this->text, number_to_sting, size);
 }
 
-void Kill(Player* this)
+void Kill(Player* this, Object* killer)
 {
-	this->loseMenu->inherited_class.object->enabled = 1;
-	Time.timescale = 0;
-	if(GetKeyDown(KeyCode.Enter))
+	this->hearts_count--;
+	if(this->hearts_count == 1)
 	{
-		LoadScene(2);
+		this->Heart1->inherited_class.object->enabled = 0;
 	}
+	killer->enabled = 0;
 }
 
 void template(T, OnTriggerStay)(T* this, Object* entered)

@@ -35,7 +35,7 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[6], "./Assets\\Exit.bmp");
 	ReadBMPFile(&scene->textures[7], "./Assets/Statistic.bmp");
 	ReadBMPFile(&scene->textures[8], "./Assets/NewGame.bmp");
-	ReadBMPFile(&scene->textures[9], "./Assets/Statistic.bmp");
+	ReadBMPFile(&scene->textures[9], "./Assets/heart.bmp");
 	ReadBMPFile(&scene->textures[10], "./Assets/RedBlock.bmp");
 	ReadBMPFile(&scene->textures[11], "./Assets/Pause.bmp");
 	ReadBMPFile(&scene->textures[12], "./Assets/Quit.bmp");

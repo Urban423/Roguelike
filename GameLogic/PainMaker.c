@@ -37,6 +37,6 @@ void template(T, OnTriggerStay)(T* this, Object* entered)
 	TEMPLATE(GetComponent, Player)(entered, &player);
 	if(player != NULL)
 	{
-		Kill(player);
+		Kill(player, this->inherited_class.object);
 	}
 }

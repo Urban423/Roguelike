@@ -28,11 +28,13 @@ typedef struct T
 	MeshRenderer* keyObj;
 	MeshRenderer* loseMenu;
 	TextMesh* text;
+	int hearts_count;
+	MeshRenderer* Heart1;
 }T;
 
 void getKey(Player* this);
 void addScore(Player* this, int add);
-void Kill(Player* this);
+void Kill(Player* this, Object* killer);
 
 void template(T, constructor)(T* this);
 void template(T, Start)(T* this);
