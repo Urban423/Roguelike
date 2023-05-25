@@ -138,7 +138,9 @@ void CreateSceneGame(Scene* scene)
 	CreateVector2(&vect, 0, 0);
 	Vector2 sca;
 	CreateVector2(&sca, 2, 2);
-	
+
+	Key* key;
+	Door* door;
 	Enemy* enemy;
 	WriteYourText* writeYourText;
 	TextMesh* textMesh;
@@ -299,11 +301,32 @@ void CreateSceneGame(Scene* scene)
 				ObjectConstructor(object, vect, sca);
 				TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
 				TEMPLATE(AddComponent, BoxCollider)(object, &box);
+				TEMPLATE(AddComponent, Door)(object, &door);
 				AddObject(&scene->objectManager, object);
 				box->size.x = block_size / 2;
 				box->size.y = block_size / 2;
+				box->isTrigger = 0;
+				door->player = pl;
+				meshRenderer->textureNumber = 1;
+				b_index++;
+				continue;
+			}
+			else if(b.buffer[b_index] == '-')
+			{
+				//key
+				CreateVector2(&sca, 1, 1);
+				CreateVector2(&vect, block_size * x, block_size * y);
+				object = (Object*)malloc(sizeof(Object));
+				ObjectConstructor(object, vect, sca);
+				TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+				TEMPLATE(AddComponent, BoxCollider)(object, &box);
+				TEMPLATE(AddComponent, Key)(object, &key);
+				AddObject(&scene->objectManager, object);
+				meshRenderer->textureNumber = 20;
 				box->isTrigger = 1;
-				meshRenderer->textureNumber = 4;
+				box->size.x = 0.5f;
+				box->size.y = 0.5f;
+				key->player = pl;
 				b_index++;
 				continue;
 			}
@@ -318,10 +341,11 @@ void CreateSceneGame(Scene* scene)
 				TEMPLATE(AddComponent, BoxCollider)(object, &box);
 				TEMPLATE(AddComponent, Enemy)(object, &enemy);
 				AddObject(&scene->objectManager, object);
-				meshRenderer->textureNumber = 10;
+				meshRenderer->textureNumber = 21;
 				box->isTrigger = 1;
 				box->size.x = 0.5f;
 				box->size.y = 0.5f;
+				enemy->walkSpeed = 0;
 				enemy->player = &cam->transform;
 				b_index++;
 				continue;
@@ -381,6 +405,24 @@ void CreateSceneGame(Scene* scene)
 	SetText(textMesh, "0", 1);
 	pl->text = textMesh;
 	object->parent = cam;
+
+	
+	//UI key
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	AddObject(&scene->objectManager, object);
+	
+	CreateVector2(&sca, 3, 3);
+	CreateVector2(&vect, -12.2f, 7);
+	object = (Object*)malloc(sizeof(Object));
+	ObjectConstructor(object, vect, sca);
+	TEMPLATE(AddComponent, MeshRenderer)(object, &meshRenderer);
+	AddObject(&scene->objectManager, object);
+	meshRenderer->textureNumber = 20;
+	object->parent = cam;
+	object->enabled = 0;
+	pl->keyObj = meshRenderer;
+	
 	
 	
 	
@@ -449,7 +491,7 @@ void CreateSceneGame(Scene* scene)
 	
 	
 	//Win text
-	CreateVector2(&sca, 30, 30);
+	CreateVector2(&sca, 330, 330);
 	CreateVector2(&vect, 0, 0);
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);
@@ -516,7 +558,7 @@ void CreateSceneGame(Scene* scene)
 	ObjectConstructor(object, vect, sca);
 	AddObject(&scene->objectManager, object);
 	
-	CreateVector2(&sca, 30, 30);
+	CreateVector2(&sca, 330, 330);
 	CreateVector2(&vect, 0, 0);
 	object = (Object*)malloc(sizeof(Object));
 	ObjectConstructor(object, vect, sca);

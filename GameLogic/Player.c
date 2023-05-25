@@ -27,6 +27,7 @@ void template(T, Start)(T *this)
 {
 	this->walkSpeed = 8.3f;
 	this->score = 0;
+	this->key = 0;
 }
 
 void template(T, Update)(T *this)
@@ -51,6 +52,13 @@ void template(T, Update)(T *this)
 	}
 	this->inherited_class.object->transform.position = add(this->inherited_class.object->transform.position, multiple(moveDirection, speed));
 	//this->inherited_class.object->transform.rotation = this->t * 14;
+}
+
+
+void getKey(Player* this)
+{
+	this->key = 1;
+	this->keyObj->inherited_class.object->enabled = 1;
 }
 
 void addScore(Player* this, int add)

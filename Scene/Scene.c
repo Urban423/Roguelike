@@ -15,7 +15,7 @@ includeTime
 void onCreate(Scene* scene)
 {
 	CreateMessageList();
-	createWindow(&scene->renderer, 1080, 546);
+	createWindow(&scene->renderer, 10801, 5416);
 	Vector2 windowSize = getSize(&scene->renderer);
 	BufferConstructor(&scene->renderer.buffer, windowSize.x, windowSize.y);
 	
@@ -24,9 +24,10 @@ void onCreate(Scene* scene)
 	scene->is_running = 1;
 	CreateVertexBox(&scene->meshes[0]);
 	scene->meshes_size = 5;
-	scene->textures_size = 5;
+	scene->textures_size = 22;
+	//scene->textures = (Texture*)malloc(sizeof(Texture) * scene->textures_size);
 	ReadBMPFile(&scene->textures[0], "./Assets/0012.bmp");
-	ReadBMPFile(&scene->textures[1], "./Assets/Mercury.bmp");
+	ReadBMPFile(&scene->textures[1], "./Assets/Door.bmp");
 	ReadBMPFile(&scene->textures[2], "./Assets/Wall.bmp");
 	ReadBMPFile(&scene->textures[3], "./Assets/Roguelike.bmp");
 	ReadBMPFile(&scene->textures[4], "./Assets/WhiteBlock.bmp");
@@ -45,6 +46,9 @@ void onCreate(Scene* scene)
 	ReadBMPFile(&scene->textures[17], "./Assets/Coin.bmp");
 	ReadBMPFile(&scene->textures[18], "./Assets/Pain.bmp");
 	ReadBMPFile(&scene->textures[19], "./Assets/uLose.bmp");
+	ReadBMPFile(&scene->textures[20], "./Assets/key.bmp");
+	ReadBMPFile(&scene->textures[21], "./Assets/ghost2.bmp");
+	//ReadBMPFile(&scene->textures[22], "./Assets/key.bmp");
 	
 	
 	const char* alphabetDir = "./Assets\\alphabet\\A.bmp";

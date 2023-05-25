@@ -12,6 +12,8 @@
 #include "PainMaker.h"
 #include "Coin.h"
 #include "Enemy.h"
+#include "Door.h"
+#include "key.h"
 
 #undef T  
 #define T Player  
@@ -59,4 +61,12 @@
 
 #undef T 
 #define T Enemy
+#include "Object.c" 
+
+#undef T 
+#define T Door
+#include "Object.c" 
+
+#undef T 
+#define T Key
 #include "Object.c" 

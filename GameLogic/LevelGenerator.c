@@ -578,6 +578,32 @@ int generateDoorsInRoom(Buffer* buffer, Leaf* this, char str, char Ignore)
 	return 0;
 }
 
+int generateElementInRandomRoom(Buffer* buffer, Leaf* this, Leaf* impossibleRoom1, Leaf* impossibleRoom2, char str, char offset)
+{
+	if (this->leftChild != 0 || this->rightChild != 0)
+	{
+		char leftL = this->leftChild != 0  && this->leftChild != impossibleRoom1 && this->leftChild != impossibleRoom2;
+		char leftR = this->leftChild != 0  && this->leftChild != impossibleRoom1 && this->leftChild != impossibleRoom2;
+		float r = RandomRange(0, 1);
+		
+		if ((leftL && r < 0.5f) || (leftL && leftR == 0))
+		{
+			generateElementInRandomRoom(buffer, this->leftChild, impossibleRoom1, impossibleRoom2, str, offset);
+		}
+		else
+		{
+			generateElementInRandomRoom(buffer, this->rightChild, impossibleRoom1, impossibleRoom2, str, offset);
+		}
+	}
+	else{
+		int rand_x = this->room.x + RandomRange(offset, this->room.width - 1 - offset);
+		int rand_y = this->room.y + RandomRange(offset, this->room.height - 1 - offset);
+		
+		buffer->buffer[rand_y * buffer->width + rand_x] = str;
+	}
+	return 0;
+}
+
 Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 {
 	srand(seed);
@@ -604,11 +630,14 @@ Buffer GenerateLevel(unsigned int width, unsigned int height, int seed)
 	int index = find_path(buffer.buffer, buffer.width, buffer.height);
 	buffer.buffer[index] = 'e';
 	
+	Leaf* withPlayer = findRootWithElement(&buffer, root, 'p');
 	Leaf* withExit = findRootWithElement(&buffer, root, 'e');
 	if(withExit != NULL)
 	{
 		generateDoorsInRoom(&buffer, withExit, 'd', ' ');
 	}
+	generateElementInRandomRoom(&buffer, root, withPlayer, withExit, '-', 0);
+	
 	
 	
 	DrawBuffer(&buffer);

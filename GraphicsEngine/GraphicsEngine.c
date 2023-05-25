@@ -37,6 +37,7 @@ VertexMesh* mesh, Texture* texture)
 	//HANDLE* l = (HANDLE*)malloc(sizeof(HANDLE) * number_of_triangles);
 	
 	int apple = 0;
+	int apple2 = 0;
 	TriangleInput input;
 	int p1, p2, p3;
 	char switcher = 1;
@@ -69,9 +70,17 @@ VertexMesh* mesh, Texture* texture)
 		input.uv3 = mesh->UV_map[p3];
 		input.counter = &apple;
 		
+		DrawTriangleByTexture(&input);
+		continue;
+		if(counter - apple > 2 - 2)
+		{
+			input.counter = &apple2;
+			//DrawTriangleByTexture(&input);
+			printf("counter: %d\n", apple);
+			//continue;
+		}
+		
 		(HANDLE)_beginthread(DrawTriangleByTexture, 0, (void*)&input);
-		//printf("%d\n", l[counter]);
-		//Sleep(1);
 		if(er == -1L)
 		{
 			continue;
@@ -81,7 +90,7 @@ VertexMesh* mesh, Texture* texture)
 	
 	free(copy_of_verticles);
 	
-	while(apple < counter);
+	//while(apple < counter);
 	//WaitForMultipleObjects(counter, l, 1, INFINITE);
 	//free(l);
 }
@@ -109,6 +118,8 @@ Matrix3x3* cam_view,
 Matrix3x3* cam_proj,
 VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size)
 {
+	int apple = 0;
+	TriangleInput input;
 	Matrix3x3 temp = MultipleMatrixMatrix(*world_pos, *cam_view);
 	temp = MultipleMatrixMatrix(temp, *cam_proj);
 
@@ -147,15 +158,21 @@ VertexMesh* mesh, Texture* texture, char* text, unsigned int text_size)
 			int p2 = mesh->faces[i + 1];
 			int p3 = mesh->faces[i + 2];
 			
-			/*
-			DrawTriangleByTexture(
-				buffer, 
-				copy_of_verticles[p1].x + x_offset, copy_of_verticles[p1].y + y_offset,
-				copy_of_verticles[p2].x + x_offset, copy_of_verticles[p2].y + y_offset,
-				copy_of_verticles[p3].x + x_offset, copy_of_verticles[p3].y + y_offset,
-				texture, 
-				mesh->UV_map[p1], mesh->UV_map[p2], mesh->UV_map[p3]);
-			*/
+			
+			input.buffer = buffer;
+			input.x1 = copy_of_verticles[p1].x + x_offset;
+			input.x2 = copy_of_verticles[p2].x + x_offset;
+			input.x3 = copy_of_verticles[p3].x + x_offset;
+			input.y1 = copy_of_verticles[p1].y + y_offset;
+			input.y2 = copy_of_verticles[p2].y + y_offset;
+			input.y3 = copy_of_verticles[p3].y + y_offset;
+			input.texture = &texture[index];
+			input.uv1 = mesh->UV_map[p1];
+			input.uv2 = mesh->UV_map[p2];
+			input.uv3 = mesh->UV_map[p3];
+			input.counter = &apple;
+				
+			DrawTriangleByTexture(&input);
 		}
 		x_offset += x_offset_add;
 	}

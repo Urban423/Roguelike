@@ -28,7 +28,7 @@ char updateWindow(Renderer* renderer, unsigned long time_of_begin)
 	float new_time = currentTime.tv_sec * (int)1e6 + currentTime.tv_usec;
 	float delta = new_time - old_time;
 	old_time = new_time;
-	printf("%f\n", delta / 1000);
+	//printf("%f\n", delta / 1000);
 	if(delta < 16000)
 	{
 		//usleep (16);

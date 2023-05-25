@@ -24,10 +24,13 @@ typedef struct T
 	float walkSpeed;
 	float RunSpeed;
 	int score;
+	int key;
+	MeshRenderer* keyObj;
 	MeshRenderer* loseMenu;
 	TextMesh* text;
 }T;
 
+void getKey(Player* this);
 void addScore(Player* this, int add);
 void Kill(Player* this);
 
