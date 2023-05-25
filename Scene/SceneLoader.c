@@ -345,7 +345,7 @@ void CreateSceneGame(Scene* scene)
 				box->isTrigger = 1;
 				box->size.x = 0.5f;
 				box->size.y = 0.5f;
-				enemy->walkSpeed = 0;
+				enemy->walkSpeed = 5.3f;
 				enemy->player = &cam->transform;
 				b_index++;
 				continue;
